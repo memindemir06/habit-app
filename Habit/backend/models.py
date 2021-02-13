@@ -20,8 +20,9 @@ class Users(models.Model):
     user_id = models.CharField(max_length=6, default=generate_unique_code, unique=True, primary_key=True)
     first_name = models.CharField(max_length=15)
     last_name = models.CharField(max_length=15)
-    dob = models.CharField(max_length=20)
     email = models.EmailField(max_length=254)
+    password = models.CharField(max_length=30, default="")
+    dob = models.CharField(max_length=20)
     # verified = models.BooleanField()
 
 
