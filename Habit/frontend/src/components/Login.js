@@ -1,13 +1,11 @@
 import React from "react";
 import { Grid, Button, TextField, Typography } from "@material-ui/core";
-// import LockOutlinedIcon from "@material-ui/icons/LockOutlinedIcon";
 import { Link } from "react-router-dom";
 
 function Login() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} align="center">
-        {/* <LockOutlinedIcon /> */}
         <Typography variant="h4" component="h4">
           Login
         </Typography>
