@@ -8,13 +8,15 @@ import {
 } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
+import DailyReminders from "./DailyReminders"
 
 function Home() {
   return (
     <Router>
       <Switch>
         <Route exact path="/" component={Login} />
-        <Route path="/register" component={Register} />
+        <Route exact path="/register" component={Register} />
+        <Route path="/:userId" component={DailyReminders} />
       </Switch>
     </Router>
   );
