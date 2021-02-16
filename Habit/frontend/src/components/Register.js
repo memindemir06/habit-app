@@ -51,9 +51,12 @@ function Register() {
   };
 
   const submitButtonPressed = () => {
+    //Validate textfields, password and dob
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         first_name: firstName,
         last_name: lastName,
@@ -63,19 +66,17 @@ function Register() {
       }),
     };
 
-    fetch("/register", requestOptions)
+    fetch("api/register", requestOptions)
       .then((response) => {
         if (!response.ok) {
-          console.log(response);
+          console.log("Invalid data");
         } else {
           return response.json();
         }
       })
       .then((data) => {
-        console.log(data);
         history.push("/" + data.user_id);
       });
-    // .catch((error) => console.log(error));
   };
 
   return (
@@ -91,74 +92,74 @@ function Register() {
         </Collapse>
       </Grid>
       <Grid item xs={12} align="center">
-        <form autoComplete="on">
-          <TextField
-            required
-            label="First Name"
-            variant="outlined"
-            margin="normal"
-            onChange={firstNameChange}
-          />
-          <br />
-          <TextField
-            required
-            label="Last Name"
-            variant="outlined"
-            margin="normal"
-            onChange={lastNameChange}
-          />
-          <br />
-          <TextField
-            required
-            label="Enter Email"
-            variant="outlined"
-            margin="normal"
-            onChange={emailChange}
-          />
-          <br />
-          <TextField
-            required
-            label="Enter Password"
-            variant="outlined"
-            margin="normal"
-            onChange={passwordChange}
-          />
-          <br />
-          <TextField
-            required
-            label="Validate Password"
-            variant="outlined"
-            margin="normal"
-            onChange={validatePasswordChange}
-          />
-          <br />
-          <TextField
-            required
-            variant="outlined"
-            margin="normal"
-            type="date"
-            label="Date of Birth"
-            InputLabelProps={{ shrink: true }}
-            onChange={dobChange}
-          />
-          <br /> <br />
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            size="large"
-          >
-            Create Account
-          </Button>
-          <br /> <br />
-        </form>
+        {/* <form autoComplete="on"> */}
+        <TextField
+          required
+          label="First Name"
+          variant="outlined"
+          margin="normal"
+          onChange={firstNameChange}
+        />
+        <br />
+        <TextField
+          required
+          label="Last Name"
+          variant="outlined"
+          margin="normal"
+          onChange={lastNameChange}
+        />
+        <br />
+        <TextField
+          required
+          label="Enter Email"
+          variant="outlined"
+          margin="normal"
+          onChange={emailChange}
+        />
+        <br />
+        <TextField
+          required
+          label="Enter Password"
+          variant="outlined"
+          margin="normal"
+          onChange={passwordChange}
+        />
+        <br />
+        <TextField
+          required
+          label="Validate Password"
+          variant="outlined"
+          margin="normal"
+          onChange={validatePasswordChange}
+        />
+        <br />
+        <TextField
+          required
+          variant="outlined"
+          margin="normal"
+          type="date"
+          label="Date of Birth"
+          InputLabelProps={{ shrink: true }}
+          onChange={dobChange}
+        />
+        <br /> <br />
+        {/* </form> */}
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          size="large"
+          onClick={submitButtonPressed}
+        >
+          Create Account
+        </Button>
+        <br /> <br />
         <Button
           to="/"
           component={Link}
           variant="contained"
           color="secondary"
           size="large"
-          onClick={submitButtonPressed}
         >
           Back
         </Button>

@@ -1,4 +1,3 @@
-# from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -14,7 +13,12 @@ class index(generics.ListAPIView):
 
 class Register(APIView):
     serializer_class = RegisterSerializer
+
     def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # If they don't have a session -> create one
+            self.request.session.create()
+            
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             first_name = serializer.data.get('first_name')
@@ -22,16 +26,11 @@ class Register(APIView):
             email = serializer.data.get('email')
             password = serializer.data.get('password')
             dob = serializer.data.get('dob')
-
-            if not self.request.session.exists(self.request.session.session_key):
-                # If they don't have a session -> create one
-                self.request.session.create()
-            
             user = Users(first_name=first_name, last_name=last_name, email=email, password=password, dob=dob)
             user.save()
 
             self.request.session['user_id'] = user.user_id
-            return Response(RegisterSerializer(user).data, status=status.HTTP_201_CREATED)
+            return Response(RegisterSerializer(user).data, status=status.HTTP_200_OK)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -51,7 +50,7 @@ class Login(APIView):
         if (email != None and password != None):
             user_result = Users.objects.filter(email=email, password=password)
 
-            if len(user_result) > 0:
+            if user_result.exists():
                 user = user_result[0]
                 self.request.session['user_id'] = user.user_id
                 # serializer = self.serializer_class(data=user.user_id)

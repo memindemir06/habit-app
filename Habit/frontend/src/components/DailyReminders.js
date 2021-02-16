@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 function DailyReminders({ match }) {
-  const [userId, setUserId] = useState(match.userId);
+  const [userId, setUserId] = useState(match.params.userId);
 
   return (
     <div>
