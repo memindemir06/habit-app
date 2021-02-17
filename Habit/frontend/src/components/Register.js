@@ -75,7 +75,7 @@ function Register() {
         }
       })
       .then((data) => {
-        history.push("/" + data.user_id);
+        history.push("/" + data.user_id); 
       });
   };
 

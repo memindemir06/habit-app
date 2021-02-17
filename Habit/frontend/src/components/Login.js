@@ -52,7 +52,7 @@ function Login() {
           Login
         </Typography>
       </Grid>
-      <Grid item xs={12} align="center">
+      <Grid item xs={12} align="center"> 
         <TextField
           required
           label="Enter your Email"

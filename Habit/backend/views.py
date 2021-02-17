@@ -64,5 +64,39 @@ class Login(APIView):
 
 
 class activeSession(APIView):
-    pass
+    def get(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):   # Checks userid in url to session
+            # If they don't have a session -> create one
+            self.request.session.create()
+        
+        data = {
+            'user_id': self.request.session.get('user_id')
+        }
+        return JsonResponse(data, status=status.HTTP_200_OK)
+
+
+
+class userIdValid(APIView):
+    serializer_class = UserSerializer
+    lookup_url_kwarg = 'user_id'
+    
+    def get(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # If they don't have a session -> create one
+            self.request.session.create()
+
+        user_id = request.GET.get(self.lookup_url_kwarg)
+        if (user_id != None):
+            listOfUsers = Users.objects.filter(user_id=user_id)
+            if listOfUsers.exists():
+                data = UserSerializer(listOfUsers[0]).data
+                return Response(data, status=status.HTTP_200_OK)
+
+            return Response({"User not found": "Invalid User ID"}, status=status.HTTP_404_NOT_FOUND)
+            
+        return Response({'Bad Request': 'User ID paramater not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+    
+
+
 
