@@ -5,7 +5,8 @@ function DailyReminders({ leaveAccountCallback }) {
   const params = useParams();
   const history = useHistory();
   const [userId, setUserId] = useState(null);
-  const [listOfHabits, setListOfHabits] = useState(null);
+  const [listOfHabits, setListOfHabits] = useState({});
+  const [habitId, setHabitId] = useState(null);
 
   useEffect(() => {
     fetch("api/userIdValid" + "?user_id=" + params.userId)
@@ -22,19 +23,49 @@ function DailyReminders({ leaveAccountCallback }) {
           setUserId(null);
         } else {
           setUserId(data.user_id);
+          getHabits(data.user_id);
         }
       });
   }, []);
 
-  useEffect(() => {
-    fetch().then().then();
-  }, []);
+  const getHabits = (user_id) => {
+    console.log(user_id);
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: user_id,
+      }),
+    };
+    fetch("api/getUserHabits", requestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          console.log("No User ID: ", response);
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data) {
+          console.log(data);
+          setListOfHabits(data);
+          setHabitId(data.habit_id);
+        } else {
+          console.log("No Data");
+        }
+      });
+  };
 
   if (!userId) {
     return null;
-  } else if (!istOfHabits[0]) {
+  }
+
+  if (!listOfHabits) {
     return (
       <div>
+        <h1>{habitId}</h1>
         <h2>No Habits added..</h2>
         <h2>Add a Habit</h2>
       </div>
@@ -44,7 +75,7 @@ function DailyReminders({ leaveAccountCallback }) {
   return (
     <div>
       <h1>{userId}</h1>
-      <p>text</p>
+      <p>{habitId}</p>
     </div>
   );
 }

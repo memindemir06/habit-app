@@ -24,3 +24,5 @@ class UserHabitsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserHabits
         fields = ('user_id', 'habit_id', 'streak', 'start_date')
+        # fields = ([])
+

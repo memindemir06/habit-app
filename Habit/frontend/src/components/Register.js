@@ -23,6 +23,7 @@ function Register() {
   // Handles State Changes
   const firstNameChange = (event) => {
     setFirstName(event.target.value);
+    
   };
   const lastNameChange = (event) => {
     setLastName(event.target.value);

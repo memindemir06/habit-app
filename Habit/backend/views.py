@@ -96,21 +96,26 @@ class userIdValid(APIView):
 
 
 class getUserHabits(APIView):
-    serializer_class = UserHabitsSerializer
+    serializer_class = UserHabitsSerializer(many=True)
     lookup_url_kwarg = 'user_id'
 
-    def get(self, request, format=None):
-        # if not self.request.session.exists(self.request.session.session_key):
-        #     # If they don't have an active session -> create one
-        #     self.request.session.create() 
-        user_id = self.request.data.get(self.lookup_url_kwarg)
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # If they don't have an active session -> create one
+            self.request.session.create() 
+
+        user_id = request.data.get(self.lookup_url_kwarg)
         
         if user_id != None:
             listOfHabits = UserHabits.objects.filter(user_id=user_id)
-            if listOfHabits.exists():
-                return Response(UserHabitsSerializer(listOfHabits).data, status=status.HTTP_200_OK)
-            
-            # return Response({}, status=status.HTTP_)
+            if listOfHabits.exists(): 
+                habitList = []
+                
+                for i in range(len(listOfHabits)):
+                    habitList.append(UserHabitsSerializer(listOfHabits[i]).data)
+                data = {'list_of_habits': habitList} 
+
+                return JsonResponse(data, status=status.HTTP_200_OK)
         
         return Response({"Bad Request': 'User ID not valid"}, status=status.HTTP_400_BAD_REQUEST)
 
