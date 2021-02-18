@@ -5,6 +5,7 @@ function DailyReminders({ leaveAccountCallback }) {
   const params = useParams();
   const history = useHistory();
   const [userId, setUserId] = useState(null);
+  const [listOfHabits, setListOfHabits] = useState(null);
 
   useEffect(() => {
     fetch("api/userIdValid" + "?user_id=" + params.userId)
@@ -25,8 +26,19 @@ function DailyReminders({ leaveAccountCallback }) {
       });
   }, []);
 
+  useEffect(() => {
+    fetch().then().then();
+  }, []);
+
   if (!userId) {
     return null;
+  } else if (!istOfHabits[0]) {
+    return (
+      <div>
+        <h2>No Habits added..</h2>
+        <h2>Add a Habit</h2>
+      </div>
+    );
   }
 
   return (

@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import generics, status
-from .models import Users
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from .models import Users, UserHabits 
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer
 
 
 class index(generics.ListAPIView):
@@ -35,7 +35,7 @@ class Register(APIView):
 
 
 class Login(APIView):
-    # serializer_class = LoginSerializer
+    serializer_class = LoginSerializer
     lookup_url_kwarg_email = 'email'
     lookup_url_kwarg_password = 'password'
     
@@ -62,7 +62,6 @@ class Login(APIView):
         return Response({"Bad Request", "Invalid post data, did not find the email and password"}, status=status.HTTP_400_BAD_REQUEST) 
 
 
-
 class activeSession(APIView):
     def get(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):   # Checks userid in url to session
@@ -73,7 +72,6 @@ class activeSession(APIView):
             'user_id': self.request.session.get('user_id')
         }
         return JsonResponse(data, status=status.HTTP_200_OK)
-
 
 
 class userIdValid(APIView):
@@ -96,7 +94,26 @@ class userIdValid(APIView):
             
         return Response({'Bad Request': 'User ID paramater not found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
-    
+
+class getUserHabits(APIView):
+    serializer_class = UserHabitsSerializer
+    lookup_url_kwarg = 'user_id'
+
+    def get(self, request, format=None):
+        # if not self.request.session.exists(self.request.session.session_key):
+        #     # If they don't have an active session -> create one
+        #     self.request.session.create() 
+        user_id = self.request.data.get(self.lookup_url_kwarg)
+        
+        if user_id != None:
+            listOfHabits = UserHabits.objects.filter(user_id=user_id)
+            if listOfHabits.exists():
+                return Response(UserHabitsSerializer(listOfHabits).data, status=status.HTTP_200_OK)
+            
+            # return Response({}, status=status.HTTP_)
+        
+        return Response({"Bad Request': 'User ID not valid"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 
