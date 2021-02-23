@@ -23,6 +23,7 @@ class LoginSerializer(serializers.ModelSerializer):
 class UserHabitsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserHabits
-        fields = ('user_id', 'habit_id', 'streak', 'start_date')
+        depth = 1 # To get foreign key data
+        fields = ('habit_id', 'streak', 'start_date') # Got rid of user_id, dont need it
         # fields = ([])
 
