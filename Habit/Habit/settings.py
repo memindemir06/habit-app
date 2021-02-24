@@ -85,8 +85,16 @@ WSGI_APPLICATION = 'Habit.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+<<<<<<< HEAD
         # 'NAME': '2020_comp10120_x13',
         'NAME': 'w89594sa',
+=======
+<<<<<<< Updated upstream
+=======
+        # 'NAME': '2020_comp10120_x13',
+>>>>>>> Stashed changes
+        'NAME': '2020_comp10120_x13',
+>>>>>>> Frontend
         'USER':'w89594sa',
         'PASSWORD':'Sahir000',
         'HOST':'dbhost.cs.man.ac.uk',
