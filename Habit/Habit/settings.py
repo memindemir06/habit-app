@@ -85,16 +85,8 @@ WSGI_APPLICATION = 'Habit.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-<<<<<<< HEAD
         # 'NAME': '2020_comp10120_x13',
         'NAME': 'w89594sa',
-=======
-<<<<<<< Updated upstream
-=======
-        # 'NAME': '2020_comp10120_x13',
->>>>>>> Stashed changes
-        'NAME': '2020_comp10120_x13',
->>>>>>> Frontend
         'USER':'w89594sa',
         'PASSWORD':'Sahir000',
         'HOST':'dbhost.cs.man.ac.uk',
@@ -103,7 +95,27 @@ DATABASES = {
 }
 
 
-
+LOGGING = {
+    'version': 1,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        }
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
