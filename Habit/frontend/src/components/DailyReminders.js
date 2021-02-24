@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import HabitBlock from "./HabitBlock";
+import LoadingPage from "./LoadingPage";
 
 function DailyReminders({ leaveAccountCallback }) {
   const params = useParams();
@@ -8,7 +9,7 @@ function DailyReminders({ leaveAccountCallback }) {
   const [userId, setUserId] = useState(null);
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
-  const [listOfHabits, setListOfHabits] = useState([]);
+  const [listOfHabits, setListOfHabits] = useState(null);
   const [habitId, setHabitId] = useState(null);
 
   useEffect(() => {
@@ -58,18 +59,19 @@ function DailyReminders({ leaveAccountCallback }) {
           setHabitId(data.list_of_habits[0].habit_id.habit_id);
         } else {
           console.log("No Data");
+          setListOfHabits([]);
         }
       });
   };
-
-  if (!userId) {
-    return null;
+  
+  if (!userId || !listOfHabits) {
+    return <LoadingPage />;
   }
 
-  if (!listOfHabits) {
+  // If no Habits yet added
+  if (listOfHabits == []) {
     return (
       <div>
-        <h1>{habitId}</h1>
         <h2>No Habits added..</h2>
         <h2>Add a Habit</h2>
       </div>

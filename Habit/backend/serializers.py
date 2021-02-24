@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Users, UserHabits
+from .models import Users, UserHabits, Optional
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,5 +25,10 @@ class UserHabitsSerializer(serializers.ModelSerializer):
         model = UserHabits
         depth = 1 # To get foreign key data
         fields = ('habit_id', 'streak', 'start_date') # Got rid of user_id, dont need it
-        # fields = ([])
+        
+class UserOptionalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Optional
+        fields = ('phone_number', 'description', 'facebook', 'instagram', 'twitter')
+        
 

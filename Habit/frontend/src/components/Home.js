@@ -12,13 +12,12 @@ import Login from "./Login";
 import Register from "./Register";
 import DailyReminders from "./DailyReminders";
 import ErrorPage from "./ErrorPage";
+import Profile from "./Profile";
 
 function Home() {
   const history = useHistory();
   // const location = useLocation();
   const [userId, setUserId] = useState(null);
-
-
 
   useEffect(() => {
     fetch("api/activeSession")
@@ -53,9 +52,16 @@ function Home() {
         />
         <Route path="/register" component={Register} />
         <Route
+          exact
           path="/:userId"
           render={() => {
             return <DailyReminders leaveAccountCallback={backToLogin} />;
+          }}
+        />
+        <Route
+          path="/profile/:userId"
+          render={() => {
+            return <Profile leaveAccountCallback={backToLogin} />;
           }}
         />
       </Switch>
