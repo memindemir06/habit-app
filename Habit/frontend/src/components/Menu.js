@@ -28,7 +28,7 @@ function MenuTest() {
         onClick={handleClick}
       >
         Open Menu
-      </Button>
+      </Button> 
       <Menu id="fade-menu" onClose={handleClose}>
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>

@@ -160,9 +160,24 @@ class getFriends(APIView):
 
             listOfFriends = []
 
+            if listOfFriends1.exists():
+                for i in range(len(listOfFriends1)):
+                    friendPair = FriendsSerializer(listOfFriends1[i]).data
+                    friendPair = friendPair.pop('user_id2')
+                    listOfFriends.append(friendPair)
             
+            if listOfFriends2.exists():
+                for i in range(len(listOfFriends2)):
+                    friendPair = FriendsSerializer(listOfFriends2[i]).data
+                    friendPair = friendPair.pop('user_id1')
+                    listOfFriends.append(friendPair)
             
-        
+            data = {
+                'list_of_friends': listOfFriends,
+            }
+
+            return JsonResponse(data, status=status.HTTP_200_OK)
+
         return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_404_NOT_FOUND)
             
         

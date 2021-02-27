@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
+import FriendBlock from "./FriendBlock";
 
 function FriendsPage({ leaveAccountCallback }) {
   let params = useParams();
   let history = useHistory();
   const [userId, setUserId] = useState(null);
-  const [friendsList, setfriendsList] = useState(null);
+  const [friendsList, setFriendsList] = useState(null);
 
   useEffect(() => {
     // Investigate issue with request -> friends/api/userIdValid -> check View
@@ -21,12 +22,10 @@ function FriendsPage({ leaveAccountCallback }) {
       })
       .then((data) => {
         if (!data) {
-          //   setUserId(null);
+          console.log("No Data");
         } else {
           console.log(data);
           setUserId(data.user_id);
-          //   setFirstName(data.first_name);
-          //   setLastName(data.last_name);
           getFriends(data.user_id);
         }
       });
@@ -52,8 +51,18 @@ function FriendsPage({ leaveAccountCallback }) {
       })
       .then((data) => {
         if (data) {
-          console.log(data);
-          setfriendsList(data);
+          console.log(data.list_of_friends);
+          // (Lambda?) Function to sort the list of friends by 1st Name
+          let tempFriendList = data.list_of_friends;
+          tempFriendList = tempFriendList.sort((a, b) => {
+            if (a.first_name < b.first_name) {
+              return -1;
+            } else if (a.first_name > b.first_name) {
+              return 1;
+            }
+            return 0;
+          });
+          setFriendsList(data.list_of_friends);
         } else {
           console.log("No Data");
         }
@@ -64,10 +73,27 @@ function FriendsPage({ leaveAccountCallback }) {
     return <LoadingPage />;
   }
 
+  if (friendsList.length == 0) {
+    return (
+      <div>
+        <h1>No Friends Added</h1>
+        <h1>Add some Friends...</h1>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h1>{userId}</h1>
-      <h1>Friends</h1>
+      <h1>Your Friend List</h1>
+      {friendsList.map((friend) => {
+        return (
+          <FriendBlock
+            firstName={friend.first_name}
+            lastName={friend.last_name}
+          />
+        );
+      })}
     </div>
   );
 }
