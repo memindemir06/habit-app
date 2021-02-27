@@ -1,29 +1,47 @@
 import React from "react";
-import { Menu, Grid, Button, TextField, Typography, Container, Box } from "@material-ui/core";
-import { palette } from '@material-ui/system';
-import { makeStyles, ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
+import {
+  MenuList,
+  MenuItem,
+  Grid,
+  Button,
+  TextField,
+  Typography,
+  Container,
+  Box,
+} from "@material-ui/core";
+import { palette } from "@material-ui/system";
+import {
+  makeStyles,
+  ThemeProvider,
+  createMuiTheme,
+} from "@material-ui/core/styles";
 import { orange } from "@material-ui/core/colors";
+// import {  } from "@material-ui/icons";
 
-function MenuTest()
-{    
-    const handleClick = () => {};
-    const handleClose = () => {};
+function Menu() {
+  const handleClick = () => {};
+  const handleClose = () => {};
 
-    return (
+  return (
     <div>
-    <Button aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}>
-    Open Menu
-    </Button>
-    <Menu
-        id="fade-menu"
-        onClose={handleClose}
-    >
-    <MenuItem onClick={handleClose}>Profile</MenuItem>
-    <MenuItem onClick={handleClose}>My account</MenuItem>
-    <MenuItem onClick={handleClose}>Logout</MenuItem>
-    </Menu>
-    </div> 
-    );
+      <Button
+        aria-controls="fade-menu"
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        Open Menu
+      </Button>
+      <MenuList id="fade-menu" onClose={handleClose}>
+        <MenuItem component={Link} to="/FZPIGF">
+          Daily Reminders
+        </MenuItem>
+        <MenuItem component={Link} to="/profile/FZPIGF">
+          My account
+        </MenuItem>
+      </MenuList>
+    </div>
+  );
 }
 
 export default Menu;

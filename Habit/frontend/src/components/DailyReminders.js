@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import HabitBlock from "./HabitBlock";
+import LoadingPage from "./LoadingPage";
 
 function DailyReminders({ leaveAccountCallback }) {
   const params = useParams();
   const history = useHistory();
   const [userId, setUserId] = useState(null);
-  const [listOfHabits, setListOfHabits] = useState({});
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [listOfHabits, setListOfHabits] = useState(null);
   const [habitId, setHabitId] = useState(null);
 
   useEffect(() => {
@@ -22,6 +26,9 @@ function DailyReminders({ leaveAccountCallback }) {
         if (!data) {
           setUserId(null);
         } else {
+          console.log(data);
+          setFirstName(data.first_name);
+          setLastName(data.last_name);
           setUserId(data.user_id);
           getHabits(data.user_id);
         }
@@ -29,7 +36,6 @@ function DailyReminders({ leaveAccountCallback }) {
   }, []);
 
   const getHabits = (user_id) => {
-    console.log(user_id);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -49,23 +55,23 @@ function DailyReminders({ leaveAccountCallback }) {
       })
       .then((data) => {
         if (data) {
-          console.log(data);
-          setListOfHabits(data);
-          setHabitId(data.habit_id);
+          setListOfHabits(data.list_of_habits);
+          setHabitId(data.list_of_habits[0].habit_id.habit_id);
         } else {
           console.log("No Data");
+          setListOfHabits([]);
         }
       });
   };
-
-  if (!userId) {
-    return null;
+  
+  if (!userId || !listOfHabits) {
+    return <LoadingPage />;
   }
 
-  if (!listOfHabits) {
+  // If no Habits yet added
+  if (listOfHabits == []) {
     return (
       <div>
-        <h1>{habitId}</h1>
         <h2>No Habits added..</h2>
         <h2>Add a Habit</h2>
       </div>
@@ -74,8 +80,16 @@ function DailyReminders({ leaveAccountCallback }) {
 
   return (
     <div>
-      <h1>{userId}</h1>
-      <p>{habitId}</p>
+      <h1>{firstName + " " + lastName}</h1>
+      {listOfHabits.map((habit) => {
+        return (
+          <HabitBlock
+            habitName={habit.habit_id.habit_name}
+            startDate={habit.start_date}
+            streak={habit.streak}
+          />
+        );
+      })}
     </div>
   );
 }

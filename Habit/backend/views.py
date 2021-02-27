@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import generics, status
-from .models import Users, UserHabits 
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer
+from .models import Users, UserHabits, Optional
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer, UserOptionalSerializer
 
 
 class index(generics.ListAPIView):
@@ -90,7 +90,7 @@ class userIdValid(APIView):
                 data = UserSerializer(listOfUsers[0]).data
                 return Response(data, status=status.HTTP_200_OK)
 
-            return Response({"User not found": "Invalid User ID"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"User not found": "Invalid User ID"}, status=status.HTTP_400_BAD_REQUEST)
             
         return Response({'Bad Request': 'User ID paramater not found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -98,7 +98,7 @@ class userIdValid(APIView):
 class getUserHabits(APIView):
     serializer_class = UserHabitsSerializer(many=True)
     lookup_url_kwarg = 'user_id'
-
+    
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             # If they don't have an active session -> create one
@@ -119,6 +119,27 @@ class getUserHabits(APIView):
         
         return Response({"Bad Request': 'User ID not valid"}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class getUserOptionals(APIView):
+    serializer_class = UserOptionalSerializer
+    lookup_url_kwarg = 'user_id'
+
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # If they don't have an active session -> create one
+            self.request.session.create() 
+        
+        user_id = request.data.get(self.lookup_url_kwarg)
+        
+        if user_id != None:
+            listOfOptionals = Optional.objects.filter(user_id=user_id)
+            if listOfOptionals.exists():
+                # return JsonResponse({'userOptionals': UserOptionalSerializer(listOfOptionals[0]).data}, status=status.HTTP_200_OK)
+                return Response(UserOptionalSerializer(listOfOptionals[0]).data, status=status.HTTP_200_OK)
+            
+            return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
