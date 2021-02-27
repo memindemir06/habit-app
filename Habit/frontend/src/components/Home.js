@@ -13,7 +13,7 @@ import Register from "./Register";
 import DailyReminders from "./DailyReminders";
 import ErrorPage from "./ErrorPage";
 import Profile from "./Profile";
-import Menu from "./Menu";
+import MenuTest from "./Menu";
 
 function Home() {
   const history = useHistory();
@@ -39,7 +39,7 @@ function Home() {
   return (
     <div>
       <Router>
-        <Menu />
+        <MenuTest />
         <Switch>
           <Route exact path="/ErrorPage" component={ErrorPage} />
           <Route
