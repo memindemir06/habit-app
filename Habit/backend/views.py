@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import generics, status
-from .models import Users, UserHabits, Optional
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer, UserOptionalSerializer
+from .models import Users, UserHabits, Optional, UserFriends
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer, UserOptionalSerializer, FriendsSerializer
 
 
 class index(generics.ListAPIView):
@@ -143,3 +143,26 @@ class getUserOptionals(APIView):
 
 
 
+class getFriends(APIView):
+    serializer_class = FriendsSerializer
+    lookup_url_kwarg = 'user_id'
+
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # If they don't have an active session -> create one
+            self.request.session.create() 
+
+        user_id = request.data.get(self.lookup_url_kwarg)
+
+        if user_id != None:
+            listOfFriends1 = UserFriends.objects.filter(user_id1 = user_id)
+            listOfFriends2 = UserFriends.objects.filter(user_id2 = user_id)
+
+            listOfFriends = []
+
+            
+            
+        
+        return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_404_NOT_FOUND)
+            
+        

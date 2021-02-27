@@ -95,7 +95,6 @@ function Profile({ leaveAccountCallback }) {
       <p>{twitter}</p>
     </div>
   );
-  // }
 
   // return (
   //   <div>

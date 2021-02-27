@@ -63,7 +63,7 @@ function DailyReminders({ leaveAccountCallback }) {
         }
       });
   };
-  
+
   if (!userId || !listOfHabits) {
     return <LoadingPage />;
   }

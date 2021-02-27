@@ -13,6 +13,7 @@ import Register from "./Register";
 import DailyReminders from "./DailyReminders";
 import ErrorPage from "./ErrorPage";
 import Profile from "./Profile";
+import FriendsPage from "./FriendsPage";
 
 function Home() {
   const history = useHistory();
@@ -59,9 +60,17 @@ function Home() {
           }}
         />
         <Route
-          path="/profile/:userId"
+          exact
+          path="/profile/:userId" 
           render={() => {
             return <Profile leaveAccountCallback={backToLogin} />;
+          }}
+        />
+        <Route 
+          exact
+          path="/friends/:userId"
+          render={() => {
+            return <FriendsPage leaveAccountCallback={backToLogin} />;
           }}
         />
       </Switch>

@@ -8,4 +8,5 @@ urlpatterns = [
     path('register', index),
     path('<str:userId>', index),
     path('profile/<str:userId>', index),
+    path('friends/<str:userId>', index),
 ]

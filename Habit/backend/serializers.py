@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Users, UserHabits, Optional
+from .models import Users, UserHabits, Optional, UserFriends
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,4 +31,8 @@ class UserOptionalSerializer(serializers.ModelSerializer):
         model = Optional
         fields = ('phone_number', 'description', 'facebook', 'instagram', 'twitter')
         
-
+class FriendsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserFriends
+        depth = 1
+        fields = ('user_id1', 'user_id2')

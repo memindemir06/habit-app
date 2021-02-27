@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import index, Login, Register, activeSession, userIdValid, getUserHabits, getUserOptionals
+from .views import index, Login, Register, activeSession, userIdValid, getUserHabits, getUserOptionals, getFriends
 
 urlpatterns = [
     path('users', index.as_view()),
@@ -9,4 +9,5 @@ urlpatterns = [
     path('userIdValid', userIdValid.as_view()),
     path('getUserHabits', getUserHabits.as_view()),
     path('getUserOptionals', getUserOptionals.as_view()),
+    path('getFriends', getFriends.as_view()),
 ]

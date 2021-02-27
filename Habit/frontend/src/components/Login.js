@@ -29,17 +29,17 @@ function Login() {
     fetch("api/login", requestOptions)
       .then((response) => {
         if (!response.ok) {
-          // SET ALERT -> Validate at start of function 
+          // SET ALERT -> Validate at start of function
           console.log("Invalid data");
         } else {
-          return response.json(); 
+          return response.json();
         }
       })
       .then((data) => {
         if (data) {
           history.push("/" + data.user_id);
         } else {
-          // SET ALERT 
+          // SET ALERT
           console.log("Invalid Data");
         }
       });
@@ -52,7 +52,7 @@ function Login() {
           Login
         </Typography>
       </Grid>
-      <Grid item xs={12} align="center"> 
+      <Grid item xs={12} align="center">
         <TextField
           required
           label="Enter your Email"
