@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import generics, status
-from .models import Users, UserHabits, Optional, UserFriends
+from .models import Users, UserHabits, Optional, UserFriends, Habits
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer, UserOptionalSerializer, FriendsSerializer
 
 
@@ -179,5 +179,67 @@ class getFriends(APIView):
             return JsonResponse(data, status=status.HTTP_200_OK)
 
         return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_404_NOT_FOUND)
+
+class filterFriends(APIView):
+    serializer_class = FriendsSerializer
+    lookup_url_kwarg = 'user_id'
+    lookup_url_habit_name = 'habit_name'
+
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # If they don't have an active session -> create one
+            self.request.session.create() 
+
+        user_id = request.data.get(self.lookup_url_kwarg)
+        habit_name = request.data.get(self.lookup_url_habit_name)
+        listOfFriends = []
+
+        # This part gets the list of friends, basically getFriends class
+        if user_id != None:
+            listOfFriends1 = UserFriends.objects.filter(user_id1 = user_id)
+            listOfFriends2 = UserFriends.objects.filter(user_id2 = user_id)
+
+            if listOfFriends1.exists():
+                for i in range(len(listOfFriends1)):
+                    friendPair = FriendsSerializer(listOfFriends1[i]).data
+                    friendPair = friendPair.pop('user_id2')
+                    listOfFriends.append(friendPair)
             
+            if listOfFriends2.exists():
+                for i in range(len(listOfFriends2)):
+                    friendPair = FriendsSerializer(listOfFriends2[i]).data
+                    friendPair = friendPair.pop('user_id1')
+                    listOfFriends.append(friendPair)
+        else:
+            return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_404_NOT_FOUND) 
+       
+        # This part filters the list of friends by habit
+        listOfFilteredFriends = []
+        habit_id = Habits.objects.filter(habit_name = habit_name)
+        if habit_id != None:
+            habit_id = habit_id[0].habit_id # Gets habit id from habit name
+
+            for friend in listOfFriends:
+                tempuser_id = friend["user_id"]
+                habitExist = UserHabits.objects.filter(user_id = tempuser_id, habit_id = habit_id) # Filters by friend and habit
+                if habitExist.exists():
+                    listOfFilteredFriends.append(friend) # Adds to filtered friends list if habit is found
+            
+            data = {
+                'list_of_friends': listOfFilteredFriends,
+            }
+
+            return JsonResponse(data, status=status.HTTP_200_OK)
+
+        return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_404_NOT_FOUND)
+
+class getLeaderboard(APIView):
+    lookup_url_kwarg = 'user_id'
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # If they don't have an active session -> create one
+            self.request.session.create() 
+        user_id = request.data.get(self.lookup_url_kwarg)
         
+        
+             

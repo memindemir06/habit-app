@@ -14,6 +14,7 @@ import DailyReminders from "./DailyReminders";
 import ErrorPage from "./ErrorPage";
 import Profile from "./Profile";
 import FriendsPage from "./FriendsPage";
+import LeaderboardPage from "./LeaderboardPage";
 
 function Home() {
   const history = useHistory();
@@ -21,7 +22,7 @@ function Home() {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    fetch("api/activeSession")
+    fetch("api/activeSession") // this gives GET error for urls like profile/userid
       .then((response) => response.json())
       .then((data) => {
         if (data.user_id == null) {
@@ -71,6 +72,13 @@ function Home() {
           path="/friends/:userId"
           render={() => {
             return <FriendsPage leaveAccountCallback={backToLogin} />;
+          }}
+        />
+        <Route 
+          exact
+          path="/leaderboard/:userId"
+          render={() => {
+            return <LeaderboardPage leaveAccountCallback={backToLogin} />;
           }}
         />
       </Switch>

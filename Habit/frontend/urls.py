@@ -9,4 +9,5 @@ urlpatterns = [
     path('<str:userId>', index),
     path('profile/<str:userId>', index),
     path('friends/<str:userId>', index),
+    path('leaderboard/<str:usedId>', index),
 ]

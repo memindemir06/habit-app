@@ -22,11 +22,13 @@ function FriendsPage({ leaveAccountCallback }) {
       })
       .then((data) => {
         if (!data) {
-          console.log("No Data");
+          
+          console.log("");
         } else {
-          console.log(data);
+          // console.log(data);
           setUserId(data.user_id);
-          getFriends(data.user_id);
+          // getFriends(data.user_id);
+          filterFriends(data.user_id, "Smoking") // This is for testing the filter
         }
       });
   }, []);
@@ -62,6 +64,46 @@ function FriendsPage({ leaveAccountCallback }) {
             }
             return 0;
           });
+          setFriendsList(data.list_of_friends);
+        } else {
+          console.log("No Data");
+        }
+      });
+  };
+
+  const filterFriends = (user_id, habit_name) => {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: user_id,
+        habit_name: habit_name,
+      }),
+    };
+    fetch("../api/filterFriends", requestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          console.log("No User ID: ", response);
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data) {
+          console.log(data.list_of_friends);
+          // (Lambda?) Function to sort the list of friends by 1st Name
+          let tempFriendList = data.list_of_friends;
+          tempFriendList = tempFriendList.sort((a, b) => {
+            if (a.first_name < b.first_name) {
+              return -1;
+            } else if (a.first_name > b.first_name) {
+              return 1;
+            }
+            return 0;
+          });
+          console.log(data.list_of_friends)
           setFriendsList(data.list_of_friends);
         } else {
           console.log("No Data");
