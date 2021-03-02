@@ -1,11 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Habit",
-    "\\Habit\\frontend",
-    "\\Habit\\frontend\\src",
-    "\\Habit\\frontend\\src\\components"
+    ""
   ],
-  "SelectedNode": "\\Habit\\frontend\\src\\components\\Menu.js",
+  "SelectedNode": "\\Habit",
   "PreviewInSolutionExplorer": false
 }

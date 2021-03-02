@@ -1,11 +1,17 @@
-import React from "react";
+import React, {useState} from "react";
 import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+  Collapse,
   Grid,
-  Button,
-  TextField,
+  IconButton,
+  Paper,
   Typography,
   Container,
   Box,
+  Link
 } from "@material-ui/core";
 import { palette } from "@material-ui/system";
 import {
@@ -14,6 +20,9 @@ import {
   createMuiTheme,
 } from "@material-ui/core/styles";
 import { orange } from "@material-ui/core/colors";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const theme = createMuiTheme({
   palette: {
@@ -39,15 +48,43 @@ const styles = {
 };
 
 const HabitBlock = ({ habitName, startDate, streak }) => {
+  const [expanded, setExpanded] = useState(false);
+  
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  }
+  
   return (
     <div>
-      <ThemeProvider theme={theme}>
+      {/* <ThemeProvider theme={theme}>
         <Container style={{ backgroundColor: "orange" }}>
-          <Typography variant="h1">{habitName}</Typography>
-          <Typography variant="h2">Start Date: {startDate}</Typography>
-          <Typography variant="h2">Streak: {streak}</Typography>
+
         </Container>
-      </ThemeProvider>
+      </ThemeProvider> */}
+      <Container>
+        <Grid item xs={12}> 
+          <Card> 
+          <CardHeader title={habitName} action={
+            <div> 
+              <IconButton edge="" >
+                  <DeleteIcon />
+              </IconButton >
+              <IconButton onClick={handleExpandClick} >
+                  {expanded ? (<ExpandLessIcon />) : (<ExpandMoreIcon />)}
+              </IconButton>
+            </div>
+          } />
+          <Collapse in={expanded} timeout="auto">
+            <CardContent> 
+              <Typography variant="h4">Start Date: {startDate}</Typography> 
+              <Typography variant="h4">Streak: {streak}</Typography>
+            </CardContent> 
+          </Collapse>
+          </Card>
+        </Grid>
+      </Container>
+
+
     </div>
   );
 };
