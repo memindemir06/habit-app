@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import HabitBlock from "./HabitBlock";
 import LoadingPage from "./LoadingPage";
+import { Button, Typography } from '@material-ui/core';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 function DailyReminders({ leaveAccountCallback }) {
   const params = useParams();
@@ -79,15 +81,20 @@ function DailyReminders({ leaveAccountCallback }) {
   }
 
   return (
-    <div>
-      <h1>{firstName + " " + lastName}</h1>
+    <div>      
+      <Typography variant="h3" align="center">{firstName + " " + lastName}</Typography>
+      <br />
+      <Button variant="contained" color="secondary" endIcon={<AddCircleIcon />} > ADD A HABIT </Button>
       {listOfHabits.map((habit) => {
         return (
-          <HabitBlock
-            habitName={habit.habit_id.habit_name}
-            startDate={habit.start_date}
-            streak={habit.streak}
-          />
+          <div>
+            <HabitBlock
+              habitName={habit.habit_id.habit_name}
+              startDate={habit.start_date}
+              streak={habit.streak}
+            />
+            <br/>
+          </div>
         );
       })}
     </div>
