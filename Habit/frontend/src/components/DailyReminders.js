@@ -9,8 +9,8 @@ function DailyReminders({ leaveAccountCallback }) {
   const params = useParams();
   const history = useHistory();
   const [userId, setUserId] = useState(null);
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
+  const [userFirstName, setUserFirstName] = useState();
+  const [userLastName, setUserLastName] = useState();
   const [listOfHabits, setListOfHabits] = useState(null);
   const [habitId, setHabitId] = useState(null);
 
@@ -29,8 +29,8 @@ function DailyReminders({ leaveAccountCallback }) {
           setUserId(null);
         } else {
           console.log(data);
-          setFirstName(data.first_name);
-          setLastName(data.last_name);
+          setUserFirstName(data.first_name);
+          setUserLastName(data.last_name);
           setUserId(data.user_id);
           getHabits(data.user_id);
         }
@@ -80,12 +80,21 @@ function DailyReminders({ leaveAccountCallback }) {
     );
   }
 
+  const buttonStyle = {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+  };
+
   return (
-    <div>      
-      <Typography variant="h3" align="center">{firstName + " " + lastName}</Typography>
-      <br />
-      <Button variant="contained" color="secondary" endIcon={<AddCircleIcon />} > ADD A HABIT </Button>
-      {listOfHabits.map((habit) => {
+    <div style={buttonStyle}>      
+        <Typography variant="h2" align="center">{userFirstName + " " + userLastName}</Typography>
+        <Typography variant="h3" align="center">HABITS</Typography>
+        <br />
+        <Button variant="contained" color="secondary" endIcon={<AddCircleIcon />} > ADD A HABIT </Button>
+        <br />
+        {listOfHabits.map((habit) => {
         return (
           <div>
             <HabitBlock
@@ -93,7 +102,7 @@ function DailyReminders({ leaveAccountCallback }) {
               startDate={habit.start_date}
               streak={habit.streak}
             />
-            <br/>
+            <br />
           </div>
         );
       })}
