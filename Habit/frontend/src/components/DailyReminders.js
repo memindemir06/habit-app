@@ -30,15 +30,9 @@ function DailyReminders({ leaveAccountCallback }) {
         if (!data) {
           setUserId(null);
         } else {
-<<<<<<< HEAD
-          console.log(data);
-          setUserFirstName(data.first_name);
-          setUserLastName(data.last_name);
-=======
           // console.log(data);
           setFirstName(data.first_name);
           setLastName(data.last_name);
->>>>>>> origin/Backend
           setUserId(data.user_id);
           getHabits(data.user_id);
           getAllHabits();
@@ -153,15 +147,6 @@ function DailyReminders({ leaveAccountCallback }) {
   };
 
   return (
-<<<<<<< HEAD
-    <div style={buttonStyle}>      
-        <Typography variant="h2" align="center">{userFirstName + " " + userLastName}</Typography>
-        <Typography variant="h3" align="center">HABITS</Typography>
-        <br />
-        <Button variant="contained" color="secondary" endIcon={<AddCircleIcon />} > ADD A HABIT </Button>
-        <br />
-        {listOfHabits.map((habit) => {
-=======
     <div>
       <Typography variant="h3" align="center">
         {firstName + " " + lastName}
@@ -178,7 +163,6 @@ function DailyReminders({ leaveAccountCallback }) {
       <br />
       <br />
       {listOfHabits.map((habit) => {
->>>>>>> origin/Backend
         return (
           <div>
             <HabitBlock
