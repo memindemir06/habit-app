@@ -11,8 +11,8 @@ function DailyReminders({ leaveAccountCallback }) {
   let setOfAllHabits = new Set();
 
   const [userId, setUserId] = useState(null);
-  const [userFirstName, setUserFirstName] = useState();
-  const [userLastName, setUserLastName] = useState();
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
   const [listOfHabits, setListOfHabits] = useState(null);
   const [listOfAvailableHabits, setListOfAvailableHabits] = useState([]);
 
@@ -140,10 +140,10 @@ function DailyReminders({ leaveAccountCallback }) {
   }
 
   const buttonStyle = {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   };
 
   return (

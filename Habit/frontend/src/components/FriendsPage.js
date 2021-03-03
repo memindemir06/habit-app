@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
 import FriendBlock from "./FriendBlock";
-import { Button, Typography, TextField } from '@material-ui/core';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { Button, Typography, TextField } from "@material-ui/core";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 function FriendsPage({ leaveAccountCallback }) {
   let params = useParams();
@@ -28,15 +28,14 @@ function FriendsPage({ leaveAccountCallback }) {
       })
       .then((data) => {
         if (!data) {
-          
           console.log("");
         } else {
           // console.log(data);
           setUserId(data.user_id);
           setUserFirstName(data.first_name);
-          setUserLastName(data.last_name)
-          // getFriends(data.user_id);
-          filterFriends(data.user_id, "Smoking") // This is for testing the filter
+          setUserLastName(data.last_name);
+          getFriends(data.user_id);
+          // filterFriends(data.user_id, "Smoking") // This is for testing the filter
         }
       });
   }, []);
@@ -111,7 +110,7 @@ function FriendsPage({ leaveAccountCallback }) {
             }
             return 0;
           });
-          console.log(data.list_of_friends)
+          console.log(data.list_of_friends);
           setFriendsList(data.list_of_friends);
         } else {
           console.log("No Data");
@@ -136,50 +135,69 @@ function FriendsPage({ leaveAccountCallback }) {
     setFriendSearch(event.target.value);
     console.log(event.target.value);
   };
-  
+
   const submitFriendSearch = () => {
     console.log("Search Friend");
     // Use friendSearch variable as friend name
   };
 
   const buttonStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   };
 
   const friendSearchStyle = {
-    display: 'flex',
+    display: "flex",
   };
 
   const noBorder = {
-    marginRight: '10px',
-  }
+    marginRight: "10px",
+  };
 
   return (
-      <div style={buttonStyle}>
-        <Typography variant="h2" align="center">{userFirstName + " " + userLastName}</Typography>
-        <Typography variant="h3" align="center">FRIEND LIST</Typography>
-        <br />
-        <div style={friendSearchStyle}>
-        <TextField style={noBorder} id="filled-basic" label="Type Friend Username" onChange={friendSearchChange} variant="filled"/> 
-        <Button variant="contained" color="secondary" endIcon={<AddCircleIcon />} onClick={submitFriendSearch} disableElevation> ADD A FRIEND </Button>
-        </div>
-        <br />
-        {friendsList.map((friend) => {
+    <div style={buttonStyle}>
+      <Typography variant="h2" align="center">
+        {userFirstName + " " + userLastName}
+      </Typography>
+      <Typography variant="h3" align="center">
+        FRIEND LIST
+      </Typography>
+      <br />
+      <div style={friendSearchStyle}>
+        <TextField
+          style={noBorder}
+          id="filled-basic"
+          label="Type Friend Username"
+          onChange={friendSearchChange}
+          variant="filled"
+        />
+        <Button
+          variant="contained"
+          color="secondary"
+          endIcon={<AddCircleIcon />}
+          onClick={submitFriendSearch}
+          disableElevation
+        >
+          {" "}
+          ADD A FRIEND{" "}
+        </Button>
+      </div>
+      <br />
+      {friendsList.map((friend) => {
         return (
-        <div>
-          <FriendBlock
-            firstName={friend.first_name}
-            lastName={friend.last_name}
-            email={friend.email}
-            user_id={friend.user_id}
-          />
-        <br />
-        </div>
+          <div>
+            <FriendBlock
+              firstName={friend.first_name}
+              lastName={friend.last_name}
+              email={friend.email}
+              user_id={friend.user_id}
+            />
+            <br />
+          </div>
         );
-        })}
+      })}
     </div>
   );
 }
