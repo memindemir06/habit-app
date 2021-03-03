@@ -35,7 +35,7 @@ function FriendsPage({ leaveAccountCallback }) {
           setUserFirstName(data.first_name);
           setUserLastName(data.last_name);
           getFriends(data.user_id);
-          // filterFriends(data.user_id, "Smoking"); // This is for testing the filter
+          // filterFriends(data.user_id, "Smoking") // This is for testing the filter
         }
       });
   }, []);
