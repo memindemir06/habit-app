@@ -86,7 +86,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': '2020_comp10120_x13',
+<<<<<<< HEAD
         #'NAME': 'w89594sa',
+=======
+>>>>>>> origin/Backend
         # 'NAME': 'w89594sa',
         'USER':'w89594sa',
         'PASSWORD':'Sahir000',

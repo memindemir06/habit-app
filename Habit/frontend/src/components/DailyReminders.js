@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import HabitBlock from "./HabitBlock";
 import LoadingPage from "./LoadingPage";
-import { Button, Typography } from '@material-ui/core';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { Button, Typography } from "@material-ui/core";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 function DailyReminders({ leaveAccountCallback }) {
   const params = useParams();
   const history = useHistory();
+  let setOfAllHabits = new Set();
+
   const [userId, setUserId] = useState(null);
   const [userFirstName, setUserFirstName] = useState();
   const [userLastName, setUserLastName] = useState();
   const [listOfHabits, setListOfHabits] = useState(null);
-  const [habitId, setHabitId] = useState(null);
+  const [listOfAvailableHabits, setListOfAvailableHabits] = useState([]);
 
   useEffect(() => {
     fetch("api/userIdValid" + "?user_id=" + params.userId)
@@ -28,11 +30,18 @@ function DailyReminders({ leaveAccountCallback }) {
         if (!data) {
           setUserId(null);
         } else {
+<<<<<<< HEAD
           console.log(data);
           setUserFirstName(data.first_name);
           setUserLastName(data.last_name);
+=======
+          // console.log(data);
+          setFirstName(data.first_name);
+          setLastName(data.last_name);
+>>>>>>> origin/Backend
           setUserId(data.user_id);
           getHabits(data.user_id);
+          getAllHabits();
         }
       });
   }, []);
@@ -57,11 +66,67 @@ function DailyReminders({ leaveAccountCallback }) {
       })
       .then((data) => {
         if (data) {
+          for (let habit in data.list_of_habits) {
+            setOfAllHabits.add(data.list_of_habits[habit].habit_id.habit_id);
+          }
           setListOfHabits(data.list_of_habits);
-          setHabitId(data.list_of_habits[0].habit_id.habit_id);
         } else {
           console.log("No Data");
           setListOfHabits([]);
+        }
+      });
+  };
+
+  const getAllHabits = () => {
+    fetch("api/getAllHabits")
+      .then((response) => {
+        if (!response.ok) {
+          console.log(response);
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data) {
+          // Set .has() method not working -> may be delay in changing state of listOfAllHabits
+          for (let habit in data.list_of_all_habits) {
+            if (setOfAllHabits.has(data.list_of_all_habits[habit].habit_id)) {
+              listOfAvailableHabits.push(data.list_of_all_habits[habit]);
+            }
+          }
+          console.log(listOfAvailableHabits);
+        } else {
+          console.log("No Data");
+        }
+      });
+  };
+
+  const addHabitButtonClicked = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        habit_name: "Gym",
+      }),
+    };
+    fetch("api/addHabit", requestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          console.log("Bad Response: ", response);
+        } else {
+          console.log("Good Response: ", response);
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (!data) {
+          console.log("No Data!");
+        } else {
+          console.log(data);
+          getHabits(userId);
         }
       });
   };
@@ -88,6 +153,7 @@ function DailyReminders({ leaveAccountCallback }) {
   };
 
   return (
+<<<<<<< HEAD
     <div style={buttonStyle}>      
         <Typography variant="h2" align="center">{userFirstName + " " + userLastName}</Typography>
         <Typography variant="h3" align="center">HABITS</Typography>
@@ -95,12 +161,33 @@ function DailyReminders({ leaveAccountCallback }) {
         <Button variant="contained" color="secondary" endIcon={<AddCircleIcon />} > ADD A HABIT </Button>
         <br />
         {listOfHabits.map((habit) => {
+=======
+    <div>
+      <Typography variant="h3" align="center">
+        {firstName + " " + lastName}
+      </Typography>
+      <br />
+      <Button
+        variant="contained"
+        color="secondary"
+        endIcon={<AddCircleIcon />}
+        onClick={addHabitButtonClicked}
+      >
+        ADD A HABIT
+      </Button>
+      <br />
+      <br />
+      {listOfHabits.map((habit) => {
+>>>>>>> origin/Backend
         return (
           <div>
             <HabitBlock
               habitName={habit.habit_id.habit_name}
               startDate={habit.start_date}
               streak={habit.streak}
+              habitId={habit.habit_id.habit_id}
+              userId={userId}
+              getHabits={getHabits}
             />
             <br />
           </div>

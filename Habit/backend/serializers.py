@@ -37,3 +37,9 @@ class FriendsSerializer(serializers.ModelSerializer):
         depth = 1
         fields = ('user_id1', 'user_id2')
 
+class AllHabitsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Habits
+        fields = ('habit_id', 'habit_name')
+
+

@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import generics, status
 from .models import Users, UserHabits, Optional, UserFriends, Habits
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer, UserOptionalSerializer, FriendsSerializer
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer, UserOptionalSerializer, FriendsSerializer, AllHabitsSerializer
 
 
 class index(generics.ListAPIView):
@@ -142,7 +142,6 @@ class getUserOptionals(APIView):
         return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_404_NOT_FOUND)
 
 
-
 class getFriends(APIView):
     serializer_class = FriendsSerializer
     lookup_url_kwarg = 'user_id'
@@ -179,6 +178,7 @@ class getFriends(APIView):
             return JsonResponse(data, status=status.HTTP_200_OK)
 
         return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_404_NOT_FOUND)
+
 
 class filterFriends(APIView):
     serializer_class = FriendsSerializer
@@ -233,6 +233,7 @@ class filterFriends(APIView):
 
         return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_404_NOT_FOUND)
 
+
 class getLeaderboard(APIView):
     lookup_url_kwarg = 'user_id'
     def post(self, request, format=None):
@@ -240,6 +241,74 @@ class getLeaderboard(APIView):
             # If they don't have an active session -> create one
             self.request.session.create() 
         user_id = request.data.get(self.lookup_url_kwarg)
+
+
+class removeHabit(APIView):
+    lookup_url_user_id = 'user_id'
+    lookup_url_habit_id = 'habit_id'
+
+    def patch(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # If they don't have an active session -> create one
+            self.request.session.create() 
         
+        user_id = request.data.get(self.lookup_url_user_id)
+        habit_id = request.data.get(self.lookup_url_habit_id)
         
-             
+        if (user_id != None) and (habit_id != None):
+            habit = UserHabits.objects.filter(user_id = user_id, habit_id = habit_id)
+            
+            if habit.exists():
+                habit[0].delete()
+                return Response({"Good Request": "Habit successfully deleted"}, status.HTTP_200_OK)
+            
+            return Response({"Bad Request": "Wrong User Id and/or Habit Id"}, status.HTTP_400_BAD_REQUEST)
+        
+        return Response({"Bad Request": "User Id and/or Habit Id not found"}, status.HTTP_404_NOT_FOUND)
+
+
+class addHabit(APIView):
+    lookup_url_user_id = 'user_id'
+    # If habit_id can be passed from the Frontend -> use that instead of the habit_name
+    lookup_url_habit_name = 'habit_name'
+
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # If they don't have an active session -> create one
+            self.request.session.create()
+            
+        user_id = request.data.get(self.lookup_url_user_id)
+        habit_name = request.data.get(self.lookup_url_habit_name)
+
+        if (user_id != None) and (habit_name != None):
+            user_list = Users.objects.filter(user_id = user_id)
+            habit_id_list = Habits.objects.filter(habit_name = habit_name)
+
+            if habit_id_list.exists() and user_list.exists():
+                user_instance = user_list[0]
+                habit_id = habit_id_list[0]
+
+                newHabit = UserHabits(user_id = user_instance, habit_id = habit_id)
+                newHabit.save()
+                return Response({"Good Request": {"Habit has been added!"}}, status=status.HTTP_200_OK)
+
+            return Response({"Bad Request": "Wrong User Id and/or Habit Name"}, status.HTTP_400_BAD_REQUEST)
+            
+        return Response({"Bad Request": "User Id and/or Habit Name not found"}, status.HTTP_404_NOT_FOUND)
+
+
+class getAllHabits(APIView):
+    def get(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # If they don't have an active session -> create one
+            self.request.session.create()
+        
+        listOfHabits = Habits.objects.filter()
+        listOfAllHabits = []
+
+        for habit in listOfHabits:
+            listOfAllHabits.append(AllHabitsSerializer(habit).data)
+
+        return JsonResponse({"list_of_all_habits": listOfAllHabits}, status=status.HTTP_200_OK)
+        
+
