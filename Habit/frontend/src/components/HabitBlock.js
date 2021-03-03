@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -11,7 +11,7 @@ import {
   Typography,
   Container,
   Box,
-  Link
+  Link,
 } from "@material-ui/core";
 import { palette } from "@material-ui/system";
 import {
@@ -20,9 +20,9 @@ import {
   createMuiTheme,
 } from "@material-ui/core/styles";
 import { orange } from "@material-ui/core/colors";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import DeleteIcon from '@material-ui/icons/Delete';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const theme = createMuiTheme({
   palette: {
@@ -47,13 +47,50 @@ const styles = {
   },
 };
 
-const HabitBlock = ({ habitName, startDate, streak }) => {
+const HabitBlock = ({
+  habitName,
+  startDate,
+  streak,
+  habitId,
+  userId,
+  getHabits,
+}) => {
   const [expanded, setExpanded] = useState(false);
-  
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
-  }
-  
+  };
+
+  const handleDeleteClicked = () => {
+    const requestOptions = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        habit_id: habitId,
+      }),
+    };
+    fetch("api/removeHabit", requestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          console.log("Bad Response: ", response);
+        } else {
+          console.log("Good Response: ", response);
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (!data) {
+          console.log("No Data!");
+        } else {
+          console.log(habitName);
+          getHabits(userId);
+        }
+      });
+  };
+
   return (
     <div>
       {/* <ThemeProvider theme={theme}>
@@ -62,29 +99,30 @@ const HabitBlock = ({ habitName, startDate, streak }) => {
         </Container>
       </ThemeProvider> */}
       <Container>
-        <Grid item xs={12}> 
-          <Card> 
-          <CardHeader title={habitName} action={
-            <div> 
-              <IconButton edge="" >
-                  <DeleteIcon />
-              </IconButton >
-              <IconButton onClick={handleExpandClick} >
-                  {expanded ? (<ExpandLessIcon />) : (<ExpandMoreIcon />)}
-              </IconButton>
-            </div>
-          } />
-          <Collapse in={expanded} timeout="auto">
-            <CardContent> 
-              <Typography variant="h4">Start Date: {startDate}</Typography> 
-              <Typography variant="h4">Streak: {streak}</Typography>
-            </CardContent> 
-          </Collapse>
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader
+              title={habitName}
+              action={
+                <div>
+                  <IconButton edge="" onClick={handleDeleteClicked}>
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton onClick={handleExpandClick}>
+                    {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  </IconButton>
+                </div>
+              }
+            />
+            <Collapse in={expanded} timeout="auto">
+              <CardContent>
+                <Typography variant="h4">Start Date: {startDate}</Typography>
+                <Typography variant="h4">Streak: {streak}</Typography>
+              </CardContent>
+            </Collapse>
           </Card>
         </Grid>
       </Container>
-
-
     </div>
   );
 };
