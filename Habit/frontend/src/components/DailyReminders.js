@@ -30,9 +30,9 @@ function DailyReminders({ leaveAccountCallback }) {
         if (!data) {
           setUserId(null);
         } else {
-          console.log(data);
-          setUserFirstName(data.first_name);
-          setUserLastName(data.last_name);
+          // console.log(data);
+          setFirstName(data.first_name);
+          setLastName(data.last_name);
           setUserId(data.user_id);
           getHabits(data.user_id);
           getAllHabits();
