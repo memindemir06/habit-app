@@ -7,28 +7,48 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
   
-const FriendBlock = ({ firstName, lastName, email, user_id }) => {
+const FriendBlock = ({ firstName, lastName, email, friendUserId, userId, filterFriends }) => {
     const [expanded, setExpanded] = useState(false);
-    const [showComponent, setShowComponent] = useState(true);
     let history = useHistory();
     const handleExpandClick = () => {
         setExpanded(!expanded);
     }
 
     const handleProfileClick = () => {
-      history.push("/profile/" + user_id);
+      history.push("/profile/" + friendUserId);
     }
     
-    const handleDeleteClick = () => {
-      console.log("Delete" + user_id);
-      removeFriendBlock(); // Call this function when user is deleted in backend
+    const handleDeleteClicked = () => {
+      const requestOptions = {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id1: userId,
+          user_id2: friendUserId,
+        }),
+      };
+      fetch("../api/removeFriend", requestOptions)
+        .then((response) => {
+          if (!response.ok) {
+            console.log("Bad Response: ", response);
+          } else {
+            console.log("Good Response: ", response);
+            return response.json();
+          }
+        })
+        .then((data) => {
+          if (!data) {
+            console.log("No Data!");
+          } else {
+            console.log(data);
+            filterFriends(userId);
+          }
+        });
+  
     }
 
-    const removeFriendBlock = () => {
-      setShowComponent(false);
-    }
-
-  if (showComponent == true) {
     return (
       <div>
           <Container>
@@ -42,10 +62,10 @@ const FriendBlock = ({ firstName, lastName, email, user_id }) => {
                               </IconButton>
                               </Tooltip>
                               <Tooltip title="Delete friend">
-                              <IconButton onClick={handleDeleteClick} >
+                              <IconButton onClick={handleDeleteClicked} >
                                   <DeleteIcon />
                               </IconButton >
-                              </Tooltip>     
+                              </Tooltip> 
                               <IconButton onClick={handleExpandClick} >
                                   {expanded ? (<ExpandLessIcon />) : (<ExpandMoreIcon />)}
                               </IconButton>
@@ -53,10 +73,10 @@ const FriendBlock = ({ firstName, lastName, email, user_id }) => {
                       } />
                       <Collapse in={expanded} timeout="auto">
                           <CardContent>
-                              <Typography variant="h4">Email: {email}</Typography>
-                              <Typography variant="h4">Twitter: twitter.com/twitter</Typography>
-                              <Typography variant="h4">Instagram: instagram.com/instagram</Typography>
-                              <Typography variant="h4">Facebook: facebook.com/facebook</Typography>
+                              <Typography variant="h6">Email: {email}</Typography>
+                              <Typography variant="h6">Twitter: twitter.com/twitter</Typography>
+                              <Typography variant="h6">Instagram: instagram.com/instagram</Typography>
+                              <Typography variant="h6">Facebook: facebook.com/facebook</Typography>
                           </CardContent>
                       </Collapse>
                   </Card>
@@ -64,11 +84,6 @@ const FriendBlock = ({ firstName, lastName, email, user_id }) => {
           </Container>
     </div>
   );
-  }
-  else {
-    return <div></div>;
-  }
- 
 };
 
 export default FriendBlock;

@@ -3,15 +3,11 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardActions,
   Collapse,
   Grid,
   IconButton,
-  Paper,
   Typography,
   Container,
-  Box,
-  Link,
   Tooltip,
 } from "@material-ui/core";
 import { palette } from "@material-ui/system";
@@ -119,8 +115,8 @@ const HabitBlock = ({
             />
             <Collapse in={expanded} timeout="auto">
               <CardContent>
-                <Typography variant="h4">Start Date: {startDate}</Typography>
-                <Typography variant="h4">Streak: {streak}</Typography>
+                <Typography variant="h6">Start Date: {startDate}</Typography>
+                <Typography variant="h6">Streak: {streak}</Typography>
               </CardContent>
             </Collapse>
           </Card>

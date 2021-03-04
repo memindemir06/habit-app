@@ -8,7 +8,8 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 function DailyReminders({ leaveAccountCallback }) {
   const params = useParams();
   const history = useHistory();
-  let setOfAllHabits = new Set();
+
+  const listOfAllHabits = new Set();
 
   const [userId, setUserId] = useState(null);
   const [firstName, setFirstName] = useState();
@@ -35,7 +36,7 @@ function DailyReminders({ leaveAccountCallback }) {
           setLastName(data.last_name);
           setUserId(data.user_id);
           getHabits(data.user_id);
-          getAllHabits();
+          // getAllHabits();
         }
       });
   }, []);
@@ -61,9 +62,10 @@ function DailyReminders({ leaveAccountCallback }) {
       .then((data) => {
         if (data) {
           for (let habit in data.list_of_habits) {
-            setOfAllHabits.add(data.list_of_habits[habit].habit_id.habit_id);
+            listOfAllHabits.add(data.list_of_habits[habit].habit_id.habit_id);
           }
           setListOfHabits(data.list_of_habits);
+          getAllHabits();
         } else {
           console.log("No Data");
           setListOfHabits([]);
@@ -82,12 +84,16 @@ function DailyReminders({ leaveAccountCallback }) {
       })
       .then((data) => {
         if (data) {
-          // Set .has() method not working -> may be delay in changing state of listOfAllHabits
           for (let habit in data.list_of_all_habits) {
-            if (setOfAllHabits.has(data.list_of_all_habits[habit].habit_id)) {
-              listOfAvailableHabits.push(data.list_of_all_habits[habit]);
+            if (
+              !listOfAllHabits.has(
+                data.list_of_all_habits[habit].habit_id
+              )
+            ) {
+              listOfAvailableHabits.push(data.list_of_all_habits[habit].habit_name);
             }
           }
+
           console.log(listOfAvailableHabits);
         } else {
           console.log("No Data");
@@ -146,12 +152,15 @@ function DailyReminders({ leaveAccountCallback }) {
     alignItems: "center",
   };
 
+
   return (
-    <div>
+    <div style={buttonStyle}>
       <Typography variant="h3" align="center">
         {firstName + " " + lastName}
       </Typography>
       <br />
+      {/* Add a Autocomplete Componenent to display all available Habits to choose from when adding a Habit
+        Link - https://material-ui.com/components/autocomplete/ */}
       <Button
         variant="contained"
         color="secondary"

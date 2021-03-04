@@ -23,10 +23,10 @@ function Home() {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    fetch("api/activeSession") // this gives GET error for urls like profile/userid
+    fetch("../api/activeSession") // this gives GET error for urls like profile/userid
       .then((response) => response.json())
-      .then((data) => {
-        if (data.user_id == null) {
+      .then((data) => { 
+        if (data.user_id == null) { 
           setUserId("No Session");
         } else {
           setUserId(data.user_id);
