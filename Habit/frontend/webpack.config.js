@@ -8,6 +8,16 @@ module.exports = {
     filename: "[name].js",
   },
   module: {
+    // rules: [
+    //   {
+    //     test: /\.(png|jpe?g|gif)$/i,
+    //     use: [
+    //       {
+    //         loader: "file-loader",
+    //       },
+    //     ],
+    //   },
+    // ],
     rules: [
       {
         test: /\.js$/,
@@ -18,6 +28,9 @@ module.exports = {
       },
     ],
   },
+  // module: {
+  //   rules: [{ test: /\.txt$/, use: "raw-loader" }],
+  // },
   optimization: {
     minimize: true,
   },

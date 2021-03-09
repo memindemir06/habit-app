@@ -25,8 +25,8 @@ function Home() {
   useEffect(() => {
     fetch("../api/activeSession") // this gives GET error for urls like profile/userid
       .then((response) => response.json())
-      .then((data) => { 
-        if (data.user_id == null) { 
+      .then((data) => {
+        if (data.user_id == null) {
           setUserId("No Session");
         } else {
           setUserId(data.user_id);
@@ -63,19 +63,19 @@ function Home() {
         />
         <Route
           exact
-          path="/profile/:userId" 
+          path="/profile/:userId"
           render={() => {
             return <Profile leaveAccountCallback={backToLogin} />;
           }}
         />
-        <Route 
+        <Route
           exact
           path="/friends/:userId"
           render={() => {
             return <FriendsPage leaveAccountCallback={backToLogin} />;
           }}
         />
-        <Route 
+        <Route
           exact
           path="/leaderboard/:userId"
           render={() => {

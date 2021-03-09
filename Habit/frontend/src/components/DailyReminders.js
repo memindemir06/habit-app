@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useDebugValue } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import HabitBlock from "./HabitBlock";
 import LoadingPage from "./LoadingPage";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Typography, Collapse } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import { Alert } from "@material-ui/lab";
 
 function DailyReminders({ leaveAccountCallback }) {
   const params = useParams();
@@ -17,6 +25,8 @@ function DailyReminders({ leaveAccountCallback }) {
   const [lastName, setLastName] = useState();
   const [listOfHabits, setListOfHabits] = useState(null);
   const [listOfAvailableHabits, setListOfAvailableHabits] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [habitAdded, setHabitAdded] = useState();
 
   useEffect(() => {
     fetch("api/userIdValid" + "?user_id=" + params.userId)
@@ -32,13 +42,10 @@ function DailyReminders({ leaveAccountCallback }) {
         if (!data) {
           setUserId(null);
         } else {
-          // console.log(data);
-          setUserName(data.user_name);
           setFirstName(data.first_name);
           setLastName(data.last_name);
           setUserId(data.user_id);
           getHabits(data.user_id);
-          // getAllHabits();
         }
       });
   }, []);
@@ -66,7 +73,8 @@ function DailyReminders({ leaveAccountCallback }) {
           for (let habit in data.list_of_habits) {
             listOfAllHabits.add(data.list_of_habits[habit].habit_id.habit_id);
           }
-          setListOfHabits(data.list_of_habits);
+          setListOfHabits(data.list_of_habits.reverse());
+          // listOfHabits.reverse();
           getAllHabits();
         } else {
           console.log("No Data");
@@ -76,6 +84,7 @@ function DailyReminders({ leaveAccountCallback }) {
   };
 
   const getAllHabits = () => {
+    listOfAvailableHabits.length = 0;
     fetch("api/getAllHabits")
       .then((response) => {
         if (!response.ok) {
@@ -87,15 +96,12 @@ function DailyReminders({ leaveAccountCallback }) {
       .then((data) => {
         if (data) {
           for (let habit in data.list_of_all_habits) {
-            if (
-              !listOfAllHabits.has(
-                data.list_of_all_habits[habit].habit_id
-              )
-            ) {
-              listOfAvailableHabits.push(data.list_of_all_habits[habit].habit_name);
+            if (!listOfAllHabits.has(data.list_of_all_habits[habit].habit_id)) {
+              listOfAvailableHabits.push(
+                data.list_of_all_habits[habit].habit_name
+              );
             }
           }
-
           console.log(listOfAvailableHabits);
         } else {
           console.log("No Data");
@@ -103,7 +109,7 @@ function DailyReminders({ leaveAccountCallback }) {
       });
   };
 
-  const addHabitButtonClicked = () => {
+  const addHabitButtonClicked = (habitName) => {
     const requestOptions = {
       method: "POST",
       headers: {
@@ -111,7 +117,7 @@ function DailyReminders({ leaveAccountCallback }) {
       },
       body: JSON.stringify({
         user_id: userId,
-        habit_name: "Gym",
+        habit_name: habitName,
       }),
     };
     fetch("api/addHabit", requestOptions)
@@ -125,7 +131,7 @@ function DailyReminders({ leaveAccountCallback }) {
       })
       .then((data) => {
         if (!data) {
-          console.log("No Data!");
+          console.log("No Data: ", data);
         } else {
           console.log(data);
           getHabits(userId);
@@ -147,31 +153,70 @@ function DailyReminders({ leaveAccountCallback }) {
     );
   }
 
-  const buttonStyle = {
+  const reminderStyle = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    border: "1px solid rgba(0,0,0,0.5)",
+    borderRadius: "12px",
+    background: "rgba(0,0,0,0.05)",
   };
 
+  const dialogTitleStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  };
+
+  const handleListItemClick = (value) => {
+    setOpen(false);
+    addHabitButtonClicked(value);
+  };
 
   return (
-    <div style={buttonStyle}>
+    <div style={reminderStyle}>
       <Typography variant="h3" align="center">
         {userName}
       </Typography>
       <br />
-      {/* Add a Autocomplete Componenent to display all available Habits to choose from when adding a Habit
-        Link - https://material-ui.com/components/autocomplete/ */}
       <Button
         variant="contained"
         color="secondary"
         endIcon={<AddCircleIcon />}
-        onClick={addHabitButtonClicked}
+        onClick={() => setOpen(true)}
       >
         ADD A HABIT
       </Button>
-      <br />
+      <Dialog
+        onClose={() => setOpen(false)}
+        aria-labelledby="simple-dialog-title"
+        open={open}
+      >
+        <MuiDialogTitle
+          style={dialogTitleStyle}
+          disableTypography
+          id="simple-dialog-title"
+        >
+          <Typography variant="h6">Select a Habit</Typography>
+          {open ? (
+            <IconButton aria-label="close" onClick={() => setOpen(false)}>
+              <CloseIcon />
+            </IconButton>
+          ) : null}
+        </MuiDialogTitle>
+        <List>
+          {listOfAvailableHabits.map((habit) => (
+            <ListItem
+              button
+              onClick={() => handleListItemClick(habit)}
+              key={habit}
+            >
+              <ListItemText primary={habit} />
+            </ListItem>
+          ))}
+        </List>
+      </Dialog>
       <br />
       {listOfHabits.map((habit) => {
         return (
