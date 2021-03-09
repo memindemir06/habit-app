@@ -2,7 +2,7 @@ import React, { useState, useEffect, useDebugValue } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import HabitBlock from "./HabitBlock";
 import LoadingPage from "./LoadingPage";
-import { Button, Typography, Collapse } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
@@ -11,7 +11,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import { Alert } from "@material-ui/lab";
 
 function DailyReminders({ leaveAccountCallback }) {
   const params = useParams();
@@ -42,6 +41,7 @@ function DailyReminders({ leaveAccountCallback }) {
         if (!data) {
           setUserId(null);
         } else {
+          setUserName(data.user_name);
           setFirstName(data.first_name);
           setLastName(data.last_name);
           setUserId(data.user_id);

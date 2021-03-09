@@ -8,9 +8,24 @@ import {
   TextField,
   Grid,
   Collapse,
+  RadioGroup,
+  Radio,
+  FormControlLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControl,
+  FormLabel,
+  FormGroup,
+  FormHelperText,
+  Checkbox,
+  InputAdornment,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import SearchIcon from "@material-ui/icons/Search";
 
 function FriendsPage({ leaveAccountCallback }) {
   let params = useParams();
@@ -27,6 +42,15 @@ function FriendsPage({ leaveAccountCallback }) {
   const [displayMessageExists, setDisplayMessageExists] = useState(
     "Friend added successfully"
   );
+  const [openFilter, setOpenFilter] = useState(false);
+  let options = [
+    { name: "habit1", checked: false },
+    { name: "habit2", checked: false },
+    { name: "habit3", checked: false },
+    { name: "habit4", checked: false },
+    { name: "habit5", checked: false },
+    { name: "habit6", checked: false },
+  ];
 
   useEffect(() => {
     // Investigate issue with request -> friends/api/userIdValid -> check View
@@ -44,7 +68,7 @@ function FriendsPage({ leaveAccountCallback }) {
           console.log("");
         } else {
           setUserId(data.user_id);
-          setUserName(data.user_name)
+          setUserName(data.user_name);
           setUserFirstName(data.first_name);
           setUserLastName(data.last_name);
           filterFriends(data.user_id); // This is for testing the filter
@@ -176,7 +200,14 @@ function FriendsPage({ leaveAccountCallback }) {
           id="filled-basic"
           label="Type Friend Username"
           onChange={friendSearchChange}
-          variant="filled"
+          variant="outlined"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
         />
         <Button
           variant="contained"
@@ -189,6 +220,65 @@ function FriendsPage({ leaveAccountCallback }) {
           ADD A FRIEND{" "}
         </Button>
       </div>
+      <br />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setOpenFilter(true)}
+        endIcon={<FilterListIcon />}
+      >
+        Filter Friends
+      </Button>
+      <Dialog
+        open={openFilter}
+        onClose={() => setOpenFilter(false)}
+        // scroll={true}
+        fullWidth
+      >
+        <DialogTitle>{"Choose some filters"}</DialogTitle>
+        <DialogContent dividers>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Filter by Habit</FormLabel>
+            <FormGroup>
+              {options.map((option) => {
+                return (
+                  <div>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name={option.name}
+                          checked={option.checked}
+                          // ONCLICK NOT WORKING
+                          onClick={() => {
+                            option.checked = !option.checked;
+                          }}
+                        />
+                      }
+                      label={option.name}
+                    />
+                  </div>
+                );
+              })}
+            </FormGroup>
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            // Needs to be changed
+            onClick={() => setOpenFilter(false)}
+            color="primary"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => setOpenFilter(false)}
+            color="primary"
+            autoFocus
+          >
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
       <br />
       <Grid item xs={12} align="center">
         <Collapse in={friendAlreadyExists}>
