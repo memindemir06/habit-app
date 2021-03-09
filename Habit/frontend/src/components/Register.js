@@ -23,7 +23,6 @@ function Register() {
   // Handles State Changes
   const firstNameChange = (event) => {
     setFirstName(event.target.value);
-    
   };
   const lastNameChange = (event) => {
     setLastName(event.target.value);
@@ -76,7 +75,7 @@ function Register() {
         }
       })
       .then((data) => {
-        history.push("/" + data.user_id); 
+        history.push("/" + data.user_id);
       });
   };
 

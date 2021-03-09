@@ -258,7 +258,7 @@ class addFriend(APIView):
                 
                 if friend1.exists() or friend2.exists():
                     return Response({"Good_Request": "Friend already exists"}, status.HTTP_200_OK)
-
+                
                 user_instance1 = Users.objects.filter(user_id = user_id)
                 user_instance2 = Users.objects.filter(user_id = potentialFriendUserId)
 
