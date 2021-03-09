@@ -16,6 +16,7 @@ function FriendsPage({ leaveAccountCallback }) {
   let params = useParams();
   let history = useHistory();
   const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState();
   const [userFirstName, setUserFirstName] = useState();
   const [userLastName, setUserLastName] = useState();
   const [friendsList, setFriendsList] = useState(null);
@@ -43,6 +44,7 @@ function FriendsPage({ leaveAccountCallback }) {
           console.log("");
         } else {
           setUserId(data.user_id);
+          setUserName(data.user_name)
           setUserFirstName(data.first_name);
           setUserLastName(data.last_name);
           filterFriends(data.user_id); // This is for testing the filter
@@ -74,9 +76,9 @@ function FriendsPage({ leaveAccountCallback }) {
           // (Lambda?) Function to sort the list of friends by 1st Name
           let tempFriendList = data.list_of_friends;
           tempFriendList = tempFriendList.sort((a, b) => {
-            if (a.first_name < b.first_name) {
+            if (a.user_name < b.user_name) {
               return -1;
-            } else if (a.first_name > b.first_name) {
+            } else if (a.user_name > b.user_name) {
               return 1;
             }
             return 0;
@@ -162,7 +164,7 @@ function FriendsPage({ leaveAccountCallback }) {
   return (
     <div style={buttonStyle}>
       <Typography variant="h2" align="center">
-        {userFirstName + " " + userLastName}
+        {userName}
       </Typography>
       <Typography variant="h3" align="center">
         FRIEND LIST
@@ -215,6 +217,7 @@ function FriendsPage({ leaveAccountCallback }) {
         return (
           <div>
             <FriendBlock
+              userName={friend.user_name}
               firstName={friend.first_name}
               lastName={friend.last_name}
               email={friend.email}

@@ -7,7 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
   
-const FriendBlock = ({ firstName, lastName, email, friendUserId, userId, filterFriends }) => {
+const FriendBlock = ({ userName, firstName, lastName, email, friendUserId, userId, filterFriends }) => {
     const [expanded, setExpanded] = useState(false);
     let history = useHistory();
     const handleExpandClick = () => {
@@ -54,7 +54,7 @@ const FriendBlock = ({ firstName, lastName, email, friendUserId, userId, filterF
           <Container>
               <Grid item xs={12}>
                   <Card>
-                      <CardHeader avatar={<Avatar> {firstName[0]} </Avatar>} title={firstName + " " + lastName} action={
+                      <CardHeader avatar={<Avatar> {userName[0]} </Avatar>} title={userName} action={
                           <div>
                               <Tooltip title="View profile">
                               <IconButton onClick={handleProfileClick} >
@@ -73,6 +73,7 @@ const FriendBlock = ({ firstName, lastName, email, friendUserId, userId, filterF
                       } />
                       <Collapse in={expanded} timeout="auto">
                           <CardContent>
+                              <Typography variant="h6">{firstName + " " + lastName}</Typography>
                               <Typography variant="h6">Email: {email}</Typography>
                               <Typography variant="h6">Twitter: twitter.com/twitter</Typography>
                               <Typography variant="h6">Instagram: instagram.com/instagram</Typography>

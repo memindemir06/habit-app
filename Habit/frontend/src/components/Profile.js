@@ -7,6 +7,7 @@ function Profile({ leaveAccountCallback }) {
   const history = useHistory();
 
   const [userId, setUserId] = useState();
+  const [userName, setUserName] = useState(null);
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(null);
@@ -32,6 +33,7 @@ function Profile({ leaveAccountCallback }) {
         if (!data) {
           setUserId(null);
         } else {
+          setUserName(data.user_name);
           setFirstName(data.first_name);
           setLastName(data.last_name);
           setUserId(data.user_id);
@@ -75,11 +77,11 @@ function Profile({ leaveAccountCallback }) {
   if (
     !firstName ||
     !lastName ||
-    !email ||
-    !description ||
-    !facebook ||
-    !instagram ||
-    !twitter
+    !email
+    // !description ||
+    // !facebook ||
+    // !instagram ||
+    // !twitter
   ) {
     return <LoadingPage />;
   }
@@ -87,6 +89,7 @@ function Profile({ leaveAccountCallback }) {
   return (
     <div>
       <h1>Profile Page</h1>
+      <p>{userName}</p>
       <p>{firstName + " " + lastName}</p>
       <p>{email}</p>
       <p>{description}</p>

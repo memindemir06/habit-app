@@ -55,6 +55,7 @@ const HabitBlock = ({
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
+    incrementStreak();
     setExpanded(!expanded);
   };
 
@@ -84,6 +85,35 @@ const HabitBlock = ({
         } else {
           console.log(habitName);
           getHabits(userId);
+        }
+      });
+  };
+
+  const incrementStreak = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        habit_id: habitId,
+      }),
+    };
+    fetch("api/incrementStreak", requestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          console.log("Bad Response: ", response);
+        } else {
+          console.log("Good Response: ", response);
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (!data) {
+          console.log("No Data!");
+        } else {
+          console.log("Data");
         }
       });
   };

@@ -12,6 +12,7 @@ import { Link, useHistory } from "react-router-dom";
 function Register() {
   let history = useHistory();
 
+  const [userName, setUserName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -21,9 +22,11 @@ function Register() {
   const [passwordsMatch, setPasswordsMatch] = useState(true); // For the design
 
   // Handles State Changes
+  const userNameChange = (event) => {
+    setUserName(event.target.value);
+  };
   const firstNameChange = (event) => {
     setFirstName(event.target.value);
-    
   };
   const lastNameChange = (event) => {
     setLastName(event.target.value);
@@ -61,6 +64,7 @@ function Register() {
       body: JSON.stringify({
         first_name: firstName,
         last_name: lastName,
+        user_name: userName,
         email: email,
         password: password,
         dob: dob,
@@ -94,6 +98,14 @@ function Register() {
       </Grid>
       <Grid item xs={12} align="center">
         {/* <form autoComplete="on"> */}
+        <TextField
+          required
+          label="User Name"
+          variant="outlined"
+          margin="normal"
+          onChange={userNameChange}
+        />
+        <br />
         <TextField
           required
           label="First Name"

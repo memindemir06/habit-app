@@ -12,6 +12,7 @@ function DailyReminders({ leaveAccountCallback }) {
   const listOfAllHabits = new Set();
 
   const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
   const [listOfHabits, setListOfHabits] = useState(null);
@@ -32,6 +33,7 @@ function DailyReminders({ leaveAccountCallback }) {
           setUserId(null);
         } else {
           // console.log(data);
+          setUserName(data.user_name);
           setFirstName(data.first_name);
           setLastName(data.last_name);
           setUserId(data.user_id);
@@ -156,7 +158,7 @@ function DailyReminders({ leaveAccountCallback }) {
   return (
     <div style={buttonStyle}>
       <Typography variant="h3" align="center">
-        {firstName + " " + lastName}
+        {userName}
       </Typography>
       <br />
       {/* Add a Autocomplete Componenent to display all available Habits to choose from when adding a Habit

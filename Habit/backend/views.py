@@ -21,12 +21,13 @@ class Register(APIView):
             
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+            user_name = serializer.data.get('user_name')
             first_name = serializer.data.get('first_name')
             last_name = serializer.data.get('last_name')
             email = serializer.data.get('email')
             password = serializer.data.get('password')
             dob = serializer.data.get('dob')
-            user = Users(first_name=first_name, last_name=last_name, email=email, password=password, dob=dob)
+            user = Users(user_name=user_name ,first_name=first_name, last_name=last_name, email=email, password=password, dob=dob)
             user.save()
 
             self.request.session['user_id'] = user.user_id
@@ -248,7 +249,7 @@ class addFriend(APIView):
         user_name = request.data.get(self.lookup_url_user_name)
         
         if user_id != None and user_name != None:
-            potentialFriend = Users.objects.filter(first_name=user_name)
+            potentialFriend = Users.objects.filter(user_name=user_name)
             
             if potentialFriend.exists():
                 #Add friend
@@ -349,4 +350,26 @@ class getAllHabits(APIView):
 
         return JsonResponse({"list_of_all_habits": listOfAllHabits}, status=status.HTTP_200_OK)
         
+class incrementStreak(APIView):
+    lookup_url_user_id = 'user_id'
+    lookup_url_habit_id = 'habit_id'
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # If they don't have an active session -> create one
+            self.request.session.create()
+            
+        user_id = request.data.get(self.lookup_url_user_id)
+        habit_id = request.data.get(self.lookup_url_habit_id)
+        
+        if (user_id != None) and (habit_id != None):
+            habit = UserHabits.objects.filter(user_id = user_id, habit_id = habit_id)
+            if habit.exists():
+                streak = habit[0].streak + 1
+                habit.update(streak=streak)
+
+                return Response({"Good Request": {"Streak incremented"}}, status=status.HTTP_200_OK)
+            return Response({"Bad Request": "Habit does not exist!"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"Bad Request": "Habit does not exist!"}, status=status.HTTP_400_BAD_REQUEST)
+
 

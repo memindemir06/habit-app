@@ -5,19 +5,19 @@ from .models import Users, UserHabits, Optional, UserFriends, Habits
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ('user_id', 'first_name', 'last_name', 'dob', 'email')
+        fields = ('user_id', 'user_name', 'first_name', 'last_name', 'dob', 'email')
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ('user_id', 'first_name', 'last_name', 'email', 'password', 'dob')
+        fields = ('user_id', 'user_name', 'first_name', 'last_name', 'email', 'password', 'dob')
         
         
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ('user_id', 'first_name', 'last_name', 'email', 'password', 'dob')
+        fields = ('user_id', 'user_name', 'email', 'password')
 
 
 class UserHabitsSerializer(serializers.ModelSerializer):

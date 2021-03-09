@@ -18,6 +18,7 @@ def generate_unique_code():
 
 class Users(models.Model):
     user_id = models.CharField(max_length=6, default=generate_unique_code, unique=True, primary_key=True)
+    user_name = models.CharField(max_length=20, default="Test")
     first_name = models.CharField(max_length=15)
     last_name = models.CharField(max_length=15)
     email = models.EmailField(max_length=254)
