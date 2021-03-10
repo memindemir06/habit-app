@@ -55,12 +55,6 @@ const HabitBlock = ({
   getHabits,
 }) => {
   const [expanded, setExpanded] = useState(false);
-<<<<<<< HEAD
-  let i = 0;
-
-  const handleExpandClick = () => {
-    handleHabitStatus();
-=======
   const [streakClicked, setStreakClicked] = useState(false);
 
   const handleStreakClicked = (event) => {
@@ -70,7 +64,6 @@ const HabitBlock = ({
 
   const handleExpandClick = () => {
 
->>>>>>> Frontend
     setExpanded(!expanded);
   };
 
