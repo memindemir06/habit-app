@@ -48,16 +48,20 @@ const HabitBlock = ({
   habitName,
   startDate,
   streak,
+  completed,
   habitId,
   userId,
   getHabits,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  let i = 0;
 
   const handleExpandClick = () => {
-    incrementStreak();
+    handleHabitStatus();
     setExpanded(!expanded);
   };
+
+  // setInterval(handleExpandClick, 1000);
 
   const handleDeleteClicked = () => {
     const requestOptions = {
@@ -89,18 +93,20 @@ const HabitBlock = ({
       });
   };
 
-  const incrementStreak = () => {
+  const handleHabitStatus = () => {
     const requestOptions = {
-      method: "POST",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         user_id: userId,
         habit_id: habitId,
+        // purpose = increment / decrement / reset
+        purpose: "reset",
       }),
     };
-    fetch("api/incrementStreak", requestOptions)
+    fetch("api/handleCompleted", requestOptions)
       .then((response) => {
         if (!response.ok) {
           console.log("Bad Response: ", response);
@@ -113,7 +119,7 @@ const HabitBlock = ({
         if (!data) {
           console.log("No Data!");
         } else {
-          console.log("Data");
+          getHabits(userId);
         }
       });
   };
@@ -147,6 +153,9 @@ const HabitBlock = ({
               <CardContent>
                 <Typography variant="h6">Start Date: {startDate}</Typography>
                 <Typography variant="h6">Streak: {streak}</Typography>
+                <Typography variant="h6">
+                  Completed: {completed ? "True" : "False"}
+                </Typography>
               </CardContent>
             </Collapse>
           </Card>

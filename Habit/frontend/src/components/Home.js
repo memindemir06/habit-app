@@ -15,6 +15,7 @@ import ErrorPage from "./ErrorPage";
 import Profile from "./Profile";
 import FriendsPage from "./FriendsPage";
 import LeaderboardPage from "./LeaderboardPage";
+import InspirationalPage from "./InspirationalPage";
 import MenuTest from "./Menu";
 
 function Home() {
@@ -82,6 +83,13 @@ function Home() {
             return <LeaderboardPage leaveAccountCallback={backToLogin} />;
           }}
         />
+        <Route
+          exact
+          path="/inspire/:userId"
+          render={() => {
+            return <InspirationalPage leaveAccountCallback={backToLogin} />;
+          }}
+        /> 
       </Switch>
     </Router>
   );

@@ -52,6 +52,13 @@ function FriendsPage({ leaveAccountCallback }) {
     { name: "habit6", checked: false },
   ];
 
+  const [checkedHabits, setCheckedHabits] = useState({
+    habit1: true,
+    habit2: false,
+    habit3: false,
+    habit4: false,
+  });
+
   useEffect(() => {
     // Investigate issue with request -> friends/api/userIdValid -> check View
     fetch("../api/userIdValid" + "?user_id=" + params.userId)
@@ -185,6 +192,11 @@ function FriendsPage({ leaveAccountCallback }) {
     marginRight: "10px",
   };
 
+  const handleHabitCheck = (event) => {
+    console.log("check change");
+    setCheckedHabits({ ...state, [event.target.name]: event.target.checked });
+  };
+
   return (
     <div style={buttonStyle}>
       <Typography variant="h2" align="center">
@@ -239,7 +251,28 @@ function FriendsPage({ leaveAccountCallback }) {
         <DialogContent dividers>
           <FormControl component="fieldset">
             <FormLabel component="legend">Filter by Habit</FormLabel>
-            <FormGroup>
+            <FormGroup row>
+              {() => {
+                for (let habit in checkedHabits) {
+                  console.log(habit);
+                  console.log(checkedHabits[habit]);
+                  return (
+                    <FormControlLabel
+                      label={habit}
+                      control={
+                        <Checkbox
+                          checked={checkedHabits[habit]}
+                          onChange={handleHabitCheck}
+                          name={habit}
+                          color="primary"
+                        />
+                      }
+                    />
+                  );
+                }
+              }}
+            </FormGroup>
+            {/* <FormGroup>
               {options.map((option) => {
                 return (
                   <div>
@@ -249,9 +282,11 @@ function FriendsPage({ leaveAccountCallback }) {
                           name={option.name}
                           checked={option.checked}
                           // ONCLICK NOT WORKING
-                          onClick={() => {
+                          onClick={() => { 
                             option.checked = !option.checked;
+                            console.log("clicked");
                           }}
+                          onChange={() => console.log("onChange")}
                         />
                       }
                       label={option.name}
@@ -259,7 +294,7 @@ function FriendsPage({ leaveAccountCallback }) {
                   </div>
                 );
               })}
-            </FormGroup>
+            </FormGroup> */}
           </FormControl>
         </DialogContent>
         <DialogActions>

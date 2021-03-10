@@ -47,6 +47,7 @@ class UserHabits(models.Model):
     habit_id = models.ForeignKey(Habits, on_delete=models.CASCADE)
     streak = models.IntegerField(default=0)
     start_date = models.DateTimeField(auto_now_add=True)
+    completed = models.BooleanField(default=False)
 
 
 class UserFriends(models.Model):

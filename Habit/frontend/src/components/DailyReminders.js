@@ -222,10 +222,11 @@ function DailyReminders({ leaveAccountCallback }) {
         return (
           <div>
             <HabitBlock
+              habitId={habit.habit_id.habit_id}
               habitName={habit.habit_id.habit_name}
               startDate={habit.start_date}
               streak={habit.streak}
-              habitId={habit.habit_id.habit_id}
+              completed={habit.completed}
               userId={userId}
               getHabits={getHabits}
             />

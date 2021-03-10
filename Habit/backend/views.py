@@ -172,7 +172,8 @@ class filterFriends(APIView):
                     friendPair = FriendsSerializer(listOfFriends2[i]).data
                     friendPair = friendPair.pop('user_id1')
                     listOfFriends.append(friendPair)
-            if habit_name == "No Filter":        
+
+            if habit_name == "No Filter":         
                 data = {
                     'list_of_friends': listOfFriends,
                 }
@@ -349,27 +350,43 @@ class getAllHabits(APIView):
             listOfAllHabits.append(AllHabitsSerializer(habit).data)
 
         return JsonResponse({"list_of_all_habits": listOfAllHabits}, status=status.HTTP_200_OK)
-        
-class incrementStreak(APIView):
+
+
+class HandleCompleted(APIView):
+    serializer_class = UserHabitsSerializer
     lookup_url_user_id = 'user_id'
     lookup_url_habit_id = 'habit_id'
-    def post(self, request, format=None):
+    lookup_url_kwarg_purpose = 'purpose'
+
+    def patch(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             # If they don't have an active session -> create one
             self.request.session.create()
             
         user_id = request.data.get(self.lookup_url_user_id)
         habit_id = request.data.get(self.lookup_url_habit_id)
+        purpose = request.data.get(self.lookup_url_kwarg_purpose)
         
-        if (user_id != None) and (habit_id != None):
+        if (user_id != None) and (habit_id != None) and (purpose != None):
             habit = UserHabits.objects.filter(user_id = user_id, habit_id = habit_id)
+
             if habit.exists():
-                streak = habit[0].streak + 1
-                habit.update(streak=streak)
+                if purpose == "increment":
+                    streak = habit[0].streak + 1
+                    habit.update(streak=streak, completed=True)
+                    return Response({"Good Request": "Streak Incremented!"}, status=status.HTTP_200_OK)
+                elif purpose == "decrement":
+                    streak = habit[0].streak - 1
+                    habit.update(streak=streak, completed=False)
+                    return Response({"Good Request": "Streak Decremented!"}, status=status.HTTP_200_OK)
+                # Reached end of day && completed=False -> Reset 
+                elif purpose == "reset": 
+                    streak = 0
+                    habit.update(streak=streak, completed=False)
+                    return Response({"Good Request": "Streak Reset!"}, status=status.HTTP_200_OK)
+                
+                return Response({"Bad Request": "Habit does not exist!"}, status=status.HTTP_400_BAD_REQUEST)
 
-                return Response({"Good Request": {"Streak incremented"}}, status=status.HTTP_200_OK)
-            return Response({"Bad Request": "Habit does not exist!"}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response({"Bad Request": "Habit does not exist!"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"Bad Request": "User Id and/or Habit Id does not exist!"}, status=status.HTTP_400_BAD_REQUEST)    
 
 

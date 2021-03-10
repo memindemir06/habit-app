@@ -24,7 +24,7 @@ class UserHabitsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserHabits
         depth = 1 # To get foreign key data
-        fields = ('user_id', 'habit_id', 'streak', 'start_date') # Got rid of user_id, dont need it
+        fields = ('user_id', 'habit_id', 'streak', 'start_date', 'completed') # Got rid of user_id, dont need it
         
 class UserOptionalSerializer(serializers.ModelSerializer):
     class Meta:
