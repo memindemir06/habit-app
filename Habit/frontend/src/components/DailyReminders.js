@@ -243,23 +243,6 @@ function DailyReminders({ leaveAccountCallback }) {
       >
       <TabPanel value={value} index={0}>
       {listOfHabits.map((habit) => {
-<<<<<<< HEAD
-        return (
-          <div>
-            <HabitBlock
-              habitId={habit.habit_id.habit_id}
-              habitName={habit.habit_id.habit_name}
-              startDate={habit.start_date}
-              streak={habit.streak}
-              completed={habit.completed}
-              userId={userId}
-              getHabits={getHabits}
-            />
-            <br />
-          </div>
-        );
-      })}
-=======
           return (
             <div>
               <HabitBlock
@@ -313,7 +296,6 @@ function DailyReminders({ leaveAccountCallback }) {
         </Dialog>
       </div>
     </div>
->>>>>>> Frontend
     </div>
   );
 }
