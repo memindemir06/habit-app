@@ -17,6 +17,7 @@ import FriendsPage from "./FriendsPage";
 import LeaderboardPage from "./LeaderboardPage";
 import InspirationalPage from "./InspirationalPage";
 import MenuTest from "./Menu";
+import AppBar from "./AppBar";
 
 function Home() {
   const history = useHistory();
@@ -41,7 +42,9 @@ function Home() {
 
   return (
     <Router>
+    <AppBar />
       <Switch>
+        {/* <Route path="/" component={AppBar} /> */}
         <Route exact path="/ErrorPage" component={ErrorPage} />
         <Route
           exact

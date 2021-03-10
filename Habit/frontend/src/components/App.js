@@ -1,10 +1,13 @@
 import React from "react";
 import Home from "./Home";
+import AppBar from "./AppBar";
 
 function App() {
   return (
-    <div className="center">
-      <Home />
+    <div className="main">
+        {/* <AppBar /> */}
+
+        <Home />
     </div>
   );
 }

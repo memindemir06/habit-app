@@ -3,6 +3,7 @@ import {
   Card,
   CardHeader,
   CardContent,
+  Checkbox,
   Collapse,
   Grid,
   IconButton,
@@ -54,10 +55,22 @@ const HabitBlock = ({
   getHabits,
 }) => {
   const [expanded, setExpanded] = useState(false);
+<<<<<<< HEAD
   let i = 0;
 
   const handleExpandClick = () => {
     handleHabitStatus();
+=======
+  const [streakClicked, setStreakClicked] = useState(false);
+
+  const handleStreakClicked = (event) => {
+    // incrementStreak();
+    setStreakClicked(!streakClicked);
+  }; 
+
+  const handleExpandClick = () => {
+
+>>>>>>> Frontend
     setExpanded(!expanded);
   };
 
@@ -137,7 +150,12 @@ const HabitBlock = ({
             <CardHeader
               title={habitName}
               action={
-                <div>
+              <div>
+                  <Tooltip title="Update streak">
+                    <Checkbox onChange={handleStreakClicked}>
+                        <DeleteIcon />
+                    </Checkbox>
+                  </Tooltip>
                   <Tooltip title="Delete habit">
                     <IconButton onClick={handleDeleteClicked}>
                       <DeleteIcon />
