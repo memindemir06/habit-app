@@ -12,6 +12,7 @@ import {
   Container,
   Box,
   Icon,
+  Dialog,
 } from "@material-ui/core";
 import { palette } from "@material-ui/system";
 import {

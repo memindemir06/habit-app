@@ -2,7 +2,8 @@ import React, { useState, useEffect, useDebugValue } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import HabitBlock from "./HabitBlock";
 import LoadingPage from "./LoadingPage";
-import { Button, Typography } from "@material-ui/core";
+import PropTypes from "prop-types";
+import { Button, Box, Typography, Tab, Tabs, AppBar } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
@@ -11,6 +12,33 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import SwipeableViews from 'react-swipeable-views';
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
 
 function DailyReminders({ leaveAccountCallback }) {
   const params = useParams();
@@ -26,6 +54,7 @@ function DailyReminders({ leaveAccountCallback }) {
   const [listOfAvailableHabits, setListOfAvailableHabits] = useState([]);
   const [open, setOpen] = useState(false);
   const [habitAdded, setHabitAdded] = useState();
+  const [value, setValue] = useState(0);
 
   useEffect(() => {
     fetch("api/userIdValid" + "?user_id=" + params.userId)
@@ -158,9 +187,6 @@ function DailyReminders({ leaveAccountCallback }) {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    border: "1px solid rgba(0,0,0,0.5)",
-    borderRadius: "12px",
-    background: "rgba(0,0,0,0.05)",
   };
 
   const dialogTitleStyle = {
@@ -169,70 +195,107 @@ function DailyReminders({ leaveAccountCallback }) {
     alignItems: "center",
   };
 
+  const mainStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }
+
   const handleListItemClick = (value) => {
     setOpen(false);
     addHabitButtonClicked(value);
   };
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
+  
+
   return (
-    <div style={reminderStyle}>
-      <Typography variant="h3" align="center">
-        {userName}
-      </Typography>
-      <br />
-      <Button
-        variant="contained"
-        color="secondary"
-        endIcon={<AddCircleIcon />}
-        onClick={() => setOpen(true)}
-      >
-        ADD A HABIT
-      </Button>
-      <Dialog
-        onClose={() => setOpen(false)}
-        aria-labelledby="simple-dialog-title"
-        open={open}
-      >
-        <MuiDialogTitle
-          style={dialogTitleStyle}
-          disableTypography
-          id="simple-dialog-title"
+    <div>
+      <Typography variant="h3" align="left">
+          {userName}
+        </Typography>
+        <br />
+        
+      <AppBar position="static">
+        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+          <Tab label="Pending"  />
+          <Tab label="Completed"  />
+          <Button
+          variant="contained"
+          color="secondary"
+          endIcon={<AddCircleIcon />}
+          onClick={() => setOpen(true)}
         >
-          <Typography variant="h6">Select a Habit</Typography>
-          {open ? (
-            <IconButton aria-label="close" onClick={() => setOpen(false)}>
-              <CloseIcon />
-            </IconButton>
-          ) : null}
-        </MuiDialogTitle>
-        <List>
-          {listOfAvailableHabits.map((habit) => (
-            <ListItem
-              button
-              onClick={() => handleListItemClick(habit)}
-              key={habit}
-            >
-              <ListItemText primary={habit} />
-            </ListItem>
-          ))}
-        </List>
-      </Dialog>
-      <br />
+          ADD A HABIT
+        </Button>
+        </Tabs>
+        
+      </AppBar>
+      <SwipeableViews
+        index={value}
+        onChangeIndex={handleChangeIndex}
+      >
+      <TabPanel value={value} index={0}>
       {listOfHabits.map((habit) => {
-        return (
-          <div>
-            <HabitBlock
-              habitName={habit.habit_id.habit_name}
-              startDate={habit.start_date}
-              streak={habit.streak}
-              habitId={habit.habit_id.habit_id}
-              userId={userId}
-              getHabits={getHabits}
-            />
-            <br />
-          </div>
-        );
-      })}
+          return (
+            <div>
+              <HabitBlock
+                habitName={habit.habit_id.habit_name}
+                startDate={habit.start_date}
+                streak={habit.streak}
+                habitId={habit.habit_id.habit_id}
+                userId={userId}
+                getHabits={getHabits}
+              />
+              <br />
+            </div>
+          );
+        })}
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        Item Two
+      </TabPanel>
+      </SwipeableViews>
+    
+    <div style={mainStyle}>
+      <div style={reminderStyle}>        
+        <Dialog
+          onClose={() => setOpen(false)}
+          aria-labelledby="simple-dialog-title"
+          open={open}
+        >
+          <MuiDialogTitle
+            style={dialogTitleStyle}
+            disableTypography
+            id="simple-dialog-title"
+          >
+            <Typography variant="h6">Select a Habit</Typography>
+            {open ? (
+              <IconButton aria-label="close" onClick={() => setOpen(false)}>
+                <CloseIcon />
+              </IconButton>
+            ) : null}
+          </MuiDialogTitle>
+          <List>
+            {listOfAvailableHabits.map((habit) => (
+              <ListItem
+                button
+                onClick={() => handleListItemClick(habit)}
+                key={habit}
+              >
+                <ListItemText primary={habit} />
+              </ListItem>
+            ))}
+          </List>
+        </Dialog>
+      </div>
+    </div>
     </div>
   );
 }
