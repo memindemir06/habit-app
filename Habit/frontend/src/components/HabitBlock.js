@@ -55,19 +55,20 @@ const HabitBlock = ({
   getHabits,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [streakClicked, setStreakClicked] = useState(false);
+  const [streakClicked, setStreakClicked] = useState(completed);
 
   const handleStreakClicked = (event) => {
-    // incrementStreak();
     setStreakClicked(!streakClicked);
-  }; 
-
-  const handleExpandClick = () => {
-
-    setExpanded(!expanded);
+    if (completed) {
+      handleHabitStatus("decrement");
+    } else {
+      handleHabitStatus("increment");
+    }
   };
 
-  // setInterval(handleExpandClick, 1000);
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
   const handleDeleteClicked = () => {
     const requestOptions = {
@@ -99,7 +100,7 @@ const HabitBlock = ({
       });
   };
 
-  const handleHabitStatus = () => {
+  const handleHabitStatus = (purpose) => {
     const requestOptions = {
       method: "PATCH",
       headers: {
@@ -109,7 +110,7 @@ const HabitBlock = ({
         user_id: userId,
         habit_id: habitId,
         // purpose = increment / decrement / reset
-        purpose: "reset",
+        purpose: purpose,
       }),
     };
     fetch("api/handleCompleted", requestOptions)
@@ -132,21 +133,19 @@ const HabitBlock = ({
 
   return (
     <div>
-      {/* <ThemeProvider theme={theme}>
-        <Container style={{ backgroundColor: "orange" }}>
-
-        </Container>
-      </ThemeProvider> */}
       <Container>
         <Grid item xs={12}>
           <Card>
             <CardHeader
               title={habitName}
               action={
-              <div>
+                <div>
                   <Tooltip title="Update streak">
-                    <Checkbox onChange={handleStreakClicked}>
-                        <DeleteIcon />
+                    <Checkbox
+                      onChange={handleStreakClicked}
+                      checked={streakClicked}
+                    >
+                      <DeleteIcon />
                     </Checkbox>
                   </Tooltip>
                   <Tooltip title="Delete habit">
