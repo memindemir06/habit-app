@@ -379,11 +379,6 @@ class HandleCompleted(APIView):
                     streak = habit[0].streak - 1
                     habit.update(streak=streak, completed=False)
                     return Response({"Good Request": "Streak Decremented!"}, status=status.HTTP_200_OK)
-                # Reached end of day && completed=False -> Reset 
-                elif purpose == "reset": 
-                    streak = 0
-                    habit.update(streak=streak, completed=False)
-                    return Response({"Good Request": "Streak Reset!"}, status=status.HTTP_200_OK)
                 
                 return Response({"Bad Request": "Habit does not exist!"}, status=status.HTTP_400_BAD_REQUEST)
 
