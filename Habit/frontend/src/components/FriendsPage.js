@@ -44,19 +44,21 @@ function FriendsPage({ leaveAccountCallback }) {
   );
   const [openFilter, setOpenFilter] = useState(false);
   let options = [
-    { name: "habit1", checked: false },
-    { name: "habit2", checked: false },
-    { name: "habit3", checked: false },
-    { name: "habit4", checked: false },
-    { name: "habit5", checked: false },
-    { name: "habit6", checked: false },
+    { name: "Drinking", checked: false },
+    { name: "Smoking", checked: false },
+    { name: "Jogging", checked: false },
+    { name: "Programming", checked: false },
+    { name: "Eating Healthily", checked: false },
+    { name: "Drugs", checked: false },
   ];
 
   const [checkedHabits, setCheckedHabits] = useState({
-    habit1: true,
-    habit2: false,
-    habit3: false,
-    habit4: false,
+    "Drinking": true,
+    "Smoking": true,
+    "Jogging": false,
+    "Programming": false,
+    "Eating Healthily": false,
+    "Drugs": false,
   });
 
   useEffect(() => {
@@ -253,15 +255,16 @@ function FriendsPage({ leaveAccountCallback }) {
             <FormLabel component="legend">Filter by Habit</FormLabel>
             <FormGroup row>
               {() => {
-                for (let habit in checkedHabits) {
+                console.log("Starting iteration");
+                for (let habit in options) {
                   console.log(habit);
-                  console.log(checkedHabits[habit]);
+                  console.log(options[habit]);
                   return (
                     <FormControlLabel
                       label={habit}
                       control={
                         <Checkbox
-                          checked={checkedHabits[habit]}
+                          checked={options[habit]}
                           onChange={handleHabitCheck}
                           name={habit}
                           color="primary"

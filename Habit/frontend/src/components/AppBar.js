@@ -13,6 +13,7 @@ import { MenuList, MenuItem } from '@material-ui/core';
 import { Link } from "react-router-dom";
 import MyAccountIcon from "@material-ui/icons/AccountCircleRounded";
 import DailyRemindersIcon from "@material-ui/icons/CalendarTodayRounded";
+import MyFriendsIcon from '@material-ui/icons/PeopleAltRounded';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,23 +50,16 @@ function AppBar() {
           <Typography align="center" variant="h6" className={classes.title}>
             HAB!TS
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button component={Link} to="/" color="inherit">Login</Button>
         </Toolbar>
       </AppBar2>
         <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
-            {/* <div>
-            <MenuList>
-                <MenuItem> */}
-                    <Button component={Link} to="/profile/FZPIGF" startIcon={<MyAccountIcon />}> My Account </Button>    
-                {/* </MenuItem>
-                <MenuItem> */}
-                    <Button component={Link} to="/FZPIGF" startIcon={<DailyRemindersIcon />}> Daily Reminders </Button>
-                {/* </MenuItem>
-              </MenuList>
-            </div> */}
+            <Button onClick={handleClose} component={Link} to="/profile/FZPIGF" startIcon={<MyAccountIcon />}> My Account </Button>    
+            <Button onClick={handleClose} component={Link} to="/FZPIGF" startIcon={<DailyRemindersIcon />}> Daily Reminders </Button>
+            <Button onClick={handleClose} component={Link} to="/friends/FZPIGF" startIcon={<MyFriendsIcon />}> My Friends </Button>
         </Dialog>
     </div>
   );

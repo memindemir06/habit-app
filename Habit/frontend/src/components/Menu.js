@@ -24,6 +24,7 @@ import { orange } from "@material-ui/core/colors";
 import MyAccountIcon from "@material-ui/icons/AccountCircleRounded";
 import MenuIcon from "@material-ui/icons/Menu";
 import DailyRemindersIcon from "@material-ui/icons/CalendarTodayRounded";
+import MyFriendsIcon from '@material-ui/icons/PeopleAltRounded';
 
 function MenuTest() {
 
@@ -39,7 +40,7 @@ function MenuTest() {
 
   return (
       <div>
-          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}> <MenuIcon /> </Button>
+        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}> <MenuIcon /> </Button>
         <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
             <MenuList onClose={handleClose}>
                 <MenuItem onClick={handleClose}>
