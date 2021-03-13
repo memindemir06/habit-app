@@ -53,12 +53,12 @@ function FriendsPage({ leaveAccountCallback }) {
   ];
 
   const [checkedHabits, setCheckedHabits] = useState({
-    "Drinking": true,
-    "Smoking": true,
-    "Jogging": false,
-    "Programming": false,
+    Drinking: true,
+    Smoking: true,
+    Jogging: false,
+    Programming: false,
     "Eating Healthily": false,
-    "Drugs": false,
+    Drugs: false,
   });
 
   useEffect(() => {

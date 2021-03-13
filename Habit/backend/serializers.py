@@ -29,7 +29,8 @@ class UserHabitsSerializer(serializers.ModelSerializer):
 class UserOptionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Optional
-        fields = ('phone_number', 'description', 'facebook', 'instagram', 'twitter')
+        depth = 1
+        fields = ('user_id', 'phone_number', 'description', 'facebook', 'instagram', 'twitter')
         
 class FriendsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,5 +42,4 @@ class AllHabitsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habits
         fields = ('habit_id', 'habit_name')
-
 

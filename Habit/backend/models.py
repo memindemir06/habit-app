@@ -18,9 +18,9 @@ def generate_unique_code():
 
 class Users(models.Model):
     user_id = models.CharField(max_length=6, default=generate_unique_code, unique=True, primary_key=True)
-    user_name = models.CharField(max_length=20, default="Test")
-    first_name = models.CharField(max_length=15)
-    last_name = models.CharField(max_length=15)
+    user_name = models.CharField(max_length=25, default="Test")
+    first_name = models.CharField(max_length=25)
+    last_name = models.CharField(max_length=25)
     email = models.EmailField(max_length=254)
     password = models.CharField(max_length=30, default="")
     dob = models.CharField(max_length=20)
@@ -31,9 +31,9 @@ class Optional(models.Model):
     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=15, null=True)
     description = models.CharField(max_length=200, null=True)
-    facebook = models.CharField(max_length=15, null=True) 
-    instagram = models.CharField(max_length=15, null=True)
-    twitter = models.CharField(max_length=15, null=True)
+    facebook = models.CharField(max_length=25, null=True) 
+    instagram = models.CharField(max_length=25, null=True)
+    twitter = models.CharField(max_length=25, null=True)
     # location = models.CharField(max_length=20, null=True)
 
 

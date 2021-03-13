@@ -46,7 +46,7 @@ function AppBar() {
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={handleClickOpen}>
             <MenuIcon />
-          </IconButton>
+          </IconButton> 
           <Typography align="center" variant="h6" className={classes.title}>
             HAB!TS
           </Typography>

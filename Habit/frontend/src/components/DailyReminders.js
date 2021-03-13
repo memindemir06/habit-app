@@ -221,7 +221,7 @@ function DailyReminders({ leaveAccountCallback }) {
 
   return (
     <div>
-      <Typography variant="h3" align="left">
+      <Typography variant="h3" align="center">
         {userName}
       </Typography>
       <br />

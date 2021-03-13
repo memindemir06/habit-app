@@ -42,7 +42,8 @@ function Home() {
 
   return (
     <Router>
-    <AppBar />
+      <AppBar />
+      <br />
       <Switch>
         {/* <Route path="/" component={AppBar} /> */}
         <Route exact path="/ErrorPage" component={ErrorPage} />
@@ -92,7 +93,7 @@ function Home() {
           render={() => {
             return <InspirationalPage leaveAccountCallback={backToLogin} />;
           }}
-        /> 
+        />
       </Switch>
     </Router>
   );

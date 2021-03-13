@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import index, Login, Register, activeSession, userIdValid, getUserHabits, getUserOptionals, filterFriends, removeFriend, addFriend, getLeaderboard, removeHabit, addHabit, getAllHabits, HandleCompleted
+from .views import index, Login, Register, activeSession, userIdValid, getUserHabits, getUserOptionals, filterFriends, removeFriend, addFriend, getLeaderboard, removeHabit, addHabit, getAllHabits, handleCompleted, updateProfile
 
 urlpatterns = [
     path('users', index.as_view()),
@@ -16,5 +16,6 @@ urlpatterns = [
     path('getAllHabits', getAllHabits.as_view()),
     path('removeFriend', removeFriend.as_view()),
     path('addFriend', addFriend.as_view()),
-    path('handleCompleted', HandleCompleted.as_view()),
+    path('handleCompleted', handleCompleted.as_view()),
+    path('updateProfile', updateProfile.as_view()),
 ]
