@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
-import { Typography, TextField, Button, IconButton } from "@material-ui/core";
+import { Typography, TextField, Button, ButtonGroup } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/EditRounded";
 import SaveIcon from "@material-ui/icons/SaveRounded";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 function Profile({ leaveAccountCallback }) {
   const params = useParams();
@@ -20,18 +21,17 @@ function Profile({ leaveAccountCallback }) {
   const [instagram, setInstagram] = useState(null);
   const [twitter, setTwitter] = useState(null);
 
+  const [loaded, setLoaded] = useState(false);
   const [edit, setEdit] = useState(true);
-  let pageLoaded = false;
-
-  //   const [usernameEditClicked, setUsernameEditClicked] = useState(true);
-  //   const [nameEditClicked, setNameEditClicked] = useState(true);
-  //   const [emailEditClicked, setEmailEditClicked] = useState(true);
-  //   const [descriptionEditClicked, setDescriptionEditClicked] = useState(true);
-  //   const [facebookEditClicked, setFacebookEditClicked] = useState(true);
-  //   const [instagramEditClicked, setInstagramEditClicked] = useState(true);
-  //   const [twitterEditClicked, setTwitterEditClicked] = useState(true);
+  let requiredData = {};
+  let optionalData = {};
 
   useEffect(() => {
+    getRequiredData();
+  }, []);
+
+  const getRequiredData = () => {
+    // useEffect(() => {
     fetch("../api/userIdValid" + "?user_id=" + params.userId)
       .then((response) => {
         if (!response.ok) {
@@ -50,10 +50,12 @@ function Profile({ leaveAccountCallback }) {
           setLastName(data.last_name);
           setUserId(data.user_id);
           setEmail(data.email);
+          requiredData = data;
           getUserOptionals(data.user_id);
         }
       });
-  }, []);
+    // }, []);
+  };
 
   const getUserOptionals = (user_id) => {
     const requestOptions = {
@@ -80,46 +82,20 @@ function Profile({ leaveAccountCallback }) {
           setFacebook(data.facebook);
           setInstagram(data.instagram);
           setTwitter(data.twitter);
-          pageLoaded = true;
+          setLoaded(true);
+          optionalData = data;
         } else {
           console.log("No Data");
         }
       });
   };
 
-  // Bug -> if description is blank -> infinite load
-  if (!description && !pageLoaded) {
-    return <LoadingPage />;
-  }
-  
   const profileStyle = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
   };
-
-  //   const handleUsernameEditClicked = () => {
-  //     setUsernameEditClicked(!usernameEditClicked);
-  //   };
-  //   const handleNameEditClicked = () => {
-  //     setNameEditClicked(!nameEditClicked);
-  //   };
-  //   const handleEmailEditClicked = () => {
-  //     setEmailEditClicked(!emailEditClicked);
-  //   };
-  //   const handleDescriptionEditClicked = () => {
-  //     setDescriptionEditClicked(!descriptionEditClicked);
-  //   };
-  //   const handleFacebookEditClicked = () => {
-  //     setFacebookEditClicked(!facebookEditClicked);
-  //   };
-  //   const handleInstagramEditClicked = () => {
-  //     setInstagramEditClicked(!instagramEditClicked);
-  //   };
-  //   const handleTwitterEditClicked = () => {
-  //     setTwitterEditClicked(!twitterEditClicked);
-  //   };
 
   const userNameChange = (event) => {
     setUserName(event.target.value);
@@ -176,14 +152,24 @@ function Profile({ leaveAccountCallback }) {
       })
       .then((data) => {
         if (data) {
-          console.log(data);
+          // console.log(data);
           // Below call may not be needed..
-          getUserOptionals(userId);
+          // getRequiredData();
         } else {
           console.log("No Data!");
         }
       });
   };
+
+  const handleCancelClicked = () => {
+    setLoaded(false);
+    setEdit(true);
+    getRequiredData();
+  };
+
+  if (!loaded) {
+    return <LoadingPage />;
+  }
 
   return (
     <div style={profileStyle}>
@@ -198,15 +184,26 @@ function Profile({ leaveAccountCallback }) {
           Edit Profile
         </Button>
       ) : (
-        <Button
-          variant="contained"
-          color="primary"
-          endIcon={<SaveIcon />}
-          onClick={handleSaveChanges}
-          disableElevation
-        >
-          Save Changes
-        </Button>
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            endIcon={<SaveIcon />}
+            onClick={handleSaveChanges}
+            disableElevation
+          >
+            Save Changes
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            endIcon={<CancelIcon />}
+            onClick={handleCancelClicked}
+            disableElevation
+          >
+            Cancel
+          </Button>
+        </div>
       )}
 
       <br />
@@ -298,76 +295,6 @@ function Profile({ leaveAccountCallback }) {
         onChange={twitterChange}
       />
       <br />
-      {/* <Typography variant="h6" align="center">
-        {userName + ": Profile Page"}
-      </Typography>
-      <br /> 
-      <form noValidate autoComplete="off">
-        <div style={profileStyle}>
-          <TextField
-            disabled={usernameEditClicked}
-            label="Username"
-            defaultValue={userName}
-          />
-          <IconButton onClick={handleUsernameEditClicked}>
-            {usernameEditClicked ? <EditIcon /> : <SaveIcon />}
-          </IconButton>
-          <br />
-          <TextField
-            disabled={nameEditClicked}
-            label="Name"
-            defaultValue={firstName + " " + lastName}
-          />
-          <IconButton onClick={handleNameEditClicked}>
-            {nameEditClicked ? <EditIcon /> : <SaveIcon />}
-          </IconButton>
-          <br />
-          <TextField
-            disabled={emailEditClicked}
-            label="Email"
-            defaultValue={email}
-          />
-          <IconButton onClick={handleEmailEditClicked}>
-            {emailEditClicked ? <EditIcon /> : <SaveIcon />}
-          </IconButton>
-          <br />
-          <TextField
-            disabled={descriptionEditClicked}
-            label="Description"
-            defaultValue={description}
-          />
-          <IconButton onClick={handleDescriptionEditClicked}>
-            {descriptionEditClicked ? <EditIcon /> : <SaveIcon />}
-          </IconButton>
-          <br />
-          <TextField
-            disabled={facebookEditClicked}
-            label="Facebook"
-            defaultValue={facebook}
-          />
-          <IconButton onClick={handleFacebookEditClicked}>
-            {facebookEditClicked ? <EditIcon /> : <SaveIcon />}
-          </IconButton>
-          <br />
-          <TextField
-            disabled={instagramEditClicked}
-            label="Instagram"
-            defaultValue={instagram}
-          />
-          <IconButton onClick={handleInstagramEditClicked}>
-            {instagramEditClicked ? <EditIcon /> : <SaveIcon />}
-          </IconButton>
-          <br />
-          <TextField
-            disabled={twitterEditClicked}
-            label="Twitter"
-            defaultValue={twitter}
-          />
-          <IconButton onClick={handleTwitterEditClicked}>
-            {twitterEditClicked ? <EditIcon /> : <SaveIcon />}
-          </IconButton>
-        </div>
-      </form> */}
     </div>
   );
 }
