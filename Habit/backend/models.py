@@ -20,7 +20,7 @@ class Users(models.Model):
     user_id = models.CharField(max_length=6, default=generate_unique_code, unique=True, primary_key=True)
     user_name = models.CharField(max_length=25, default="Test")
     first_name = models.CharField(max_length=25)
-    last_name = models.CharField(max_length=25)
+    last_name = models.CharField(max_length=25) 
     email = models.EmailField(max_length=254)
     password = models.CharField(max_length=30, default="")
     dob = models.CharField(max_length=20)
@@ -45,9 +45,9 @@ class Habits(models.Model):
 class UserHabits(models.Model):
     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
     habit_id = models.ForeignKey(Habits, on_delete=models.CASCADE)
-    streak = models.IntegerField(default=0)
-    start_date = models.DateTimeField(auto_now_add=True)
-    completed = models.BooleanField(default=False)
+    streak = models.IntegerField(default=0) 
+    start_date = models.DateTimeField(auto_now_add=True) 
+    completed = models.BooleanField(default=False) 
 
 
 class UserFriends(models.Model):

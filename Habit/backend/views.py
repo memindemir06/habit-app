@@ -433,12 +433,34 @@ class filterFriends(APIView):
 # LEADERBOARD ---------------------------------------------------------------------------------
 
 class getLeaderboard(APIView):
-    lookup_url_kwarg = 'user_id'
+    #serializer_class = UserHabitsSerializer
+    lookup_url_filter = 'filter' 
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             # If they don't have an active session -> create one
             self.request.session.create() 
-        user_id = request.data.get(self.lookup_url_kwarg)
+        
+        filter = request.data.get(self.lookup_url_filter)
+
+        if filter != None:
+            arrayOfHabits = [] 
+            if filter == "No Filter":
+                listOfHabits = UserHabits.objects.order_by('-streak')
+
+                if listOfHabits.exists():
+                    for habit in listOfHabits:
+                        arrayOfHabits.append(UserHabitsSerializer(habit).data)
+
+                    data = {"user_habits": arrayOfHabits}
+
+                    return JsonResponse(data, status=status.HTTP_200_OK)
+
+                # else filter by habit
+
+            return Response({"Bad Request": "Invalid Parameter"}, status=status.HTTP_404_NOT_FOUND) 
+
+        return Response({"Bad Request": "No Parameter found"}, status=status.HTTP_404_NOT_FOUND) 
+        
 
 
 # MAP PAGE ------------------------------------------------------------------------------------

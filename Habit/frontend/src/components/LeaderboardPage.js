@@ -7,7 +7,7 @@ function LeaderboardPage({ leaveAccountCallback }) {
   let params = useParams();
   let history = useHistory();
   const [userId, setUserId] = useState(null);
-  const [leaderboardList, setleaderboardList] = useState(null);
+  const [leaderboardList, setLeaderboardList] = useState(null);
 
   useEffect(() => {
     // Investigate issue with request -> friends/api/userIdValid -> check View
@@ -22,26 +22,22 @@ function LeaderboardPage({ leaveAccountCallback }) {
       })
       .then((data) => {
         if (!data) {
-          
           console.log("");
         } else {
-          // console.log(data);
-          console.log(data.user_id);
           setUserId(data.user_id);
-          getLeaderboard(data.user_id);
-          //filterLeaderboard(data.user_id, "Smoking") // This is for testing the filter
+          getLeaderboard();
         }
       });
   }, []);
 
-  const getLeaderboard = (user_id) => {
+  const getLeaderboard = () => {
     const requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        user_id: user_id,
+        filter: "No Filter",
       }),
     };
     fetch("../api/getLeaderboard", requestOptions)
@@ -54,33 +50,18 @@ function LeaderboardPage({ leaveAccountCallback }) {
       })
       .then((data) => {
         if (data) {
-          console.log(data.list_of_friends);
-
-          setLeaderboardList(data.list_of_friends);
+          console.log(data.user_habits);
+          setLeaderboardList(data.user_habits);
         } else {
           console.log("No Data");
         }
       });
   };
 
-//   if (!userId || !friendsList) {
-//     return <LoadingPage />;
-//   }
-
-//   if (friendsList.length == 0) {
-//     return (
-//       <div>
-//         <h1>No Friends Added</h1>
-//         <h1>Add some Friends...</h1>
-//       </div>
-//     );
-//   }
-
   return (
     <div>
       {/* <h1>{userId}</h1> */}
       <h1>Leaderboard</h1>
-
     </div>
   );
 }
