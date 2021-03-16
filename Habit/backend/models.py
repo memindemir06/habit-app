@@ -24,6 +24,7 @@ class Users(models.Model):
     email = models.EmailField(max_length=254)
     password = models.CharField(max_length=30, default="")
     dob = models.CharField(max_length=20)
+    ordering = ['user_name']
     # verified = models.BooleanField()
 
 
@@ -42,7 +43,7 @@ class Habits(models.Model):
     habit_name = models.CharField(max_length=15, unique=True)
 
 
-class UserHabits(models.Model):
+class UserHabits(models.Model): 
     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
     habit_id = models.ForeignKey(Habits, on_delete=models.CASCADE)
     streak = models.IntegerField(default=0) 

@@ -397,7 +397,7 @@ class filterFriends(APIView):
                 for i in range(len(listOfFriends2)):
                     friendPair = FriendsSerializer(listOfFriends2[i]).data
                     friendPair = friendPair.pop('user_id1')
-                    listOfFriends.append(friendPair)
+                    listOfFriends.append(friendPair) 
 
             if habit_name == "No Filter":         
                 data = {
@@ -412,7 +412,7 @@ class filterFriends(APIView):
                 if habit_id != None:
                     habit_id = habit_id[0].habit_id # Gets habit id from habit name
 
-                    for friend in listOfFriends:
+                    for friend in listOfFriends: 
                         tempuser_id = friend["user_id"]
                         habitExist = UserHabits.objects.filter(user_id = tempuser_id, habit_id = habit_id) # Filters by friend and habit
                         if habitExist.exists():
@@ -434,28 +434,86 @@ class filterFriends(APIView):
 
 class getLeaderboard(APIView):
     #serializer_class = UserHabitsSerializer
-    lookup_url_filter = 'filter' 
+    lookup_url_purpose = 'purpose' 
+    lookup_url_user_id = 'user_id'
+    
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             # If they don't have an active session -> create one
             self.request.session.create() 
         
-        filter = request.data.get(self.lookup_url_filter)
+        user_id = request.data.get(self.lookup_url_user_id)
+        purpose = request.data.get(self.lookup_url_purpose)
 
-        if filter != None:
+        if purpose != None:
             arrayOfHabits = [] 
-            if filter == "No Filter":
-                listOfHabits = UserHabits.objects.order_by('-streak')
-
+            if purpose == "No Filter":
+                listOfHabits = UserHabits.objects.order_by('-streak', 'user_id__user_name') 
+                
                 if listOfHabits.exists():
-                    for habit in listOfHabits:
-                        arrayOfHabits.append(UserHabitsSerializer(habit).data)
+                    for habit in listOfHabits: 
+                        arrayOfHabits.append(UserHabitsSerializer(habit).data) 
 
                     data = {"user_habits": arrayOfHabits}
 
                     return JsonResponse(data, status=status.HTTP_200_OK)
 
-                # else filter by habit
+                return Response({"Bad Request": "habits does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+            
+            elif purpose == "Friends":
+                if user_id != None:
+                    friendQuery1 = UserFriends.objects.filter(user_id1=user_id)
+                    friendQuery2 = UserFriends.objects.filter(user_id2=user_id)
+
+                    listOfFriends = []
+
+                    if friendQuery1.exists():
+                        for friend in friendQuery1:
+                            friendPair = FriendsSerializer(friend).data
+                            friendPair = friendPair.pop('user_id2')
+                            listOfFriends.append(friendPair)
+
+                    if friendQuery2.exists():
+                        for friend in friendQuery2:
+                            friendPair = FriendsSerializer(friend).data
+                            friendPair = friendPair.pop('user_id1')
+                            listOfFriends.append(friendPair)
+
+                    for friend in listOfFriends:
+                        user_id = friend["user_id"]
+                        friendHabits = UserHabits.objects.filter(user_id=user_id)
+
+                        if friendHabits.exists():
+                            for habit in friendHabits:
+                                
+                                arrayOfHabits.append(UserHabitsSerializer(habit).data)
+                    
+                    arrayOfHabits.sort(key=lambda x: (-x['streak'], x['user_id']['user_name']))
+
+                    data = {"user_habits": arrayOfHabits} 
+
+                    return JsonResponse(data, status=status.HTTP_200_OK)
+                    
+                return Response({"Bad Request": "User id does not exist"}, status=status.HTTP_404_NOT_FOUND)
+            else:
+                habit_id = Habits.objects.filter(habit_name = purpose)
+                
+                if habit_id.exists():
+                    habit_id = habit_id[0].habit_id
+                    listOfHabits = UserHabits.objects.filter(habit_id=habit_id).order_by('-streak', 'user_id__user_name')
+
+                    if listOfHabits.exists():
+                        for habit in listOfHabits: 
+                            arrayOfHabits.append(UserHabitsSerializer(habit).data) 
+
+                        data = {"user_habits": arrayOfHabits}
+
+                        return JsonResponse(data, status=status.HTTP_200_OK)
+                    
+                    return Response({"Bad Request": "habits does not exist"}, status=status.HTTP_404_NOT_FOUND)
+                
+                return Response({"Bad Request": "habit id not valid"}, status=status.HTTP_404_NOT_FOUND)
 
             return Response({"Bad Request": "Invalid Parameter"}, status=status.HTTP_404_NOT_FOUND) 
 

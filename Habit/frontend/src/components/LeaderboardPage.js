@@ -8,6 +8,7 @@ function LeaderboardPage({ leaveAccountCallback }) {
   let history = useHistory();
   const [userId, setUserId] = useState(null);
   const [leaderboardList, setLeaderboardList] = useState(null);
+  const [listOfFilters, setListOfFilters] = useState();
 
   useEffect(() => {
     // Investigate issue with request -> friends/api/userIdValid -> check View
@@ -25,19 +26,47 @@ function LeaderboardPage({ leaveAccountCallback }) {
           console.log("");
         } else {
           setUserId(data.user_id);
-          getLeaderboard();
+          getAllHabits();
+          getLeaderboard(data.user_id, "No Filter");
         }
       });
   }, []);
 
-  const getLeaderboard = () => {
+  const getAllHabits = () => {
+    fetch("../api/getAllHabits")
+      .then((response) => {
+        if (!response.ok) {
+          console.log(response);
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data) {
+          let tempArray = [];
+          let listOfHabits = data.list_of_all_habits;
+          tempArray.push("No Filter");
+          tempArray.push("Friends");
+          for (let habitObj in listOfHabits) {
+            tempArray.push(listOfHabits[habitObj].habit_name);
+          }
+          setListOfFilters(tempArray);
+        } else {
+          console.log("No Data");
+        }
+      });
+  };
+
+  // Call this to filter and get leaderboard
+  const getLeaderboard = (user_id, purpose) => {
     const requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        filter: "No Filter",
+        user_id: user_id,
+        purpose: purpose,
       }),
     };
     fetch("../api/getLeaderboard", requestOptions)
@@ -60,8 +89,8 @@ function LeaderboardPage({ leaveAccountCallback }) {
 
   return (
     <div>
-      {/* <h1>{userId}</h1> */}
       <h1>Leaderboard</h1>
+      {/* Display Filter using listOfFilters */} 
     </div>
   );
 }
