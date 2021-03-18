@@ -1,66 +1,196 @@
 import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar2 from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Dialog from '@material-ui/core/Dialog';
-import Slide from '@material-ui/core/Slide';
-import CloseIcon from '@material-ui/icons/Close';
-import { MenuList, MenuItem } from '@material-ui/core';
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import AppBar2 from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import CloseIcon from "@material-ui/icons/Close";
+import { MenuList, MenuItem } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import MyAccountIcon from "@material-ui/icons/AccountCircleRounded";
 import DailyRemindersIcon from "@material-ui/icons/CalendarTodayRounded";
-import MyFriendsIcon from '@material-ui/icons/PeopleAltRounded';
+import MyFriendsIcon from "@material-ui/icons/PeopleAltRounded";
+import clsx from "clsx";
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Divider from "@material-ui/core/Divider";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
+    display: "flex",
   },
-  title: {
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginRight: 36,
+  },
+  hide: {
+    display: "none",
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: "nowrap",
+  },
+  drawerOpen: {
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerClose: {
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: "hidden",
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up("sm")]: {
+      width: theme.spacing(7) + 1,
+    },
+  },
+  toolbar: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+  },
+  content: {
     flexGrow: 1,
+    padding: theme.spacing(3),
   },
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="right" ref={ref} {...props} />;
-});
-
 function AppBar() {
   const classes = useStyles();
+  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
+  const handleDrawerOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleDrawerClose = () => {
     setOpen(false);
   };
 
   return (
     <div className={classes.root}>
-      <AppBar2 position="static">
+      <CssBaseline />
+      <AppBar2
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={handleClickOpen}>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open,
+            })}
+          >
             <MenuIcon />
-          </IconButton> 
-          <Typography align="center" variant="h6" className={classes.title}>
+          </IconButton>
+          <Typography style={{flexGrow: 1,}} align="center" variant="h6" className={classes.title}>
             HAB!TS
           </Typography>
-          <Button component={Link} to="/" color="inherit">Login</Button>
+          <Button  component={Link} to="/" color="inherit">
+            Login
+          </Button>
         </Toolbar>
       </AppBar2>
-        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-              <CloseIcon />
-            </IconButton>
-            <Button onClick={handleClose} component={Link} to="/profile/FZPIGF" startIcon={<MyAccountIcon />}> My Account </Button>    
-            <Button onClick={handleClose} component={Link} to="/FZPIGF" startIcon={<DailyRemindersIcon />}> Daily Reminders </Button>
-            <Button onClick={handleClose} component={Link} to="/friends/FZPIGF" startIcon={<MyFriendsIcon />}> My Friends </Button>
-        </Dialog>
+      <Drawer
+        variant="permanent"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          }),
+        }}
+      >
+        <div className={classes.toolbar}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          <ListItem
+            button
+            key="My Account"
+            onClick={handleDrawerClose}
+            component={Link}
+            to="/"
+          >
+            <ListItemIcon>
+              <MyAccountIcon />
+            </ListItemIcon>
+            <ListItemText primary="My Account" />
+          </ListItem>
+          <ListItem
+            button
+            key="Daily Reminders"
+            onClick={handleDrawerClose}
+            component={Link}
+            to="/"
+          >
+            <ListItemIcon>
+              <DailyRemindersIcon />
+            </ListItemIcon>
+            <ListItemText primary="Daily Reminders" />
+          </ListItem>
+          <ListItem
+            button
+            key="My Friends"
+            onClick={handleDrawerClose}
+            component={Link}
+            to="/"
+          >
+            <ListItemIcon>
+              <MyFriendsIcon />
+            </ListItemIcon>
+            <ListItemText primary="My Friends" />
+          </ListItem>
+        </List>
+      </Drawer>
     </div>
   );
 }

@@ -18,11 +18,24 @@ import LeaderboardPage from "./LeaderboardPage";
 import InspirationalPage from "./InspirationalPage";
 import MenuTest from "./Menu";
 import AppBar from "./AppBar";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  content: {
+    marginTop: "64px",
+    marginLeft: theme.spacing(7) + 1,
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(7) + 1,
+    },
+  },
+}));
 
 function Home() {
   const history = useHistory();
   // const location = useLocation();
   const [userId, setUserId] = useState(null);
+  const classes = useStyles();
+  const theme = useTheme();
 
   useEffect(() => {
     fetch("../api/activeSession") // this gives GET error for urls like profile/userid
@@ -42,8 +55,9 @@ function Home() {
 
   return (
     <Router>
-      <AppBar />
+      <AppBar /> 
       <br />
+      <div className={classes.content}>
       <Switch>
         {/* <Route path="/" component={AppBar} /> */}
         <Route exact path="/ErrorPage" component={ErrorPage} />
@@ -95,6 +109,7 @@ function Home() {
           }}
         />
       </Switch>
+      </div>
     </Router>
   );
 }

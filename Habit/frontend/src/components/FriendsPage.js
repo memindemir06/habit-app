@@ -8,8 +8,6 @@ import {
   TextField,
   Grid,
   Collapse,
-  RadioGroup,
-  Radio,
   FormControlLabel,
   Dialog,
   DialogTitle,
@@ -18,7 +16,6 @@ import {
   FormControl,
   FormLabel,
   FormGroup,
-  FormHelperText,
   Checkbox,
   InputAdornment,
 } from "@material-ui/core";
@@ -36,33 +33,72 @@ function FriendsPage({ leaveAccountCallback }) {
   const [userLastName, setUserLastName] = useState();
   const [friendsList, setFriendsList] = useState(null);
   const [friendSearch, setFriendSearch] = useState("");
-  const [filterHabitName, setFilterHabitName] = useState("No Filter");
+  // const [filterHabitName, setFilterHabitName] = useState("No Filter");
   const [friendAlreadyExists, setFriendAlreadyExists] = useState(null);
   const [displayExists, setDisplayExists] = useState("success");
   const [displayMessageExists, setDisplayMessageExists] = useState(
     "Friend added successfully"
   );
   const [openFilter, setOpenFilter] = useState(false);
-  let options = [
-    { name: "Drinking", checked: false },
-    { name: "Smoking", checked: false },
-    { name: "Jogging", checked: false },
-    { name: "Programming", checked: false },
-    { name: "Eating Healthily", checked: false },
-    { name: "Drugs", checked: false },
-  ];
 
   const [checkedHabits, setCheckedHabits] = useState({
-    Drinking: true,
-    Smoking: true,
+    No_Filter: true,
+    Gym: false,
     Jogging: false,
-    Programming: false,
-    "Eating Healthily": false,
     Drugs: false,
   });
 
+  const { No_Filter, Gym, Jogging, Drugs } = checkedHabits;
+
+  const error = [No_Filter, Gym, Jogging, Drugs].filter((v) => v).length !== 1;
+
+  // const [checkedHabits, setCheckedHabits] = useState({
+  //   Smoking: false,
+  //   Jogging: false,
+  //   Drinking: false,
+  //   Drugs: false,
+  //   Reading: false,
+  //   Cycling: false,
+  //   Programming: false,
+  //   Walking: false,
+  //   Eating_Healthily: false,
+  //   Gaming: false,
+  //   Watching: false,
+  //   Learning: false,
+  // });
+
+  // const {
+  //   Smoking,
+  //   Jogging,
+  //   Drinking,
+  //   Drugs,
+  //   Reading,
+  //   Cycling,
+  //   Programming,
+  //   Walking,
+  //   Eating_Healthily,
+  //   Gaming,
+  //   Watching,
+  //   Learning,
+  // } = checkedHabits;
+
+  // const error =
+  //   [
+  //     Smoking,
+  //     Jogging,
+  //     Drinking,
+  //     Drugs,
+  //     Reading,
+  //     Cycling,
+  //     Programming,
+  //     Walking,
+  //     Eating_Healthily,
+  //     Gaming,
+  //     Watching,
+  //     Learning,
+  //   ].filter((v) => v).length !== 1;
+
   useEffect(() => {
-    // Investigate issue with request -> friends/api/userIdValid -> check View
     fetch("../api/userIdValid" + "?user_id=" + params.userId)
       .then((response) => {
         if (!response.ok) {
@@ -76,16 +112,18 @@ function FriendsPage({ leaveAccountCallback }) {
         if (!data) {
           console.log("");
         } else {
+          // getAllHabits();
           setUserId(data.user_id);
           setUserName(data.user_name);
           setUserFirstName(data.first_name);
           setUserLastName(data.last_name);
-          filterFriends(data.user_id); // This is for testing the filter
+          filterFriends(data.user_id, "No_Filter");
         }
       });
   }, []);
 
-  const filterFriends = (user_id) => {
+  const filterFriends = (user_id, habit_name) => {
+    setOpenFilter(false);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -93,7 +131,7 @@ function FriendsPage({ leaveAccountCallback }) {
       },
       body: JSON.stringify({
         user_id: user_id,
-        habit_name: filterHabitName,
+        habit_name: habit_name,
       }),
     };
     fetch("../api/filterFriends", requestOptions)
@@ -101,12 +139,14 @@ function FriendsPage({ leaveAccountCallback }) {
         if (!response.ok) {
           console.log("No User ID: ", response);
         } else {
+          console.log(response);
           return response.json();
         }
       })
       .then((data) => {
         if (data) {
-          // (Lambda?) Function to sort the list of friends by 1st Name
+          console.log(data);
+          // Function to sort the list of friends by 1st Name
           let tempFriendList = data.list_of_friends;
           tempFriendList = tempFriendList.sort((a, b) => {
             if (a.user_name < b.user_name) {
@@ -117,6 +157,24 @@ function FriendsPage({ leaveAccountCallback }) {
             return 0;
           });
           setFriendsList(data.list_of_friends);
+        } else {
+          console.log("No Data");
+        }
+      });
+  };
+
+  const getAllHabits = () => {
+    fetch("api/getAllHabits")
+      .then((response) => {
+        if (!response.ok) {
+          console.log(response);
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data) {
+          console.log(data.list_of_all_habits);
         } else {
           console.log("No Data");
         }
@@ -195,8 +253,10 @@ function FriendsPage({ leaveAccountCallback }) {
   };
 
   const handleHabitCheck = (event) => {
-    console.log("check change");
-    setCheckedHabits({ ...state, [event.target.name]: event.target.checked });
+    setCheckedHabits({
+      ...checkedHabits,
+      [event.target.name]: event.target.checked,
+    });
   };
 
   return (
@@ -243,74 +303,52 @@ function FriendsPage({ leaveAccountCallback }) {
       >
         Filter Friends
       </Button>
-      <Dialog
-        open={openFilter}
-        onClose={() => setOpenFilter(false)}
-        // scroll={true}
-        fullWidth
-      >
-        <DialogTitle>{"Choose some filters"}</DialogTitle>
+      <Dialog open={openFilter} onClose={() => setOpenFilter(false)} fullWidth>
+        <DialogTitle>{"Filter by habit"}</DialogTitle>
         <DialogContent dividers>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">Filter by Habit</FormLabel>
-            <FormGroup row>
-              {() => {
-                console.log("Starting iteration");
-                for (let habit in options) {
-                  console.log(habit);
-                  console.log(options[habit]);
-                  return (
-                    <FormControlLabel
-                      label={habit}
-                      control={
-                        <Checkbox
-                          checked={options[habit]}
-                          onChange={handleHabitCheck}
-                          name={habit}
-                          color="primary"
-                        />
-                      }
-                    />
-                  );
-                }
-              }}
-            </FormGroup>
-            {/* <FormGroup>
-              {options.map((option) => {
+          <FormControl component="fieldset" error={error}>
+            <FormLabel component="legend">Pick 1 option</FormLabel>
+            <FormGroup>
+              {Object.keys(checkedHabits).map(function (key, index) {
                 return (
                   <div>
                     <FormControlLabel
                       control={
                         <Checkbox
-                          name={option.name}
-                          checked={option.checked}
-                          // ONCLICK NOT WORKING
-                          onClick={() => { 
-                            option.checked = !option.checked;
-                            console.log("clicked");
-                          }}
-                          onChange={() => console.log("onChange")}
+                          name={key}
+                          checked={checkedHabits[key]}
+                          onChange={handleHabitCheck}
+                          disabled={false}
                         />
                       }
-                      label={option.name}
+                      label={key}
                     />
                   </div>
                 );
               })}
-            </FormGroup> */}
+            </FormGroup>
           </FormControl>
         </DialogContent>
         <DialogActions>
           <Button
             // Needs to be changed
-            onClick={() => setOpenFilter(false)}
+            onClick={() => {
+              setOpenFilter(false);
+            }}
             color="primary"
           >
             Cancel
           </Button>
           <Button
-            onClick={() => setOpenFilter(false)}
+            onClick={() => {
+              Object.keys(checkedHabits).map(function (key, index) {
+                if (checkedHabits[key]) {
+                  filterFriends(userId, key);
+                }
+              });
+            }}
             color="primary"
+            disabled={error ? true : false}
             autoFocus
           >
             Ok

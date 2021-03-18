@@ -85,8 +85,8 @@ WSGI_APPLICATION = 'Habit.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '2020_comp10120_x13',
-      # 'NAME': 'w89594sa',
+        # 'NAME': '2020_comp10120_x13',
+        'NAME': 'w89594sa',
         'USER':'w89594sa',
         'PASSWORD':'Sahir000',
         'HOST':'dbhost.cs.man.ac.uk',

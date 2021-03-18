@@ -24,7 +24,7 @@ const FriendBlock = ({
   email,
   friendUserId,
   userId,
-  filterFriends, 
+  filterFriends,
 }) => {
   const [expanded, setExpanded] = useState(false);
   let history = useHistory();

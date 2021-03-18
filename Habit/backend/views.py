@@ -380,14 +380,15 @@ class filterFriends(APIView):
 
         user_id = request.data.get(self.lookup_url_kwarg)
         habit_name = request.data.get(self.lookup_url_habit_name)
-        listOfFriends = []
 
         # This part gets the list of friends, basically getFriends class
         if user_id != None:   # No filter
+            listOfFriends = []
+
             listOfFriends1 = UserFriends.objects.filter(user_id1 = user_id)
             listOfFriends2 = UserFriends.objects.filter(user_id2 = user_id)
 
-            if listOfFriends1.exists():
+            if listOfFriends1.exists(): 
                 for i in range(len(listOfFriends1)):
                     friendPair = FriendsSerializer(listOfFriends1[i]).data
                     friendPair = friendPair.pop('user_id2')
@@ -399,7 +400,7 @@ class filterFriends(APIView):
                     friendPair = friendPair.pop('user_id1')
                     listOfFriends.append(friendPair) 
 
-            if habit_name == "No Filter":         
+            if habit_name == "No_Filter":         
                 data = {
                     'list_of_friends': listOfFriends,
                 }
@@ -447,7 +448,7 @@ class getLeaderboard(APIView):
 
         if purpose != None:
             arrayOfHabits = [] 
-            if purpose == "No Filter":
+            if purpose == "No_Filter":
                 listOfHabits = UserHabits.objects.order_by('-streak', 'user_id__user_name') 
                 
                 if listOfHabits.exists():
