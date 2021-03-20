@@ -5,9 +5,8 @@ import AppBar from "./AppBar";
 function App() {
   return (
     <div className="main">
-        {/* <AppBar /> */}
-
-        <Home />
+      {/* <AppBar /> */}
+      <Home />
     </div>
   );
 }

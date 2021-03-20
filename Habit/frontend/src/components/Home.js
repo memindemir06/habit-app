@@ -6,6 +6,8 @@ import {
   Link,
   Redirect,
   useHistory,
+  withRouter,
+  useLocation,
   // useLocation,
 } from "react-router-dom";
 import Login from "./Login";
@@ -34,20 +36,36 @@ function Home() {
   const history = useHistory();
   // const location = useLocation();
   const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState();
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [email, setEmail] = useState(null);
   const classes = useStyles();
   const theme = useTheme();
+  
+
+  // let path = useLocation();
 
   useEffect(() => {
-    fetch("../api/activeSession") // this gives GET error for urls like profile/userid
+    fetch("../api/activeSession")
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         if (data.user_id == null) {
+          console.log("No Session");
           setUserId("No Session");
+          return <Redirect to="/login" />;
         } else {
-          setUserId(data.user_id);
+          // setUserId(data.user_id);
+          setUserId(data.user_id)
+          setUserName(data.user_name);
+          setFirstName(data.first_name);
+          setLastName(data.last_name);
+          setEmail(data.email);
+          console.log(userId);
         }
       });
-  }, []);
+  }, [history]);
 
   const backToLogin = () => {
     setUserId("No Session");
@@ -55,60 +73,95 @@ function Home() {
 
   return (
     <Router>
-      <AppBar /> 
+      <AppBar />
       <br />
       <div className={classes.content}>
-      <Switch>
-        {/* <Route path="/" component={AppBar} /> */}
-        <Route exact path="/ErrorPage" component={ErrorPage} />
-        <Route
-          exact
-          path="/"
-          render={() => {
-            return !userId ? null : userId == "No Session" ? (
-              <Login />
-            ) : (
-              <Redirect to={`/${userId}`} />
-            );
-          }}
-        />
-        <Route path="/register" component={Register} />
-        <Route
-          exact
-          path="/:userId"
-          render={() => {
-            return <DailyReminders leaveAccountCallback={backToLogin} />;
-          }}
-        />
-        <Route
-          exact
-          path="/profile/:userId"
-          render={() => {
-            return <Profile leaveAccountCallback={backToLogin} />;
-          }}
-        />
-        <Route
-          exact
-          path="/friends/:userId"
-          render={() => {
-            return <FriendsPage leaveAccountCallback={backToLogin} />;
-          }}
-        />
-        <Route
-          exact
-          path="/leaderboard/:userId"
-          render={() => {
-            return <LeaderboardPage leaveAccountCallback={backToLogin} />;
-          }}
-        />
-        <Route
-          exact
-          path="/inspire/:userId"
-          render={() => {
-            return <InspirationalPage leaveAccountCallback={backToLogin} />;
-          }}
-        />
-      </Switch>
+        <Switch>
+          {/* <Route path="/" component={AppBar} /> */}
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return !userId ? null : userId == "No Session" ? (
+                <div>
+                  <Redirect to="/login" />
+                  <Login />
+                </div>
+              ) : (
+                <Redirect to="/home" />
+              );
+            }}
+          />
+          <Route exact path="/ErrorPage" component={ErrorPage} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <Route
+            exact
+            path="/home"
+            render={() => {
+              return !userId ? null : userId == "No Session" ? (
+                <div>
+                  <Redirect to="/login" />
+                  <Login />
+                </div>
+              ) : (
+                // <Redirect to="/home" />
+                <DailyReminders
+                  userId={userId}
+                  userName={userName}
+                  firstName={firstName}
+                  lastName={lastName}
+                  leaveAccountCallback={backToLogin}
+                />
+              );
+            }}
+          />
+          <Route
+            exact
+            path="/profile"
+            render={() => {
+              return (
+                <Profile userId={userId} leaveAccountCallback={backToLogin} />
+              );
+            }}
+          />
+          <Route
+            exact
+            path="/friends"
+            render={() => {
+              return (
+                <FriendsPage
+                  userId={userId}
+                  leaveAccountCallback={backToLogin}
+                />
+              );
+            }}
+          />
+          <Route
+            exact
+            path="/leaderboard"
+            render={() => {
+              return (
+                <LeaderboardPage
+                  userId={userId}
+                  leaveAccountCallback={backToLogin}
+                />
+              );
+            }}
+          />
+          <Route
+            exact
+            path="/inspire"
+            render={() => {
+              return (
+                <InspirationalPage
+                  userId={userId}
+                  leaveAccountCallback={backToLogin}
+                />
+              );
+            }}
+          />
+        </Switch>
       </div>
     </Router>
   );

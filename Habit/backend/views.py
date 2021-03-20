@@ -69,10 +69,19 @@ class activeSession(APIView):
             # If they don't have a session -> create one
             self.request.session.create()
         
-        data = {
-            'user_id': self.request.session.get('user_id')
-        }
-        return JsonResponse(data, status=status.HTTP_200_OK)
+        user_id = self.request.session.get('user_id')
+    
+        if user_id != None:
+            listOfUsers = Users.objects.filter(user_id=user_id)
+
+            if listOfUsers.exists():
+                data = UserSerializer(listOfUsers[0]).data
+
+                return Response(data, status=status.HTTP_200_OK)
+
+            # return Response({"User created"}, status=status.HTTP_200_OK)
+
+        return Response({"Bad Request": "No active session"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class userIdValid(APIView):

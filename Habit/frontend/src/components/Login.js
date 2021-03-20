@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Grid, Button, TextField, Typography } from "@material-ui/core";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, Redirect } from "react-router-dom";
 
 function Login() {
   const history = useHistory();
@@ -37,7 +37,9 @@ function Login() {
       })
       .then((data) => {
         if (data) {
-          history.push("/" + data.user_id);
+          // return <Redirect to="/home" />;
+          history.push("/home");
+          history.go(0);
         } else {
           // SET ALERT
           console.log("Invalid Data");

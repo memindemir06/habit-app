@@ -40,16 +40,22 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-function DailyReminders({ leaveAccountCallback }) {
+function DailyReminders({
+  userId,
+  userName,
+  firstName,
+  lastName,
+  // checkActiveSession,
+}) {
   const params = useParams();
   const history = useHistory();
 
   const listOfAllHabits = new Set();
+  // const [userId, setUserId] = useState(user_id);
+  // const [userName, setUserName] = useState(user_name);
+  // const [firstName, setFirstName] = useState(first_name);
+  // const [lastName, setLastName] = useState(last_name);
 
-  const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState();
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
   const [listOfHabits, setListOfHabits] = useState(null);
   const [listOfAvailableHabits, setListOfAvailableHabits] = useState([]);
   const [open, setOpen] = useState(false);
@@ -59,27 +65,11 @@ function DailyReminders({ leaveAccountCallback }) {
   // const [habitsPending, setHabitsPending] = useState(false);
 
   useEffect(() => {
-    fetch("api/userIdValid" + "?user_id=" + params.userId)
-      .then((response) => {
-        if (!response.ok) {
-          leaveAccountCallback();
-          history.push("/ErrorPage");
-        } else {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        if (!data) {
-          setUserId(null);
-        } else {
-          setUserName(data.user_name);
-          setFirstName(data.first_name);
-          setLastName(data.last_name);
-          setUserId(data.user_id);
-          getHabits(data.user_id);
-        }
-      });
-  }, []);
+    console.log(userId);
+    if (userId) {
+      getHabits(userId);
+    }
+  }, [userId]);
 
   const getHabits = (user_id) => {
     const requestOptions = {
