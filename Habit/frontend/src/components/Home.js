@@ -127,11 +127,11 @@ function Home() {
                   firstName={firstName}
                   lastName={lastName}
                   email={email}
-                  setUserId={setUserId}
-                  setUserName={setUserName}
-                  setFirstName={setFirstName}
-                  setLastName={setLastName}
-                  setEmail={setEmail}
+                  // setUserId={setUserId}
+                  // setUserName={setUserName}
+                  // setFirstName={setFirstName}
+                  // setLastName={setLastName}
+                  // setEmail={setEmail}
                   leaveAccountCallback={backToLogin}
                 />
               );

@@ -158,7 +158,7 @@ function AppBar() {
             key="My Account"
             onClick={handleDrawerClose}
             component={Link}
-            to="/"
+            to="/profile"
           >
             <ListItemIcon>
               <MyAccountIcon />
@@ -170,7 +170,7 @@ function AppBar() {
             key="Daily Reminders"
             onClick={handleDrawerClose}
             component={Link}
-            to="/"
+            to="/home"
           >
             <ListItemIcon>
               <DailyRemindersIcon />
@@ -182,7 +182,7 @@ function AppBar() {
             key="My Friends"
             onClick={handleDrawerClose}
             component={Link}
-            to="/"
+            to="/friends"
           >
             <ListItemIcon>
               <MyFriendsIcon />

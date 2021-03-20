@@ -12,16 +12,12 @@ function Profile({
   firstName,
   lastName,
   email,
-  setUserId,
-  setUserName,
-  setFirstName,
-  setLastName,
-  setEmail,
 }) {
-  const [description, setDescription] = useState(null);
-  const [facebook, setFacebook] = useState(null);
-  const [instagram, setInstagram] = useState(null);
-  const [twitter, setTwitter] = useState(null);
+  
+  const [description, setDescription] = useState("");
+  const [facebook, setFacebook] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [twitter, setTwitter] = useState("");
 
   const [loaded, setLoaded] = useState(false);
   const [edit, setEdit] = useState(true);
@@ -57,10 +53,11 @@ function Profile({
           setFacebook(data.facebook);
           setInstagram(data.instagram);
           setTwitter(data.twitter);
-          setLoaded(true);
+          //setLoaded(true);
         } else {
           console.log("No Data");
         }
+        setLoaded(true);
       });
   };
 
