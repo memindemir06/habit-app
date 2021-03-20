@@ -37,8 +37,8 @@ function Login() {
       })
       .then((data) => {
         if (data) {
-          // return <Redirect to="/home" />;
-          history.push("/home");
+          // return <Redirect to="/" />;
+          history.push("/../");
           history.go(0);
         } else {
           // SET ALERT

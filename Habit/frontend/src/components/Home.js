@@ -42,7 +42,7 @@ function Home() {
   const [email, setEmail] = useState(null);
   const classes = useStyles();
   const theme = useTheme();
-  
+  let temp = null;
 
   // let path = useLocation();
 
@@ -54,10 +54,10 @@ function Home() {
         if (data.user_id == null) {
           console.log("No Session");
           setUserId("No Session");
-          return <Redirect to="/login" />;
+          // return <Redirect to="/login" />;
         } else {
-          // setUserId(data.user_id);
-          setUserId(data.user_id)
+          temp = data.user_id;
+          setUserId(data.user_id);
           setUserName(data.user_name);
           setFirstName(data.first_name);
           setLastName(data.last_name);
@@ -131,7 +131,7 @@ function Home() {
             render={() => {
               return (
                 <FriendsPage
-                  userId={userId}
+                  // userId={userId}
                   leaveAccountCallback={backToLogin}
                 />
               );
