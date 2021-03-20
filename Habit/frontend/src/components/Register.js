@@ -80,7 +80,8 @@ function Register() {
         }
       })
       .then((data) => {
-        history.push("/home");
+        history.push("/../");
+        history.go(0);
       });
   };
 

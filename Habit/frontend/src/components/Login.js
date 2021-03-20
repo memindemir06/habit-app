@@ -37,7 +37,6 @@ function Login() {
       })
       .then((data) => {
         if (data) {
-          // return <Redirect to="/" />;
           history.push("/../");
           history.go(0);
         } else {

@@ -17,10 +17,9 @@ import {
 import LeaderboardBlock from "./LeaderboardBlock";
 import FilterListIcon from "@material-ui/icons/FilterList";
 
-function LeaderboardPage({ leaveAccountCallback }) {
+function LeaderboardPage({ leaveAccountCallback, userId }) {
   let params = useParams();
   let history = useHistory();
-  const [userId, setUserId] = useState(null);
   const [leaderboardList, setLeaderboardList] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [listOfFilters, setListOfFilters] = useState();
@@ -86,51 +85,35 @@ function LeaderboardPage({ leaveAccountCallback }) {
   //   ].filter((v) => v).length !== 1;
 
   useEffect(() => {
-    // Investigate issue with request -> friends/api/userIdValid -> check View
-    fetch("../api/userIdValid" + "?user_id=" + params.userId)
-      .then((response) => {
-        if (!response.ok) {
-          leaveAccountCallback();
-          history.push("/ErrorPage");
-        } else {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        if (!data) {
-          console.log("");
-        } else {
-          setUserId(data.user_id);
-          getAllHabits();
-          getLeaderboard(data.user_id, "No_Filter");
-        }
-      });
-  }, []);
+    if (userId) {
+      getLeaderboard(userId, "No_Filter");
+    }
+  }, [userId]);
 
-  const getAllHabits = () => {
-    fetch("../api/getAllHabits")
-      .then((response) => {
-        if (!response.ok) {
-          console.log(response);
-        } else {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        if (data) {
-          let tempArray = [];
-          let listOfHabits = data.list_of_all_habits;
-          tempArray.push("No_Filter");
-          tempArray.push("Friends");
-          for (let habitObj in listOfHabits) {
-            tempArray.push(listOfHabits[habitObj].habit_name);
-          }
-          setListOfFilters(tempArray);
-        } else {
-          console.log("No Data");
-        }
-      });
-  };
+  // const getAllHabits = () => {
+  //   fetch("../api/getAllHabits")
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         console.log(response);
+  //       } else {
+  //         return response.json();
+  //       }
+  //     })
+  //     .then((data) => {
+  //       if (data) {
+  //         let tempArray = [];
+  //         let listOfHabits = data.list_of_all_habits;
+  //         tempArray.push("No_Filter");
+  //         tempArray.push("Friends");
+  //         for (let habitObj in listOfHabits) {
+  //           tempArray.push(listOfHabits[habitObj].habit_name);
+  //         }
+  //         setListOfFilters(tempArray);
+  //       } else {
+  //         console.log("No Data");
+  //       }
+  //     });
+  // };
 
   const getLeaderboard = (user_id, filter) => {
     setOpenFilter(false);

@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useHistory } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
-import { Typography, TextField, Button, ButtonGroup } from "@material-ui/core";
+import { TextField, Button } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/EditRounded";
 import SaveIcon from "@material-ui/icons/SaveRounded";
 import CancelIcon from "@material-ui/icons/Cancel";
 
-function Profile({ leaveAccountCallback }) {
-  const params = useParams();
-  const history = useHistory();
-
-  const [userId, setUserId] = useState();
-  const [userName, setUserName] = useState(null);
-  const [firstName, setFirstName] = useState(null);
-  const [lastName, setLastName] = useState(null);
-  //   const [phoneNumber, setPhoneNumber] = useState(null);
-  const [email, setEmail] = useState(null);
+function Profile({
+  leaveAccountCallback,
+  userId,
+  userName,
+  firstName,
+  lastName,
+  email,
+  setUserId,
+  setUserName,
+  setFirstName,
+  setLastName,
+  setEmail,
+}) {
   const [description, setDescription] = useState(null);
   const [facebook, setFacebook] = useState(null);
   const [instagram, setInstagram] = useState(null);
@@ -23,39 +25,12 @@ function Profile({ leaveAccountCallback }) {
 
   const [loaded, setLoaded] = useState(false);
   const [edit, setEdit] = useState(true);
-  let requiredData = {};
-  let optionalData = {};
 
   useEffect(() => {
-    getRequiredData();
-  }, []);
-
-  const getRequiredData = () => {
-    // useEffect(() => {
-    fetch("../api/userIdValid" + "?user_id=" + params.userId)
-      .then((response) => {
-        if (!response.ok) {
-          leaveAccountCallback();
-          history.push("/ErrorPage");
-        } else {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        if (!data) {
-          setUserId(null);
-        } else {
-          setUserName(data.user_name);
-          setFirstName(data.first_name);
-          setLastName(data.last_name);
-          setUserId(data.user_id);
-          setEmail(data.email);
-          requiredData = data;
-          getUserOptionals(data.user_id);
-        }
-      });
-    // }, []);
-  };
+    if (userId) {
+      getUserOptionals(userId);
+    }
+  }, [userId]);
 
   const getUserOptionals = (user_id) => {
     const requestOptions = {
@@ -83,7 +58,6 @@ function Profile({ leaveAccountCallback }) {
           setInstagram(data.instagram);
           setTwitter(data.twitter);
           setLoaded(true);
-          optionalData = data;
         } else {
           console.log("No Data");
         }
@@ -162,9 +136,9 @@ function Profile({ leaveAccountCallback }) {
   };
 
   const handleCancelClicked = () => {
-    setLoaded(false);
     setEdit(true);
-    getRequiredData();
+    // change userId -> to execute useEffect -> reset all states which have been changed
+    setUserId("");
   };
 
   if (!loaded) {
@@ -205,7 +179,6 @@ function Profile({ leaveAccountCallback }) {
           </Button>
         </div>
       )}
-
       <br />
       <TextField
         disabled={edit}

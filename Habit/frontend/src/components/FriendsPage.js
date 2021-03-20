@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
 import FriendBlock from "./FriendBlock";
 import {
@@ -24,13 +23,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
 
-function FriendsPage({ leaveAccountCallback }) {
-  let params = useParams();
-  let history = useHistory();
-  const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState();
-  const [userFirstName, setUserFirstName] = useState();
-  const [userLastName, setUserLastName] = useState();
+function FriendsPage({ leaveAccountCallback, userId, userName }) {
   const [friendsList, setFriendsList] = useState(null);
   const [friendSearch, setFriendSearch] = useState("");
   // const [filterHabitName, setFilterHabitName] = useState("No Filter");
@@ -99,28 +92,10 @@ function FriendsPage({ leaveAccountCallback }) {
   //   ].filter((v) => v).length !== 1;
 
   useEffect(() => {
-    fetch("../api/userIdValid" + "?user_id=" + params.userId)
-      .then((response) => {
-        if (!response.ok) {
-          leaveAccountCallback();
-          history.push("/ErrorPage");
-        } else {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        if (!data) {
-          console.log("");
-        } else {
-          // getAllHabits();
-          setUserId(data.user_id);
-          setUserName(data.user_name);
-          setUserFirstName(data.first_name);
-          setUserLastName(data.last_name);
-          filterFriends(data.user_id, "No_Filter");
-        }
-      });
-  }, []);
+    if (userId) {
+      filterFriends(userId, "No_Filter");
+    }
+  }, [userId]);
 
   const filterFriends = (user_id, habit_name) => {
     setOpenFilter(false);
@@ -163,23 +138,23 @@ function FriendsPage({ leaveAccountCallback }) {
       });
   };
 
-  const getAllHabits = () => {
-    fetch("api/getAllHabits")
-      .then((response) => {
-        if (!response.ok) {
-          console.log(response);
-        } else {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        if (data) {
-          console.log(data.list_of_all_habits);
-        } else {
-          console.log("No Data");
-        }
-      });
-  };
+  // const getAllHabits = () => {
+  //   fetch("api/getAllHabits")
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         console.log(response);
+  //       } else {
+  //         return response.json();
+  //       }
+  //     })
+  //     .then((data) => {
+  //       if (data) {
+  //         console.log(data.list_of_all_habits);
+  //       } else {
+  //         console.log("No Data");
+  //       }
+  //     });
+  // };
 
   if (!userId || !friendsList) {
     return <LoadingPage />;

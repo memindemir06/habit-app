@@ -65,7 +65,7 @@ function Home() {
           console.log(userId);
         }
       });
-  }, [history]);
+  }, [history, userId]);
 
   const backToLogin = () => {
     setUserId("No Session");
@@ -121,7 +121,19 @@ function Home() {
             path="/profile"
             render={() => {
               return (
-                <Profile userId={userId} leaveAccountCallback={backToLogin} />
+                <Profile
+                  userId={userId}
+                  userName={userName}
+                  firstName={firstName}
+                  lastName={lastName}
+                  email={email}
+                  setUserId={setUserId}
+                  setUserName={setUserName}
+                  setFirstName={setFirstName}
+                  setLastName={setLastName}
+                  setEmail={setEmail}
+                  leaveAccountCallback={backToLogin}
+                />
               );
             }}
           />
@@ -131,7 +143,8 @@ function Home() {
             render={() => {
               return (
                 <FriendsPage
-                  // userId={userId}
+                  userId={userId}
+                  userName={userName}
                   leaveAccountCallback={backToLogin}
                 />
               );
@@ -156,6 +169,7 @@ function Home() {
               return (
                 <InspirationalPage
                   userId={userId}
+                  userName={userName}
                   leaveAccountCallback={backToLogin}
                 />
               );

@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useDebugValue } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import HabitBlock from "./HabitBlock";
-import LoadingPage from "./LoadingPage";
-import PropTypes from "prop-types";
 import { Button, Box, Typography, Tab, Tabs, AppBar } from "@material-ui/core";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+import {
+  Dialog,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+} from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import IconButton from "@material-ui/core/IconButton";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CloseIcon from "@material-ui/icons/Close";
 import SwipeableViews from "react-swipeable-views";
+import PropTypes from "prop-types";
+// Components
+import HabitBlock from "./HabitBlock";
+import LoadingPage from "./LoadingPage";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,32 +43,21 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-function DailyReminders({
-  userId,
-  userName,
-  firstName,
-  lastName,
-  // checkActiveSession,
-}) {
+function DailyReminders({ userId, userName, firstName, lastName }) {
   const params = useParams();
   const history = useHistory();
 
   const listOfAllHabits = new Set();
-  // const [userId, setUserId] = useState(user_id);
-  // const [userName, setUserName] = useState(user_name);
-  // const [firstName, setFirstName] = useState(first_name);
-  // const [lastName, setLastName] = useState(last_name);
 
   const [listOfHabits, setListOfHabits] = useState(null);
   const [listOfAvailableHabits, setListOfAvailableHabits] = useState([]);
   const [open, setOpen] = useState(false);
-  const [habitAdded, setHabitAdded] = useState();
+  // const [habitAdded, setHabitAdded] = useState();
   const [value, setValue] = useState(0);
-  const [habitsCompletedState, sethabitsCompletedState] = useState(false);
+  // const [habitsCompletedState, sethabitsCompletedState] = useState(false);
   // const [habitsPending, setHabitsPending] = useState(false);
 
   useEffect(() => {
-    console.log(userId);
     if (userId) {
       getHabits(userId);
     }
@@ -95,7 +87,6 @@ function DailyReminders({
             listOfAllHabits.add(data.list_of_habits[habit].habit_id.habit_id);
           }
           setListOfHabits(data.list_of_habits.reverse());
-          // listOfHabits.reverse();
           getAllHabits();
         } else {
           console.log("No Data");

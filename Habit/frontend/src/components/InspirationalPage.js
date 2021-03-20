@@ -1,30 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import LoadingPage from "./LoadingPage";
 
-const InspirationalPage = ({ leaveAccountCallback }) => {
-  let params = useParams();
-  let history = useHistory();
-  const [userId, setUserId] = useState(null);
-  const [username, setUsername] = useState(null);
-
+const InspirationalPage = ({ leaveAccountCallback, userId, userName }) => {
   useEffect(() => {
-    fetch("../api/userIdValid" + "?user_id=" + params.userId)
-      .then((response) => {
-        if (!response.ok) {
-          leaveAccountCallback();
-          history.push("/ErrorPage");
-        } else {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        if (!data) {
-          setUserId(null);
-        } else {
-          setUsername(data.user_name);
-        }
-      });
+    if (userId) {
+      fetchAPI();
+    }
   }, []);
+
   let requestOptions = {
     method: "GET",
     headers: {
@@ -54,12 +37,16 @@ const InspirationalPage = ({ leaveAccountCallback }) => {
       });
   };
 
-  return (
-    <div>
-      <h1>Inspirational Page</h1>
-      <h3>Welcome {username}</h3>
-    </div>
-  );
+  if (!userId || !userName) {
+    return <LoadingPage />;
+  } else {
+    return (
+      <div>
+        <h1>Inspirational Page</h1>
+        <h3>Welcome {"u/" + userName}</h3>
+      </div>
+    );
+  }
 };
 
 export default InspirationalPage;
