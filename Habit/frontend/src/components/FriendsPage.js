@@ -37,14 +37,16 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
   const [checkedHabits, setCheckedHabits] = useState({
     No_Filter: true,
     Gym: false,
-    Jogging: false,
+    Smoking: false,
     Drugs: false,
   });
 
-  const { No_Filter, Gym, Jogging, Drugs } = checkedHabits;
+  const { No_Filter, Gym, Smoking, Drugs } = checkedHabits;
 
-  const error = [No_Filter, Gym, Jogging, Drugs].filter((v) => v).length !== 1;
+  const error = [No_Filter, Gym, Smoking, Drugs].filter((v) => v).length !== 1;
 
+  // var filterChosen = "No_Filter";
+  const [filterChosen, setFilterChosen] = useState("No_Filter");
   // const [checkedHabits, setCheckedHabits] = useState({
   //   Smoking: false,
   //   Jogging: false,
@@ -99,6 +101,7 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
 
   const filterFriends = (user_id, habit_name) => {
     setOpenFilter(false);
+    setFilterChosen(habit_name);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -120,7 +123,7 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
       })
       .then((data) => {
         if (data) {
-          console.log(data);
+          // console.log(data);
           // Function to sort the list of friends by 1st Name
           let tempFriendList = data.list_of_friends;
           tempFriendList = tempFriendList.sort((a, b) => {
@@ -137,37 +140,6 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
         }
       });
   };
-
-  // const getAllHabits = () => {
-  //   fetch("api/getAllHabits")
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         console.log(response);
-  //       } else {
-  //         return response.json();
-  //       }
-  //     })
-  //     .then((data) => {
-  //       if (data) {
-  //         console.log(data.list_of_all_habits);
-  //       } else {
-  //         console.log("No Data");
-  //       }
-  //     });
-  // };
-
-  if (!userId || !friendsList) {
-    return <LoadingPage />;
-  }
-
-  if (friendsList.length == 0) {
-    return (
-      <div>
-        <h1>No Friends Added</h1>
-        <h1>Add some Friends...</h1>
-      </div>
-    );
-  }
 
   const friendSearchChange = (event) => {
     setFriendSearch(event.target.value);
@@ -201,7 +173,7 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
             setDisplayExists("error");
             setDisplayMessageExists("Friend already exists!");
           } else {
-            filterFriends(userId);
+            filterFriends(userId, "No_Filter");
             setFriendAlreadyExists("success");
             setDisplayExists("success");
             setDisplayMessageExists("Friend added successfully!");
@@ -233,6 +205,38 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
       [event.target.name]: event.target.checked,
     });
   };
+
+  const NoFilterMessage = () => {
+    if (friendsList.length == 0) {
+      if (filterChosen == "No_Filter") {
+        return (
+          <div>
+            <Typography variant="h5" align="center">
+              No Friends Added
+            </Typography>
+            <Typography variant="h5" align="center">
+              Add some Friends...
+            </Typography>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <Typography variant="h5" align="center">
+              No Friends Added for filter: {filterChosen}
+            </Typography>
+            <Typography variant="h5" align="center">
+              Add some Friends...
+            </Typography>
+          </div>
+        );
+      }
+    }
+  };
+
+  if (!userId || !friendsList) {
+    return <LoadingPage />;
+  }
 
   return (
     <div style={buttonStyle}>
@@ -354,7 +358,28 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
         </Collapse>
       </Grid>
       <br />
-      {friendsList.map((friend) => {
+      {friendsList.length == 0 ? (
+        <NoFilterMessage />
+      ) : (
+        friendsList.map((friend) => {
+          return (
+            <div>
+              <FriendBlock
+                userName={friend.user_name}
+                firstName={friend.first_name}
+                lastName={friend.last_name}
+                email={friend.email}
+                userId={userId}
+                friendUserId={friend.user_id}
+                filterFriends={filterFriends}
+              />
+              <br />
+            </div>
+          );
+        })
+      )}
+
+      {/* {friendsList.map((friend) => {
         return (
           <div>
             <FriendBlock
@@ -369,7 +394,7 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
             <br />
           </div>
         );
-      })}
+      })} */}
     </div>
   );
 }

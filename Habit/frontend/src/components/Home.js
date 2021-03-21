@@ -62,7 +62,6 @@ function Home() {
           setFirstName(data.first_name);
           setLastName(data.last_name);
           setEmail(data.email);
-          console.log(userId);
         }
       });
   }, [history, userId]);
@@ -105,7 +104,6 @@ function Home() {
                   <Login />
                 </div>
               ) : (
-                // <Redirect to="/home" />
                 <DailyReminders
                   userId={userId}
                   userName={userName}
@@ -120,19 +118,23 @@ function Home() {
             exact
             path="/profile"
             render={() => {
-              return (
+              return !userId ? null : userId == "No Session" ? (
+                <div>
+                  <Redirect to="/login" />
+                  <Login />
+                </div>
+              ) : (
                 <Profile
                   userId={userId}
                   userName={userName}
                   firstName={firstName}
                   lastName={lastName}
                   email={email}
-                  // setUserId={setUserId}
-                  // setUserName={setUserName}
-                  // setFirstName={setFirstName}
-                  // setLastName={setLastName}
-                  // setEmail={setEmail}
-                  leaveAccountCallback={backToLogin}
+                  setUserId={setUserId}
+                  setUserName={setUserName}
+                  setFirstName={setFirstName}
+                  setLastName={setLastName}
+                  setEmail={setEmail}
                 />
               );
             }}
@@ -141,7 +143,12 @@ function Home() {
             exact
             path="/friends"
             render={() => {
-              return (
+              return !userId ? null : userId == "No Session" ? (
+                <div>
+                  <Redirect to="/login" />
+                  <Login />
+                </div>
+              ) : (
                 <FriendsPage
                   userId={userId}
                   userName={userName}
@@ -154,7 +161,12 @@ function Home() {
             exact
             path="/leaderboard"
             render={() => {
-              return (
+              return !userId ? null : userId == "No Session" ? (
+                <div>
+                  <Redirect to="/login" />
+                  <Login />
+                </div>
+              ) : (
                 <LeaderboardPage
                   userId={userId}
                   leaveAccountCallback={backToLogin}
@@ -166,12 +178,31 @@ function Home() {
             exact
             path="/inspire"
             render={() => {
-              return (
+              return !userId ? null : userId == "No Session" ? (
+                <div>
+                  <Redirect to="/login" />
+                  <Login />
+                </div>
+              ) : (
                 <InspirationalPage
                   userId={userId}
                   userName={userName}
                   leaveAccountCallback={backToLogin}
                 />
+              );
+            }}
+          />
+          <Route
+            exact
+            path="/map"
+            render={() => {
+              return !userId ? null : userId == "No Session" ? (
+                <div>
+                  <Redirect to="/login" />
+                  <Login />
+                </div>
+              ) : (
+                <ErrorPage />
               );
             }}
           />

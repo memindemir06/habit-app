@@ -35,6 +35,8 @@ class Optional(models.Model):
     facebook = models.CharField(max_length=25, null=True) 
     instagram = models.CharField(max_length=25, null=True)
     twitter = models.CharField(max_length=25, null=True)
+    profile_img = models.ImageField(upload_to="gallery", null=True)
+    background_img = models.ImageField(upload_to="gallery", null=True)
     # location = models.CharField(max_length=20, null=True)
 
 

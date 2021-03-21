@@ -10,12 +10,21 @@ import {
   Container,
   Tooltip,
 } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
-const LeaderboardBlock = ({ userId, userName, habitName, streak, startDate }) => {
+const LeaderboardBlock = ({
+  userId,
+  userName,
+  habitName,
+  streak,
+  startDate,
+}) => {
+  const history = useHistory();
   const [expanded, setExpanded] = useState(false);
+  
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -28,7 +37,7 @@ const LeaderboardBlock = ({ userId, userName, habitName, streak, startDate }) =>
     display: "flex",
     alignItems: "center",
   };
-  
+
   const containerRightStyle = {
     display: "flex",
     alignItems: "center",
@@ -48,7 +57,7 @@ const LeaderboardBlock = ({ userId, userName, habitName, streak, startDate }) =>
               <div style={containerLeftStyle}>
                 <Typography variant="h5">{userName}</Typography>
               </div>
-            } 
+            }
             action={
               <div style={containerRightStyle}>
                 <Typography variant="h5">Streak: {streak}</Typography>

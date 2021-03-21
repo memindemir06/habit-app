@@ -61,7 +61,7 @@ const FriendBlock = ({
           console.log("No Data!");
         } else {
           console.log(data);
-          filterFriends(userId);
+          filterFriends(userId, "No_Filter");
         }
       });
   };

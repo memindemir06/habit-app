@@ -24,19 +24,22 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
   const [expanded, setExpanded] = useState(false);
   const [listOfFilters, setListOfFilters] = useState();
   const [openFilter, setOpenFilter] = useState(false);
+  const [filterChosen, setFilterChosen] = useState("No_Filter");
 
   const [checkedHabits, setCheckedHabits] = useState({
     No_Filter: true,
     Friends: false,
     Gym: false,
-    Jogging: false,
+    Smoking: false,
     Drugs: false,
+    Attendence: false,
   });
 
-  const { No_Filter, Friends, Gym, Jogging, Drugs } = checkedHabits;
+  const { No_Filter, Friends, Gym, Smoking, Drugs, Attendence } = checkedHabits;
 
   const error =
-    [No_Filter, Friends, Gym, Jogging, Drugs].filter((v) => v).length !== 1;
+    [No_Filter, Friends, Gym, Smoking, Drugs, Attendence].filter((v) => v)
+      .length !== 1;
 
   // const [checkedHabits, setCheckedHabits] = useState({
   //   Smoking: false,
@@ -90,33 +93,9 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
     }
   }, [userId]);
 
-  // const getAllHabits = () => {
-  //   fetch("../api/getAllHabits")
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         console.log(response);
-  //       } else {
-  //         return response.json();
-  //       }
-  //     })
-  //     .then((data) => {
-  //       if (data) {
-  //         let tempArray = [];
-  //         let listOfHabits = data.list_of_all_habits;
-  //         tempArray.push("No_Filter");
-  //         tempArray.push("Friends");
-  //         for (let habitObj in listOfHabits) {
-  //           tempArray.push(listOfHabits[habitObj].habit_name);
-  //         }
-  //         setListOfFilters(tempArray);
-  //       } else {
-  //         console.log("No Data");
-  //       }
-  //     });
-  // };
-
   const getLeaderboard = (user_id, filter) => {
     setOpenFilter(false);
+    setFilterChosen(filter);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -130,7 +109,7 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
     fetch("../api/getLeaderboard", requestOptions)
       .then((response) => {
         if (!response.ok) {
-          console.log("No User ID: ", response);
+          setLeaderboardList([]);
         } else {
           return response.json();
         }
@@ -157,6 +136,39 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+  };
+
+  const NoFilterMessage = () => {
+    if (leaderboardList.length == 0) {
+      if (filterChosen == "No_Filter") {
+        return (
+          <div>
+            <Typography variant="h5" align="center">
+              No Users on Leaderboard
+            </Typography>
+          </div>
+        );
+      } else if (filterChosen == "Friends") {
+        return (
+          <div>
+            <Typography variant="h5" align="center">
+              No Friends Added
+            </Typography>
+            <Typography variant="h5" align="center">
+              Add some Friends...
+            </Typography>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <Typography variant="h5" align="center">
+              No Existing Users for filter: {filterChosen}
+            </Typography>
+          </div>
+        );
+      }
+    }
   };
 
   if (leaderboardList == null) {
@@ -232,7 +244,22 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
             </Button>
           </DialogActions>
         </Dialog>
-        {leaderboardList.map((user) => {
+        {leaderboardList.length == 0 ? (
+          <NoFilterMessage />
+        ) : (
+          leaderboardList.map((user) => {
+            return (
+              <LeaderboardBlock
+                userId={user.user_id}
+                userName={user.user_id.user_name}
+                habitName={user.habit_id.habit_name}
+                streak={user.streak}
+                startDate={user.start_date}
+              />
+            );
+          })
+        )}
+        {/* {leaderboardList.map((user) => {
           return (
             <LeaderboardBlock
               userId={user.user_id}
@@ -242,7 +269,7 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
               startDate={user.start_date}
             />
           );
-        })}
+        })} */}
       </div>
     );
   }

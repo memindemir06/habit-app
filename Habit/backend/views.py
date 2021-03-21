@@ -269,8 +269,10 @@ class updateProfile(APIView):
     lookup_facebook = 'facebook'
     lookup_instagram = 'instagram'
     lookup_twitter = 'twitter'
+    lookup_profile_img = 'profile_img'
+    lookup_background_img = 'background_img'
 
-    def patch(self, request, format=None):
+    def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             # If they don't have an active session -> create one
             self.request.session.create() 
@@ -284,8 +286,10 @@ class updateProfile(APIView):
         facebook = request.data.get(self.lookup_facebook)
         instagram = request.data.get(self.lookup_instagram)
         twitter = request.data.get(self.lookup_twitter)
+        profile_img = request.FILES.get(self.lookup_profile_img) 
+        background_img = request.FILES.get(self.lookup_background_img) 
 
-        if (user_id != None) and (user_name != None) and (email != None) and (first_name != None) and (last_name != None) and (description != None) and (facebook != None) and (instagram != None) and (twitter != None):
+        if (user_id != None) and (user_name != None) and (email != None) and (first_name != None) and (last_name != None):
             userList = Users.objects.filter(user_id=user_id)
             if userList.exists():
                 # user = userList[0]
@@ -296,7 +300,7 @@ class updateProfile(APIView):
             if userOptionalsList.exists():
                 # userOptionals = userOptionalsList[0]
                 # userOptionals.update(description=description, facebook=facebook, instagram=instagram, twitter=twitter)
-                userOptionalsList.update(description=description, facebook=facebook, instagram=instagram, twitter=twitter)
+                userOptionalsList.update(description=description, facebook=facebook, instagram=instagram, twitter=twitter, profile_img=profile_img, background_img=background_img)
 
                 return Response(UserOptionalSerializer(userOptionalsList[0]).data, status=status.HTTP_200_OK)
 
