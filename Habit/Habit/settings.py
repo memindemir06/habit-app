@@ -139,4 +139,6 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 
 # FOR IMAGEFIELD
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_URL = '/'
+# MEDIA_URL = '/gallery/'
+# MEDIA_URL = '/media/'

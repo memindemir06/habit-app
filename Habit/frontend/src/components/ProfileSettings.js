@@ -1,35 +1,65 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
+import { DropzoneDialog } from "material-ui-dropzone";
+import { Button } from "@material-ui/core";
 import axios from "axios";
+// import { TextField, Button } from "@material-ui/core";
+// import EditIcon from "@material-ui/icons/EditRounded";
+// import SaveIcon from "@material-ui/icons/SaveRounded";
+// import CancelIcon from "@material-ui/icons/Cancel";
 
-class ProfileSettings extends Component {
-  state = {
-    title: "",
-    content: "",
-    image: null,
-  };
+const profileStyle = {
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+};
 
-  handleChange = (e) => {
-    this.setState({
-      [e.target.id]: e.target.value,
-    });
-  };
+const ProfileSettings = ({
+  userId,
+  userName,
+  firstName,
+  lastName,
+  email,
+  description,
+  facebook,
+  instagram,
+  twitter,
+  profileImg,
+  backgroundImg,
+  loaded,
+  setUserId,
+  setUserName,
+  setFirstName,
+  setLastName,
+  setEmail,
+  setDescription,
+  setFacebook,
+  setInstgram,
+  setTwitter,
+  setProfileImg,
+  setBackgroundImg,
+  setLoaded,
+  setSettingsClicked,
+}) => {
+  const [image, setImage] = useState(null);
+  const [open, setOpen] = useState(false);
 
-  handleImageChange = (e) => {
-    this.setState({
-      image: e.target.files[0],
-    });
-  };
+  const handleSubmit = (file) => {
+    // console.log(event);
+    // file.preventDefault();
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(this.state);
+    setSettingsClicked(false);
+    setOpen(false);
+
     let form_data = new FormData();
-    form_data.append("profile_img", this.state.image, this.state.image.name);
-    form_data.append("user_id", "CNKHMN"); 
-    form_data.append("facebook", "axios-test");
+    form_data.append("user_id", userId);
+    form_data.append("description", description);
+    form_data.append("facebook", facebook);
+    form_data.append("instagram", instagram);
+    form_data.append("twitter", twitter);
+    form_data.append("profile_img", file[0]);
+    form_data.append("background_img", backgroundImg);
 
-    // form_data.append("title", this.state.title);
-    // form_data.append("content", this.state.content);
     let url = "../api/updateProfile";
     axios
       .post(url, form_data, {
@@ -39,120 +69,83 @@ class ProfileSettings extends Component {
       })
       .then((res) => {
         console.log(res.data);
+        // causes useEffect to be called -> update all the states
+        setUserId("");
       })
       .catch((err) => console.log(err));
   };
 
-  render() {
+  const handleFileChange = (file) => {
+    if (file.length > 0) {
+      setProfileImg(file);
+      console.log(file[0]);
+    }
+  };
+
+  const handleSave = (file) => {
+    // e.preventDefault();
+    // setOpen(false);
+    // console.log(e);
+    console.log(file);
+    file.preventDefault();
+  };
+
+  const UploadFile = () => {
     return (
-      <div className="App">
-        <form onSubmit={this.handleSubmit}>
-          <p>
-            <input
-              type="text"
-              placeholder="Title"
-              id="title"
-              value={this.state.title}
-              onChange={this.handleChange}
-            />
-          </p>
-          <p>
-            <input
-              type="text"
-              placeholder="Content"
-              id="content"
-              value={this.state.content}
-              onChange={this.handleChange}
-            />
-          </p>
-          <p>
-            <input
-              type="file"
-              id="image"
-              accept="image/png, image/jpeg"
-              onChange={this.handleImageChange}
-              required
-            />
-          </p>
-          <input type="submit" />
-        </form>
+      <div style={profileStyle}>
+        <Button
+          onClick={() => setOpen(true)}
+          color="primary"
+          variant="outlined"
+          size="large"
+        >
+          {profileImg ? "Change Profile Picture" : "Add Profile Picture"}
+        </Button>
+        <DropzoneDialog
+          open={open}
+          onSave={handleSubmit}
+          filesLimit={1}
+          acceptedFiles={["image/jpeg", "image/png", "image/bmp", "image/webp"]}
+          showPreviews={true}
+          maxFileSize={5000000}
+          onClose={() => setOpen(false)}
+          // onChange={handleFileChange}
+        />
       </div>
     );
-  }
-}
+  };
+
+  return (
+    <div className="App">
+      <form onSubmit={handleSubmit}>
+        <p>
+          <input
+            type="text"
+            placeholder="Change Description"
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+          />
+          {"   " + description}
+        </p>
+        <br />
+        <UploadFile />
+        <br />
+        <p>
+          <input
+            type="file"
+            // id="image"
+            accept="image/png, image/jpeg, image/webp"
+            onChange={(event) => setProfileImg(event.target.files[0])}
+            required
+          />
+        </p>
+        <input type="submit" />
+      </form>
+    </div>
+  );
+};
 
 export default ProfileSettings;
-
-// import React, { useState, useEffect } from "react";
-// import LoadingPage from "./LoadingPage";
-// import { TextField, Button } from "@material-ui/core";
-// import EditIcon from "@material-ui/icons/EditRounded";
-// import SaveIcon from "@material-ui/icons/SaveRounded";
-// import CancelIcon from "@material-ui/icons/Cancel";
-// import { DropzoneDialog } from "material-ui-dropzone";
-// import axios from "axios";
-
-// function ProfileSettings({
-//   userId,
-//   userName,
-//   firstName,
-//   lastName,
-//   email,
-//   description,
-//   facebook,
-//   instagram,
-//   twitter,
-//   profileImg,
-//   backgroundImg,
-//   loaded,
-//   setUserId,
-//   setUserName,
-//   setFirstName,
-//   setLastName,
-//   setEmail,
-//   setDescription,
-//   setFacebook,
-//   setInstgram,
-//   setTwitter,
-//   setProfileImg,
-//   setBackgroundImg,
-//   setLoaded,
-//   setSettingsClicked,
-// }) {
-//   const [edit, setEdit] = useState(true);
-//   const [open, setOpen] = useState(false);
-
-//   const profileStyle = {
-//     display: "flex",
-//     flexDirection: "column",
-//     justifyContent: "center",
-//     alignItems: "center",
-//   };
-
-//   const userNameChange = (event) => {
-//     setUserName(event.target.value);
-//   };
-//   const emailChange = (event) => {
-//     setEmail(event.target.value);
-//   };
-//   const firstNameChange = (event) => {
-//     setFirstName(event.target.value);
-//   };
-//   const lastNameChange = (event) => {
-//     setLastName(event.target.value);
-//   };
-//   const descriptionChange = (event) => {
-//     setDescription(event.target.value);
-//   };
-//   const facebookChange = (event) => {
-//     setFacebook(event.target.value);
-//   };
-//   const instagramChange = (event) => {
-//     setInstagram(event.target.value);
-//   };
-//   const twitterChange = (event) => {
-//     setTwitter(event.target.value);
-//   };
 
 //   const handleSaveChanges = (img1, img2) => {
 //     // setEdit(true);
@@ -209,12 +202,12 @@ export default ProfileSettings;
 //     setOpen(false);
 //   };
 
-//   const handleSave = (file) => {
-//     // console.log(file[0]);
-//     // handleSaveChanges(file[0], file[0]);
-//     // setProfileImg(file[0]);
-//     // setBackgroundImg(file[0]);
-//     // setOpen(false);
+//    const handleSave = (file) => {
+//    console.log(file[0]);
+//    handleSaveChanges(file[0], file[0]);
+//    setProfileImg(file[0]);
+//    setBackgroundImg(file[0]);
+//    setOpen(false);
 //     file.preventDefault();
 //     console.log(this.state);
 //     let form_data = new FormData();
@@ -233,36 +226,22 @@ export default ProfileSettings;
 //       })
 //       .catch((err) => console.log(err));
 //   };
-
-//   handleChange = (e) => {
-//     this.setState({
-//       [e.target.id]: e.target.value,
-//     });
-//   };
-
-//   handleImageChange = (e) => {
-//     setProfileImg(e.target.files[0]);
-//     // this.setState({
-//     //   image: e.target.files[0],
-//     // });
-//   };
-
-//   const UploadFile = () => {
-//     return (
-//       <div style={profileStyle}>
-//         <Button onClick={handleOpen}>Add Image</Button>
-//         <DropzoneDialog
-//           open={open}
-//           onSave={handleSave}
-//           filesLimit={1}
-//           acceptedFiles={["image/jpeg", "image/png", "image/bmp", "image/webp"]}
-//           showPreviews={true}
-//           maxFileSize={5000000}
-//           onClose={handleClose}
-//         />
-//       </div>
-//     );
-//   };
+// const UploadFile = () => {
+//   return (
+//     <div style={profileStyle}>
+//       <Button onClick={handleOpen}>Add Image</Button>
+//       <DropzoneDialog
+//         open={open}
+//         onSave={handleSave}
+//         filesLimit={1}
+//         acceptedFiles={["image/jpeg", "image/png", "image/bmp", "image/webp"]}
+//         showPreviews={true}
+//         maxFileSize={5000000}
+//         onClose={handleClose}
+//       />
+//     </div>
+//   );
+// };
 
 //   if (!loaded) {
 //     return <LoadingPage />;
@@ -293,7 +272,6 @@ export default ProfileSettings;
 //       </div>
 //       <br />
 //       <UploadFile />
-//       {/* <UploadFile disabled={edit} /> */}
 //       <br />
 //       <TextField
 //         disabled={edit}

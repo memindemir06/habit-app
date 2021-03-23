@@ -5,6 +5,7 @@ from rest_framework import generics, status
 from .models import Users, UserHabits, Optional, UserFriends, Habits
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer, UserOptionalSerializer, FriendsSerializer, AllHabitsSerializer, ImageSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.core.files.storage import FileSystemStorage
 
 class index(generics.ListAPIView):
    queryset = Users.objects.all()
@@ -265,24 +266,41 @@ class updateProfile(APIView):
 
     def post(self, request, *args, **kwargs):
         posts_serializer = ImageSerializer(data=request.data)
-        if posts_serializer.is_valid():
-            # userList = Users.objects.filter()
-            # posts_serializer.save() 
-            
-            userOptionalsList = Optional.objects.filter(user_id=user_id)
-            
-            user_id = posts_serializer.data['user_id']
-            facebook = posts_serializer.data['facebook']
-            #  = posts_serializer.
-            #  = posts_serializer.
-            #  = posts_serializer.
-            #  = posts_serializer.
-            #  = posts_serializer.
-            #  = posts_serializer. 
 
+        if posts_serializer.is_valid():
+            # Required Info
+            user_id = posts_serializer.data['user_id']
+            # user_name = posts_serializer.data['user_name']
+            # first_name = posts_serializer.data['first_name']
+            # last_name = posts_serializer.data['last_name']
+            # email = posts_serializer.data['email']
+
+            # Optional Info
+            description = posts_serializer.data['description']
+            facebook = posts_serializer.data['facebook']
+            instagram = posts_serializer.data['instagram']
+            twitter = posts_serializer.data['twitter']
+            
+            # profile_img
+            profile_img_file = request.FILES['profile_img']
+            fs = FileSystemStorage()
+            filename = fs.save(profile_img_file.name, profile_img_file)
+            profile_img_url = fs.url(filename)
+            
+            # background_img 
+            background_img_file = request.FILES['background_img']
+            fs = FileSystemStorage()
+            filename = fs.save(background_img_file.name, background_img_file)
+            background_img_url = fs.url(filename)
+
+            # profile_img = posts_serializer.data['profile_img']
+            # background_img = posts_serializer.data['background_img']
+
+
+            userOptionalsList = Optional.objects.filter(user_id=user_id)
 
             if userOptionalsList.exists():  
-                userOptionalsList.update(facebook=facebook)                       
+                userOptionalsList.update(description=description, facebook=facebook, instagram=instagram, twitter=twitter, profile_img=profile_img_url, background_img=background_img_url)                      
 
                 return Response(UserOptionalSerializer(userOptionalsList[0]).data, status=status.HTTP_200_OK)
             return Response(posts_serializer.data, status=status.HTTP_201_CREATED)

@@ -50,7 +50,6 @@ function Home() {
     fetch("../api/activeSession")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.user_id == null) {
           console.log("No Session");
           setUserId("No Session");
