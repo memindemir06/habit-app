@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import generics, status
 from .models import Users, UserHabits, Optional, UserFriends, Habits
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer, UserOptionalSerializer, FriendsSerializer, AllHabitsSerializer
-
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer, UserOptionalSerializer, FriendsSerializer, AllHabitsSerializer, ImageSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class index(generics.ListAPIView):
    queryset = Users.objects.all()
@@ -259,7 +259,39 @@ class getUserOptionals(APIView):
 
 
 class updateProfile(APIView):
-    serializer_class = UserOptionalSerializer
+    # serializer_class = UserOptionalSerializer
+
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, *args, **kwargs):
+        posts_serializer = ImageSerializer(data=request.data)
+        if posts_serializer.is_valid():
+            # userList = Users.objects.filter()
+            # posts_serializer.save() 
+            
+            userOptionalsList = Optional.objects.filter(user_id=user_id)
+            
+            user_id = posts_serializer.data['user_id']
+            facebook = posts_serializer.data['facebook']
+            #  = posts_serializer.
+            #  = posts_serializer.
+            #  = posts_serializer.
+            #  = posts_serializer.
+            #  = posts_serializer.
+            #  = posts_serializer. 
+
+
+            if userOptionalsList.exists():  
+                userOptionalsList.update(facebook=facebook)                       
+
+                return Response(UserOptionalSerializer(userOptionalsList[0]).data, status=status.HTTP_200_OK)
+            return Response(posts_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print('error', posts_serializer.errors)
+            return Response(posts_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    '''
     lookup_user_id = 'user_id'
     lookup_user_name = 'user_name'
     lookup_first_name = 'first_name'
@@ -297,17 +329,17 @@ class updateProfile(APIView):
                 userList.update(user_name=user_name, email=email, first_name=first_name, last_name=last_name)
             
             userOptionalsList = Optional.objects.filter(user_id=user_id)
-            if userOptionalsList.exists():
-                # userOptionals = userOptionalsList[0]
+            if userOptionalsList.exists():  
+                # userOptionals = userOptionalsList[0] 
                 # userOptionals.update(description=description, facebook=facebook, instagram=instagram, twitter=twitter)
-                userOptionalsList.update(description=description, facebook=facebook, instagram=instagram, twitter=twitter, profile_img=profile_img, background_img=background_img)
-
+                userOptionalsList[0].update(description=description, facebook=facebook, instagram=instagram, twitter=twitter)                       
+                userOptionalsList[0].profile_img.save(profile_img.name, profile_img, save=True)
                 return Response(UserOptionalSerializer(userOptionalsList[0]).data, status=status.HTTP_200_OK)
 
             return Response({"Bad Request": "User Id not valid!"}, status.HTTP_400_BAD_REQUEST)
         
         return Response({"Bad Request": "Parameters missing in Request!"}, status.HTTP_400_BAD_REQUEST)
-        
+    '''
 
 # FRIENDS PAGE --------------------------------------------------------------------------------
 

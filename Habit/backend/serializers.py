@@ -26,20 +26,28 @@ class UserHabitsSerializer(serializers.ModelSerializer):
         depth = 1 # To get foreign key data
         fields = ('user_id', 'habit_id', 'streak', 'start_date', 'completed') # Got rid of user_id, dont need it
         
+
 class UserOptionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Optional
         depth = 1
         fields = ('user_id', 'phone_number', 'description', 'facebook', 'instagram', 'twitter', 'profile_img',  'background_img')
         
+
 class FriendsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFriends
         depth = 1
         fields = ('user_id1', 'user_id2')
 
+
 class AllHabitsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habits
         fields = ('habit_id', 'habit_name')
 
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Optional
+        fields = '__all__'
