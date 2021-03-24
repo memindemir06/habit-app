@@ -2,12 +2,23 @@ import React, { useState, useEffect } from "react";
 import ProfileSettings from "./ProfileSettings";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import SettingsIcon from "@material-ui/icons/Settings";
-import { IconButton, Typography } from "@material-ui/core";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
+import {
+  IconButton,
+  Typography,
+  Grid,
+  Paper,
+  Card,
+  CardHeader,
+  Avatar,
+} from "@material-ui/core";
+// import Card from "@material-ui/core/Card";
+// import CardActionArea from "@material-ui/core/CardActionArea";
+// import CardActions from "@material-ui/core/CardActions";
+// import CardContent from "@material-ui/core/CardContent";
+// import CardMedia from "@material-ui/core/CardMedia";
+import FacebookIcon from "@material-ui/icons/Facebook";
+import InstagramIcon from "@material-ui/icons/Instagram";
+import TwitterIcon from "@material-ui/icons/Twitter";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +56,11 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     bottom: "20px",
     left: "225px",
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
   },
 }));
 
@@ -134,7 +150,55 @@ function Profile({
               <SettingsIcon fontSize="small" />
             </IconButton>
           </div>
-          <div className="profile-info"></div>
+          <br />
+          <br />
+          <br />
+          <div className="profile-info">
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={12}>
+                <Paper className={classes.paper}>{description}</Paper>
+              </Grid>
+              <br />
+              <Grid container spacing={1}>
+                <Grid item xs={12} sm={4}>
+                  <Card>
+                    <CardHeader
+                      avatar={
+                        <IconButton>
+                          <FacebookIcon color="primary" />
+                        </IconButton>
+                      }
+                      title={facebook}
+                    />
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Card>
+                    <CardHeader
+                      avatar={
+                        <IconButton>
+                          <InstagramIcon color="secondary" />
+                        </IconButton>
+                      }
+                      title={instagram}
+                    />
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Card>
+                    <CardHeader
+                      avatar={
+                        <IconButton>
+                          <TwitterIcon color="primary" />
+                        </IconButton>
+                      }
+                      title={twitter}
+                    />
+                  </Card>
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
         </div>
       ) : (
         <ProfileSettings

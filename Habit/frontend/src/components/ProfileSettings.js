@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { DropzoneDialog } from "material-ui-dropzone";
-import { Button } from "@material-ui/core";
+import { Button, Typography, TextField, IconButton } from "@material-ui/core";
 import axios from "axios";
-// import { TextField, Button } from "@material-ui/core";
 // import EditIcon from "@material-ui/icons/EditRounded";
-// import SaveIcon from "@material-ui/icons/SaveRounded";
+import SaveIcon from "@material-ui/icons/SaveRounded";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 // import CancelIcon from "@material-ui/icons/Cancel";
 
 const profileStyle = {
@@ -41,26 +41,76 @@ const ProfileSettings = ({
   setLoaded,
   setSettingsClicked,
 }) => {
-  const [image, setImage] = useState(null);
   const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [blankField, setBlankField] = useState(false);
 
-  const handleSubmit = (file) => {
-    // console.log(event);
-    // file.preventDefault();
+  const userNameChange = (e) => {
+    setUserName(e.target.value);
+  };
+  const firstNameChange = (e) => {
+    setFirstName(e.target.value);
+  };
+  const lastNameChange = (e) => {
+    setLastName(e.target.value);
+  };
+  const emailChange = (e) => {
+    setEmail(e.target.value);
+  };
 
-    setSettingsClicked(false);
-    setOpen(false);
+  const handleSaveChangesRequired = () => {
+    if (userName == "" || firstName == "" || lastName == "" || email == "") {
+      // set alert for required
+    } else {
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          user_name: userName,
+          email: email,
+          first_name: firstName,
+          last_name: lastName,
+        }),
+      };
 
+      fetch("../api/updateProfileRequired", requestOptions)
+        .then((response) => {
+          if (!response.ok) {
+            console.log("Bad Request: ", response);
+            // Not all fields are updated
+          } else {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          if (data) {
+            console.log(data);
+            setUserId("");
+            // Add Alert -> profile updated!
+          } else {
+            console.log("No Data!");
+          }
+        });
+    }
+  };
+
+  const handleOptionalSubmit = (profile_img, background_img) => {
     let form_data = new FormData();
     form_data.append("user_id", userId);
     form_data.append("description", description);
     form_data.append("facebook", facebook);
     form_data.append("instagram", instagram);
     form_data.append("twitter", twitter);
-    form_data.append("profile_img", file[0]);
-    form_data.append("background_img", backgroundImg);
+    form_data.append("profile_img", profile_img ? profile_img : profileImg);
+    form_data.append(
+      "background_img",
+      background_img ? background_img : backgroundImg
+    );
 
-    let url = "../api/updateProfile";
+    let url = "../api/updateProfileOptionals";
     axios
       .post(url, form_data, {
         headers: {
@@ -69,28 +119,56 @@ const ProfileSettings = ({
       })
       .then((res) => {
         console.log(res.data);
+        // return res.json();
         // causes useEffect to be called -> update all the states
-        setUserId("");
+        // setUserId("");
       })
       .catch((err) => console.log(err));
   };
 
-  const handleFileChange = (file) => {
-    if (file.length > 0) {
-      setProfileImg(file);
-      console.log(file[0]);
-    }
+  const handleImageUpdate = (profile_img, background_img) => {
+    let form_data = new FormData();
+    form_data.append("user_id", userId);
+    form_data.append("profile_img", profile_img ? profile_img : profileImg);
+    form_data.append(
+      "background_img",
+      background_img ? background_img : backgroundImg
+    );
+
+    let url = "../api/updateProfileImage";
+    axios
+      .post(url, form_data, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        // return res.json();
+        // causes useEffect to be called -> update all the states
+        // setUserId("");
+      })
+      .catch((err) => console.log(err));
   };
 
-  const handleSave = (file) => {
-    // e.preventDefault();
-    // setOpen(false);
-    // console.log(e);
-    console.log(file);
-    file.preventDefault();
+  const handleProfileImgSubmit = (file) => {
+    handleImageUpdate(file[0], null);
+    setOpen(false);
+    // setProfileImg(file[0]);
   };
 
-  const UploadFile = () => {
+  const handleBackgroundImgSubmit = (file) => {
+    handleImageUpdate(null, file[0]);
+    setOpen(false);
+    // setBackgroundImg(file[0]);
+  };
+
+  const backToProfile = () => {
+    setUserId("");
+    setSettingsClicked(false);
+  };
+
+  const UploadFile = ({ profile }) => {
     return (
       <div style={profileStyle}>
         <Button
@@ -99,17 +177,22 @@ const ProfileSettings = ({
           variant="outlined"
           size="large"
         >
-          {profileImg ? "Change Profile Picture" : "Add Profile Picture"}
+          {profile
+            ? profileImg
+              ? "Change Profile Picture"
+              : "Add Profile Picture"
+            : backgroundImg
+            ? "Change Background Picture"
+            : "Add Background Picture"}
         </Button>
         <DropzoneDialog
           open={open}
-          onSave={handleSubmit}
+          onSave={profile ? handleProfileImgSubmit : handleBackgroundImgSubmit}
           filesLimit={1}
           acceptedFiles={["image/jpeg", "image/png", "image/bmp", "image/webp"]}
           showPreviews={true}
           maxFileSize={5000000}
           onClose={() => setOpen(false)}
-          // onChange={handleFileChange}
         />
       </div>
     );
@@ -117,76 +200,150 @@ const ProfileSettings = ({
 
   return (
     <div className="App">
-      <form onSubmit={handleSubmit}>
-        <p>
-          <input
-            type="text"
-            placeholder="Change Description"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-          />
-          {"   " + description}
-        </p>
+      <div className="required" style={profileStyle}>
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<ArrowBackIcon />}
+          onClick={backToProfile}
+        >
+          Back to Profile
+        </Button>
+        <Typography variant="h3" align="center">
+          Profile Settings
+        </Typography>
         <br />
-        <UploadFile />
+        <Typography variant="h4" align="center">
+          Required Fields
+        </Typography>
         <br />
-        <p>
-          <input
-            type="file"
-            // id="image"
-            accept="image/png, image/jpeg, image/webp"
-            onChange={(event) => setProfileImg(event.target.files[0])}
-            required
-          />
-        </p>
-        <input type="submit" />
-      </form>
+        <TextField
+          disabled={edit}
+          label="Username"
+          style={{ margin: 8 }}
+          margin="normal"
+          variant="outlined"
+          multiline={true}
+          value={userName}
+          onChange={userNameChange}
+          required={true}
+        />
+        <br />
+        <TextField
+          disabled={edit}
+          label="Email"
+          style={{ margin: 8 }}
+          margin="normal"
+          variant="outlined"
+          multiline={true}
+          value={email}
+          onChange={emailChange}
+          required={true}
+        />
+        <br />
+        <TextField
+          disabled={edit}
+          label="First Name"
+          style={{ margin: 8 }}
+          margin="normal"
+          variant="outlined"
+          multiline={true}
+          value={firstName}
+          onChange={firstNameChange}
+          required={true}
+        />
+        <br />
+        <TextField
+          disabled={edit}
+          label="Last Name"
+          style={{ margin: 8 }}
+          margin="normal"
+          variant="outlined"
+          multiline={true}
+          value={lastName}
+          onChange={lastNameChange}
+          required={true}
+        />
+        <br />
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<SaveIcon />}
+          onClick={handleSaveChangesRequired}
+          disableElevation
+        >
+          Save Changes Required
+        </Button>
+      </div>
+      <br />
+      <div className="optionals" style={profileStyle}>
+        <Typography variant="h4" align="center">
+          Optional Fields
+        </Typography>
+        <br />
+        <UploadFile profile={true} />
+        <br />
+        <UploadFile profile={false} />
+        <br />
+        <TextField
+          disabled={edit}
+          label="Description"
+          style={{ margin: 8 }}
+          margin="normal"
+          variant="outlined"
+          multiline={true}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <br />
+        <TextField
+          disabled={edit}
+          label="Facebook"
+          style={{ margin: 8 }}
+          margin="normal"
+          variant="outlined"
+          multiline={true}
+          value={facebook}
+          onChange={(e) => setFacebook(e.target.value)}
+        />
+        <br />
+        <TextField
+          disabled={edit}
+          label="Instagram"
+          style={{ margin: 8 }}
+          margin="normal"
+          variant="outlined"
+          multiline={true}
+          value={instagram}
+          onChange={(e) => setInstagram(e.target.value)}
+        />
+        <br />
+        <TextField
+          disabled={edit}
+          label="Twitter"
+          style={{ margin: 8 }}
+          margin="normal"
+          variant="outlined"
+          multiline={true}
+          value={twitter}
+          onChange={(e) => setTwitter(e.target.value)}
+        />
+        <br />
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<SaveIcon />}
+          onClick={handleOptionalSubmit}
+          disableElevation
+        >
+          Save Changes Optional
+        </Button>
+      </div>
     </div>
   );
 };
 
 export default ProfileSettings;
-
-//   const handleSaveChanges = (img1, img2) => {
-//     // setEdit(true);
-//     setSettingsClicked(false);
-//     const requestOptions = {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         user_id: userId,
-//         user_name: userName,
-//         email: email,
-//         first_name: firstName,
-//         last_name: lastName,
-//         description: description,
-//         facebook: facebook,
-//         instagram: instagram,
-//         twitter: twitter,
-//         profile_img: img1,
-//         background_img: img2,
-//       }),
-//     };
-
-//     fetch("../api/updateProfile", requestOptions)
-//       .then((response) => {
-//         if (!response.ok) {
-//           console.log("Bad Request: ", response);
-//         } else {
-//           return response.json();
-//         }
-//       })
-//       .then((data) => {
-//         if (data) {
-//           console.log(data);
-//           // Add Alert -> profile updated!
-//         } else {
-//           console.log("No Data!");
-//         }
-//       });
-//   };
 
 //   const handleCancelClicked = () => {
 //     // setEdit(true);
@@ -249,18 +406,9 @@ export default ProfileSettings;
 
 //   return (
 //     <div style={profileStyle}>
-//       <div>
-//         <Button
-//           variant="contained"
-//           color="primary"
-//           endIcon={<SaveIcon />}
-//           // onClick={handleSaveChanges}
-//           onClick={handleSave}
-//           disableElevation
-//         >
-//           Save Changes
-//         </Button>
-//         <Button
+//       {/* <div> */}
+
+//         {/* <Button
 //           variant="contained"
 //           color="secondary"
 //           endIcon={<CancelIcon />}
@@ -268,11 +416,11 @@ export default ProfileSettings;
 //           disableElevation
 //         >
 //           Cancel
-//         </Button>
-//       </div>
-//       <br />
+//         </Button> */}
+//       {/* </div> */}
+//       {/* <br />
 //       <UploadFile />
-//       <br />
+//       <br /> */}
 //       <TextField
 //         disabled={edit}
 //         label="Username"
@@ -316,7 +464,17 @@ export default ProfileSettings;
 //         value={lastName}
 //         onChange={lastNameChange}
 //       />
-//       <br />
+//        <Button
+//           variant="contained"
+//           color="primary"
+//           endIcon={<SaveIcon />}
+//           // onClick={handleSaveChanges}
+//           onClick={handleSaveChangesRequired}
+//           disableElevation
+//         >
+//           Save Changes Required
+//         </Button>
+//       {/* <br />
 //       <TextField
 //         disabled={edit}
 //         label="Description"
@@ -360,7 +518,7 @@ export default ProfileSettings;
 //         value={twitter}
 //         onChange={twitterChange}
 //       />
-//       <br />
+//       <br /> */}
 //     </div>
 //   );
 // }

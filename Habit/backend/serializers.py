@@ -50,4 +50,4 @@ class AllHabitsSerializer(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Optional
-        fields = '__all__'
+        fields = ('user_id', 'phone_number', 'description', 'facebook', 'instagram', 'twitter')

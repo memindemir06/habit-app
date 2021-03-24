@@ -1,3 +1,4 @@
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -253,15 +254,19 @@ class getUserOptionals(APIView):
             if listOfOptionals.exists():
                 # return JsonResponse({'userOptionals': UserOptionalSerializer(listOfOptionals[0]).data}, status=status.HTTP_200_OK)
                 return Response(UserOptionalSerializer(listOfOptionals[0]).data, status=status.HTTP_200_OK)
+            else:
+                userInstance = Users.objects.filter(user_id=user_id)
+                userOptionalData = Optional(user_id=userInstance[0])
+                userOptionalData.save()
+
+                return Response(UserOptionalSerializer(userOptionalData).data, status=status.HTTP_200_OK)
             
             return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_400_BAD_REQUEST)
             
         return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_404_NOT_FOUND)
 
 
-class updateProfile(APIView):
-    # serializer_class = UserOptionalSerializer
-
+class updateProfileOptionals(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
@@ -270,58 +275,92 @@ class updateProfile(APIView):
         if posts_serializer.is_valid():
             # Required Info
             user_id = posts_serializer.data['user_id']
-            # user_name = posts_serializer.data['user_name']
-            # first_name = posts_serializer.data['first_name']
-            # last_name = posts_serializer.data['last_name']
-            # email = posts_serializer.data['email']
 
             # Optional Info
-            description = posts_serializer.data['description']
+            description = posts_serializer.data['description'] 
             facebook = posts_serializer.data['facebook']
             instagram = posts_serializer.data['instagram']
             twitter = posts_serializer.data['twitter']
             
-            # profile_img
-            profile_img_file = request.FILES['profile_img']
-            fs = FileSystemStorage()
-            filename = fs.save(profile_img_file.name, profile_img_file)
-            profile_img_url = fs.url(filename)
-            
-            # background_img 
-            background_img_file = request.FILES['background_img']
-            fs = FileSystemStorage()
-            filename = fs.save(background_img_file.name, background_img_file)
-            background_img_url = fs.url(filename)
-
-            # profile_img = posts_serializer.data['profile_img']
-            # background_img = posts_serializer.data['background_img']
-
-
             userOptionalsList = Optional.objects.filter(user_id=user_id)
 
-            if userOptionalsList.exists():  
-                userOptionalsList.update(description=description, facebook=facebook, instagram=instagram, twitter=twitter, profile_img=profile_img_url, background_img=background_img_url)                      
+            if userOptionalsList.exists(): 
+                # profile_img
+                # profile_img_file = request.FILES.get('profile_img', False)
+
+                # if profile_img_file:
+                #     fs = FileSystemStorage()
+                #     filename = fs.save(profile_img_file.name, profile_img_file)
+                #     profile_img_url = fs.url(filename)
+                #     userOptionalsList.update(profile_img=profile_img_url)
+
+                # # background_img 
+                # background_img_file = request.FILES.get('background_img', False)
+
+                # if background_img_file:                
+                #     fs = FileSystemStorage()
+                #     filename = fs.save(background_img_file.name, background_img_file)
+                #     background_img_url = fs.url(filename)
+                #     userOptionalsList.update(background_img=background_img_url) 
+ 
+                
+                userOptionalsList.update(description=description, facebook=facebook, instagram=instagram, twitter=twitter)                      
 
                 return Response(UserOptionalSerializer(userOptionalsList[0]).data, status=status.HTTP_200_OK)
+
             return Response(posts_serializer.data, status=status.HTTP_201_CREATED)
         else:
             print('error', posts_serializer.errors)
             return Response(posts_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    '''
+class updateProfileImages(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, *args, **kwargs):
+        posts_serializer = ImageSerializer(data=request.data)
+
+        if posts_serializer.is_valid():
+            # Required Info
+            user_id = posts_serializer.data['user_id']
+    
+            userOptionalsList = Optional.objects.filter(user_id=user_id)
+
+            if userOptionalsList.exists(): 
+                    # profile_img
+                profile_img_file = request.FILES.get('profile_img', False)
+
+                if profile_img_file:
+                    fs = FileSystemStorage()
+                    filename = fs.save(profile_img_file.name, profile_img_file)
+                    profile_img_url = fs.url(filename)
+                    userOptionalsList.update(profile_img=profile_img_url)
+
+                # background_img
+                background_img_file = request.FILES.get('background_img', False)
+
+                if background_img_file:                
+                    fs = FileSystemStorage()
+                    filename = fs.save(background_img_file.name, background_img_file)
+                    background_img_url = fs.url(filename)
+                    userOptionalsList.update(background_img=background_img_url)
+    
+                return Response(UserOptionalSerializer(userOptionalsList[0]).data, status=status.HTTP_200_OK)
+
+            return Response({"Bad Request": "user has no optionals"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            print('error', posts_serializer.errors)
+            return Response(posts_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+       
+
+
+class updateProfileRequired(APIView):
+    
     lookup_user_id = 'user_id'
     lookup_user_name = 'user_name'
     lookup_first_name = 'first_name'
     lookup_last_name = 'last_name'
     lookup_email = 'email'
-    lookup_description = 'description'
-    lookup_facebook = 'facebook'
-    lookup_instagram = 'instagram'
-    lookup_twitter = 'twitter'
-    lookup_profile_img = 'profile_img'
-    lookup_background_img = 'background_img'
-
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             # If they don't have an active session -> create one
@@ -332,32 +371,18 @@ class updateProfile(APIView):
         email = request.data.get(self.lookup_email)
         first_name = request.data.get(self.lookup_first_name)
         last_name = request.data.get(self.lookup_last_name)
-        description = request.data.get(self.lookup_description)
-        facebook = request.data.get(self.lookup_facebook)
-        instagram = request.data.get(self.lookup_instagram)
-        twitter = request.data.get(self.lookup_twitter)
-        profile_img = request.FILES.get(self.lookup_profile_img) 
-        background_img = request.FILES.get(self.lookup_background_img) 
-
         if (user_id != None) and (user_name != None) and (email != None) and (first_name != None) and (last_name != None):
             userList = Users.objects.filter(user_id=user_id)
             if userList.exists():
-                # user = userList[0]
-                # user.update(user_name=user_name, email=email, first_name=first_name, last_name=last_name)
+ 
                 userList.update(user_name=user_name, email=email, first_name=first_name, last_name=last_name)
-            
-            userOptionalsList = Optional.objects.filter(user_id=user_id)
-            if userOptionalsList.exists():  
-                # userOptionals = userOptionalsList[0] 
-                # userOptionals.update(description=description, facebook=facebook, instagram=instagram, twitter=twitter)
-                userOptionalsList[0].update(description=description, facebook=facebook, instagram=instagram, twitter=twitter)                       
-                userOptionalsList[0].profile_img.save(profile_img.name, profile_img, save=True)
-                return Response(UserOptionalSerializer(userOptionalsList[0]).data, status=status.HTTP_200_OK)
+                                
+                return Response(UserSerializer(userList[0]).data, status=status.HTTP_200_OK)
 
             return Response({"Bad Request": "User Id not valid!"}, status.HTTP_400_BAD_REQUEST)
         
         return Response({"Bad Request": "Parameters missing in Request!"}, status.HTTP_400_BAD_REQUEST)
-    '''
+    
 
 # FRIENDS PAGE --------------------------------------------------------------------------------
 
