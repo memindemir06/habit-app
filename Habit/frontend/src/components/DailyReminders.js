@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useDebugValue } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Button, Box, Typography, Tab, Tabs, AppBar } from "@material-ui/core";
+import {
+  Button,
+  Box,
+  Typography,
+  Tab,
+  Tabs,
+  AppBar,
+  Divider,
+} from "@material-ui/core";
 import {
   Dialog,
   List,
@@ -16,6 +24,32 @@ import PropTypes from "prop-types";
 // Components
 import HabitBlock from "./HabitBlock";
 import LoadingPage from "./LoadingPage";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: theme.spacing(4),
+    margin: theme.spacing(8),
+    [theme.breakpoints.down("md")]: {
+      margin: theme.spacing(2),
+      padding: theme.spacing(4),
+    },
+    [theme.breakpoints.down("sm")]: {
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+    },
+  },
+  tabs: {
+    backgroundColor: "transparent",
+    boxShadow: "none",
+    color: "black",
+    display: "flex",
+  },
+  divider: {
+    marginLeft: theme.spacing(3),
+    width: "340px",
+  },
+}));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,6 +90,8 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
   const [value, setValue] = useState(0);
   // const [habitsCompletedState, sethabitsCompletedState] = useState(false);
   // const [habitsPending, setHabitsPending] = useState(false);
+  const classes = useStyles();
+  const theme = useTheme();
 
   useEffect(() => {
     if (userId) {
@@ -201,23 +237,25 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
   let tempCompleted = false;
 
   return (
-    <div>
+    <div className={classes.root}>
       <Typography variant="h3" align="center">
         {userName}
       </Typography>
       <br />
 
-      <AppBar position="static">
+      <AppBar position="static" className={classes.tabs}>
         <Tabs
           value={value}
           onChange={handleChange}
           aria-label="simple tabs example"
         >
-          <Tab label="Pending" />
+          <Tab style={{ marginLeft: "2em" }} label="Pending" />
           <Tab label="Completed" />
+          <div style={{ flexGrow: 1 }}></div>
           <Button
             variant="contained"
             color="secondary"
+            style={{ marginRight: "2em" }}
             endIcon={<AddCircleIcon />}
             onClick={() => setOpen(true)}
           >
@@ -244,7 +282,6 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
                     getHabits={getHabits}
                     completed={habit.completed}
                   />
-                  <br />
                 </div>
               );
             } else if (index == listOfHabits.length - 1 && !tempPending) {

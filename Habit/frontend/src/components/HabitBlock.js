@@ -8,42 +8,20 @@ import {
   Grid,
   IconButton,
   Typography,
-  Container,
   Tooltip,
+  Divider,
 } from "@material-ui/core";
-import { palette } from "@material-ui/system";
-import {
-  makeStyles,
-  ThemeProvider,
-  createMuiTheme,
-} from "@material-ui/core/styles";
-import { orange } from "@material-ui/core/colors";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: orange[500],
-    },
+const useStyles = makeStyles((theme) => ({
+  habitContainer: {
+    backgroundColor: "transparent",
+    boxShadow: "none",
   },
-});
-
-const styles = {
-  root: {
-    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
-    border: 0,
-    borderRadius: 3,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
-    color: "white",
-    height: 48,
-    padding: "0 30px",
-  },
-  Container: {
-    background: "#000000",
-  },
-};
+}));
 
 const HabitBlock = ({
   habitName,
@@ -56,6 +34,8 @@ const HabitBlock = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [streakClicked, setStreakClicked] = useState(completed);
+  const classes = useStyles();
+  const theme = useTheme();
 
   const handleStreakClicked = (event) => {
     setStreakClicked(!streakClicked);
@@ -133,9 +113,9 @@ const HabitBlock = ({
 
   return (
     <div>
-      <Container>
+      <Grid container justify="center" alignItems="center">
         <Grid item xs={12}>
-          <Card>
+          <Card className={classes.habitContainer}>
             <CardHeader
               title={habitName}
               action={
@@ -170,7 +150,8 @@ const HabitBlock = ({
             </Collapse>
           </Card>
         </Grid>
-      </Container>
+      </Grid>
+      <Divider />
     </div>
   );
 };

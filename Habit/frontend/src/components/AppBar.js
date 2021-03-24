@@ -22,6 +22,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import LeaderboardIcon from "@material-ui/icons/FormatListNumbered";
 
 const drawerWidth = 240;
 
@@ -121,10 +122,15 @@ function AppBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography style={{flexGrow: 1,}} align="center" variant="h6" className={classes.title}>
+          <Typography
+            style={{ flexGrow: 1 }}
+            align="center"
+            variant="h6"
+            className={classes.title}
+          >
             HAB!TS
           </Typography>
-          <Button  component={Link} to="/" color="inherit">
+          <Button component={Link} to="/" color="inherit">
             Login
           </Button>
         </Toolbar>
@@ -188,6 +194,18 @@ function AppBar() {
               <MyFriendsIcon />
             </ListItemIcon>
             <ListItemText primary="My Friends" />
+          </ListItem>
+          <ListItem
+            button
+            key="Leaderboard"
+            onClick={handleDrawerClose}
+            component={Link}
+            to="/leaderboard"
+          >
+            <ListItemIcon>
+              <LeaderboardIcon />
+            </ListItemIcon>
+            <ListItemText primary="Leaderboard" />
           </ListItem>
         </List>
       </Drawer>
