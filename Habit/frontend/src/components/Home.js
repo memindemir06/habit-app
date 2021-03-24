@@ -47,7 +47,7 @@ function Home() {
   // let path = useLocation();
 
   useEffect(() => {
-    fetch("../api/activeSession")
+    fetch("../api/activeSession") 
       .then((response) => response.json())
       .then((data) => {
         if (data.user_id == null) {

@@ -2,15 +2,23 @@ import React, { useState, useEffect } from "react";
 import ProfileSettings from "./ProfileSettings";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import SettingsIcon from "@material-ui/icons/Settings";
-import { IconButton, Typography } from "@material-ui/core";
-import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import {
+  IconButton,
+  Typography,
+  Grid,
+  Paper,
+  Card,
+  CardHeader,
+  Avatar,
+} from "@material-ui/core";
+// import Card from "@material-ui/core/Card";
+// import CardActionArea from "@material-ui/core/CardActionArea";
+// import CardActions from "@material-ui/core/CardActions";
+// import CardContent from "@material-ui/core/CardContent";
+// import CardMedia from "@material-ui/core/CardMedia";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import TwitterIcon from "@material-ui/icons/Twitter";
 import InstagramIcon from "@material-ui/icons/Instagram";
+import TwitterIcon from "@material-ui/icons/Twitter";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -117,6 +125,11 @@ const useStyles = makeStyles((theme) => ({
       display: "flex",
       flexDirection: "column",
     },
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
   },
 }));
 
