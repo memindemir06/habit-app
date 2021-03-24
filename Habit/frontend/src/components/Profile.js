@@ -5,17 +5,12 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import {
   IconButton,
   Typography,
-  Grid,
-  Paper,
-  Card,
-  CardHeader,
-  Avatar,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@material-ui/core";
-// import Card from "@material-ui/core/Card";
-// import CardActionArea from "@material-ui/core/CardActionArea";
-// import CardActions from "@material-ui/core/CardActions";
-// import CardContent from "@material-ui/core/CardContent";
-// import CardMedia from "@material-ui/core/CardMedia";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import TwitterIcon from "@material-ui/icons/Twitter";
@@ -201,16 +196,8 @@ function Profile({
       {!settingsClicked ? (
         <div>
           <div className={classes.images}>
-            <img
-              className={classes.profileImage}
-              src="https://pfpmaker.com/_nuxt/img/profile-3-1.3e702c5.png"
-              alt="Image not found"
-            />
-            <img
-              className={classes.backgroundImage}
-              src={backgroundImg}
-              alt=""
-            />
+            <img className={classes.profileImage} src={profileImg} />
+            <img className={classes.backgroundImage} src={backgroundImg} />
             <Typography
               className={classes.username}
               variant="h4"
@@ -232,8 +219,7 @@ function Profile({
             <div className={classes.summary}>
               <div className={classes.description}>
                 <Typography variant="body1" style={{ maxWidth: "100%" }}>
-                  I'm 6'1 sexy boi who loves smoking, jogging and yoga. Add me
-                  if you want to do yoga with me. xx
+                  {description}
                 </Typography>
               </div>
               <div className={classes.socials}>
