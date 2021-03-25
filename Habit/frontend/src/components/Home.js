@@ -43,17 +43,17 @@ function Home() {
   const classes = useStyles();
   const theme = useTheme();
   let temp = null;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // let path = useLocation();
 
   useEffect(() => {
-    fetch("../api/activeSession") 
+    fetch("../api/activeSession")
       .then((response) => response.json())
       .then((data) => {
         if (data.user_id == null) {
           console.log("No Session");
           setUserId("No Session");
-          // return <Redirect to="/login" />;
         } else {
           temp = data.user_id;
           setUserId(data.user_id);
@@ -61,6 +61,7 @@ function Home() {
           setFirstName(data.first_name);
           setLastName(data.last_name);
           setEmail(data.email);
+          setIsLoggedIn(true);
         }
       });
   }, [history, userId]);
@@ -71,7 +72,11 @@ function Home() {
 
   return (
     <Router>
-      <AppBar />
+      <AppBar
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
+        setUserId={setUserId}
+      />
       <br />
       <div className={classes.content}>
         <Switch>
@@ -115,7 +120,7 @@ function Home() {
           />
           <Route
             exact
-            path="/profile"
+            path="/myprofile"
             render={() => {
               return !userId ? null : userId == "No Session" ? (
                 <div>
@@ -129,6 +134,33 @@ function Home() {
                   firstName={firstName}
                   lastName={lastName}
                   email={email}
+                  isUser={true}
+                  setUserId={setUserId}
+                  setUserName={setUserName}
+                  setFirstName={setFirstName}
+                  setLastName={setLastName}
+                  setEmail={setEmail}
+                />
+              );
+            }}
+          />
+          <Route
+            exact
+            path="/profile/:username"
+            render={() => {
+              return !userId ? null : userId == "No Session" ? (
+                <div>
+                  <Redirect to="/login" />
+                  <Login />
+                </div>
+              ) : (
+                <Profile
+                  userId={userId}
+                  userName={userName}
+                  firstName={firstName}
+                  lastName={lastName}
+                  email={email}
+                  isUser={false}
                   setUserId={setUserId}
                   setUserName={setUserName}
                   setFirstName={setFirstName}

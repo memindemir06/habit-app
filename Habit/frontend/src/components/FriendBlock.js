@@ -25,6 +25,7 @@ const FriendBlock = ({
   friendUserId,
   userId,
   filterFriends,
+  profileImg,
 }) => {
   const [expanded, setExpanded] = useState(false);
   let history = useHistory();
@@ -33,7 +34,7 @@ const FriendBlock = ({
   };
 
   const handleProfileClick = () => {
-    history.push("/profile/" + friendUserId);
+    history.push("/profile/" + userName);
   };
 
   const handleDeleteClicked = () => {
@@ -72,15 +73,16 @@ const FriendBlock = ({
         <Grid item xs={12}>
           <Card>
             <CardHeader
-              avatar={<Avatar> {userName[0]} </Avatar>}
+              avatar={
+                <Tooltip title="View profile">
+                  <IconButton onClick={handleProfileClick}>
+                    <Avatar src={profileImg} />
+                  </IconButton>
+                </Tooltip>
+              }
               title={userName}
               action={
                 <div>
-                  <Tooltip title="View profile">
-                    <IconButton onClick={handleProfileClick}>
-                      <AccountCircleIcon />
-                    </IconButton>
-                  </Tooltip>
                   <Tooltip title="Delete friend">
                     <IconButton onClick={handleDeleteClicked}>
                       <DeleteIcon />

@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AppBar() {
+function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -99,6 +99,24 @@ function AppBar() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleLogout = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    };
+    fetch("../api/logout", requestOptions)
+      .then((response) => {
+        return response.json();
+      })
+      .then(() => {
+        setIsLoggedIn(false);
+        setUserId("");
+      });
   };
 
   return (
@@ -130,9 +148,20 @@ function AppBar() {
           >
             HAB!TS
           </Typography>
-          <Button component={Link} to="/" color="inherit">
-            Login
-          </Button>
+          {!isLoggedIn ? (
+            <Button component={Link} to="/" color="inherit">
+              Login
+            </Button>
+          ) : (
+            <Button
+              component={Link}
+              to="/"
+              color="inherit"
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          )}
         </Toolbar>
       </AppBar2>
       <Drawer
@@ -164,7 +193,7 @@ function AppBar() {
             key="My Account"
             onClick={handleDrawerClose}
             component={Link}
-            to="/profile"
+            to="/myprofile"
           >
             <ListItemIcon>
               <MyAccountIcon />
@@ -173,7 +202,7 @@ function AppBar() {
           </ListItem>
           <ListItem
             button
-            key="Daily Reminders"
+            key="Home"
             onClick={handleDrawerClose}
             component={Link}
             to="/home"
@@ -181,7 +210,7 @@ function AppBar() {
             <ListItemIcon>
               <DailyRemindersIcon />
             </ListItemIcon>
-            <ListItemText primary="Daily Reminders" />
+            <ListItemText primary="Home Page" />
           </ListItem>
           <ListItem
             button

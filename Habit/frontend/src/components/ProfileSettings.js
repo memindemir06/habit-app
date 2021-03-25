@@ -41,7 +41,9 @@ const ProfileSettings = ({
   setLoaded,
   setSettingsClicked,
 }) => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const [profileImgOpen, setProfileImgOpen] = useState(false);
+  const [backgroundImgOpen, setBackgroundImgOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const [blankField, setBlankField] = useState(false);
 
@@ -144,23 +146,18 @@ const ProfileSettings = ({
       })
       .then((res) => {
         console.log(res.data);
-        // return res.json();
-        // causes useEffect to be called -> update all the states
-        // setUserId("");
       })
       .catch((err) => console.log(err));
   };
 
   const handleProfileImgSubmit = (file) => {
     handleImageUpdate(file[0], null);
-    setOpen(false);
-    // setProfileImg(file[0]);
+    setProfileImgOpen(false);
   };
 
   const handleBackgroundImgSubmit = (file) => {
     handleImageUpdate(null, file[0]);
-    setOpen(false);
-    // setBackgroundImg(file[0]);
+    setBackgroundImgOpen(false);
   };
 
   const backToProfile = () => {
@@ -168,31 +165,51 @@ const ProfileSettings = ({
     setSettingsClicked(false);
   };
 
-  const UploadFile = ({ profile }) => {
+  const UploadProfileImg = () => {
     return (
       <div style={profileStyle}>
         <Button
-          onClick={() => setOpen(true)}
+          onClick={() => setProfileImgOpen(true)}
           color="primary"
           variant="outlined"
           size="large"
         >
-          {profile
-            ? profileImg
-              ? "Change Profile Picture"
-              : "Add Profile Picture"
-            : backgroundImg
-            ? "Change Background Picture"
-            : "Add Background Picture"}
+          {profileImg ? "Change Profile Picture" : "Add Profile Picture"}
         </Button>
         <DropzoneDialog
-          open={open}
-          onSave={profile ? handleProfileImgSubmit : handleBackgroundImgSubmit}
+          open={profileImgOpen}
+          // onSave={handleProfileImgSubmit}
+          onSave={handleProfileImgSubmit}
           filesLimit={1}
           acceptedFiles={["image/jpeg", "image/png", "image/bmp", "image/webp"]}
           showPreviews={true}
           maxFileSize={5000000}
-          onClose={() => setOpen(false)}
+          onClose={() => setProfileImgOpen(false)}
+        />
+      </div>
+    );
+  };
+  const UploadBackgroundImg = () => {
+    return (
+      <div style={profileStyle}>
+        <Button
+          onClick={() => setBackgroundImgOpen(true)}
+          color="primary"
+          variant="outlined"
+          size="large"
+        >
+          {backgroundImg
+            ? "Change Background Picture"
+            : "Add Background Picture"}
+        </Button>
+        <DropzoneDialog
+          open={backgroundImgOpen}
+          onSave={handleBackgroundImgSubmit}
+          filesLimit={1}
+          acceptedFiles={["image/jpeg", "image/png", "image/bmp", "image/webp"]}
+          showPreviews={true}
+          maxFileSize={5000000}
+          onClose={() => setBackgroundImgOpen(false)}
         />
       </div>
     );
@@ -209,6 +226,7 @@ const ProfileSettings = ({
         >
           Back to Profile
         </Button>
+        <br />
         <Typography variant="h3" align="center">
           Profile Settings
         </Typography>
@@ -281,9 +299,9 @@ const ProfileSettings = ({
           Optional Fields
         </Typography>
         <br />
-        <UploadFile profile={true} />
+        <UploadProfileImg />
         <br />
-        <UploadFile profile={false} />
+        <UploadBackgroundImg />
         <br />
         <TextField
           disabled={edit}

@@ -64,6 +64,7 @@ function Login() {
         <br />
         <TextField
           required
+          type="password"
           label="Enter your Password"
           variant="outlined"
           margin="normal"

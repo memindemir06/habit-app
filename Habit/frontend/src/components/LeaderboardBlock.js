@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -9,6 +9,7 @@ import {
   Typography,
   Container,
   Tooltip,
+  Avatar,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -21,16 +22,17 @@ const LeaderboardBlock = ({
   habitName,
   streak,
   startDate,
+  profileImg,
 }) => {
   const history = useHistory();
   const [expanded, setExpanded] = useState(false);
-  
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   const handleProfileClick = () => {
-    history.push("/profile/" + userId);
+    history.push("/profile/" + userName);
   };
 
   const containerLeftStyle = {
@@ -49,9 +51,11 @@ const LeaderboardBlock = ({
         <Card>
           <CardHeader
             avatar={
-              <IconButton onClick={handleProfileClick}>
-                <AccountCircleIcon />
-              </IconButton>
+              <Tooltip title="View Profile">
+                <IconButton onClick={handleProfileClick}>
+                  <Avatar src={profileImg} />
+                </IconButton>
+              </Tooltip>
             }
             title={
               <div style={containerLeftStyle}>

@@ -372,29 +372,13 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
                 userId={userId}
                 friendUserId={friend.user_id}
                 filterFriends={filterFriends}
+                profileImg={friend.profile_img}
               />
               <br />
             </div>
           );
         })
       )}
-
-      {/* {friendsList.map((friend) => {
-        return (
-          <div>
-            <FriendBlock
-              userName={friend.user_name}
-              firstName={friend.first_name}
-              lastName={friend.last_name}
-              email={friend.email}
-              userId={userId}
-              friendUserId={friend.user_id}
-              filterFriends={filterFriends}
-            />
-            <br />
-          </div>
-        );
-      })} */}
     </div>
   );
 }

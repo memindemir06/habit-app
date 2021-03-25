@@ -255,6 +255,7 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
                 habitName={user.habit_id.habit_name}
                 streak={user.streak}
                 startDate={user.start_date}
+                profileImg={user.profile_img}
               />
             );
           })

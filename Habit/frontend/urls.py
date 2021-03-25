@@ -8,8 +8,9 @@ urlpatterns = [
     path('register', index),
     path('login', index),
     path('home', index),
-    path('profile', index),
+    path('myprofile', index),
     path('friends', index),
     path('leaderboard', index),
     path('inspire', index),
+    path('profile/<str:username>', index),
 ]

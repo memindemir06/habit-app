@@ -65,6 +65,13 @@ class Login(APIView):
         return Response({"Bad Request", "Invalid post data, did not find the email and password"}, status=status.HTTP_400_BAD_REQUEST) 
 
 
+class Logout(APIView):
+    def post(self, request, format=None): 
+        del self.request.session['user_id']
+
+        return Response({"Logged out successful"}, status=status.HTTP_200_OK)
+
+
 class activeSession(APIView):
     def get(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):   # Checks userid in url to session
@@ -285,25 +292,6 @@ class updateProfileOptionals(APIView):
             userOptionalsList = Optional.objects.filter(user_id=user_id)
 
             if userOptionalsList.exists(): 
-                # profile_img
-                # profile_img_file = request.FILES.get('profile_img', False)
-
-                # if profile_img_file:
-                #     fs = FileSystemStorage()
-                #     filename = fs.save(profile_img_file.name, profile_img_file)
-                #     profile_img_url = fs.url(filename)
-                #     userOptionalsList.update(profile_img=profile_img_url)
-
-                # # background_img 
-                # background_img_file = request.FILES.get('background_img', False)
-
-                # if background_img_file:                
-                #     fs = FileSystemStorage()
-                #     filename = fs.save(background_img_file.name, background_img_file)
-                #     background_img_url = fs.url(filename)
-                #     userOptionalsList.update(background_img=background_img_url) 
- 
-                
                 userOptionalsList.update(description=description, facebook=facebook, instagram=instagram, twitter=twitter)                      
 
                 return Response(UserOptionalSerializer(userOptionalsList[0]).data, status=status.HTTP_200_OK)
@@ -353,14 +341,13 @@ class updateProfileImages(APIView):
             return Response(posts_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
        
 
-
 class updateProfileRequired(APIView):
-    
     lookup_user_id = 'user_id'
     lookup_user_name = 'user_name'
     lookup_first_name = 'first_name'
     lookup_last_name = 'last_name'
     lookup_email = 'email'
+
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             # If they don't have an active session -> create one
@@ -383,6 +370,22 @@ class updateProfileRequired(APIView):
         
         return Response({"Bad Request": "Parameters missing in Request!"}, status.HTTP_400_BAD_REQUEST)
     
+
+class getOtherUserInfo(APIView):
+    lookup_user_name = 'user_name'
+    
+    def get(self, request, format=None):
+        user_name = request.GET.get(self.lookup_user_name)
+        
+        if user_name != None:
+            userList = Users.objects.filter(user_name=user_name)
+            if userList.exists():
+                return Response(UserSerializer(userList[0]).data, status=status.HTTP_200_OK)
+
+            return Response({"Bad Request": "Username does not exists!"}, status.HTTP_400_BAD_REQUEST)
+
+        return Response({"Bad Request": "Username missing in Request!"}, status.HTTP_400_BAD_REQUEST)
+
 
 # FRIENDS PAGE --------------------------------------------------------------------------------
 
@@ -480,12 +483,16 @@ class filterFriends(APIView):
                 for i in range(len(listOfFriends1)):
                     friendPair = FriendsSerializer(listOfFriends1[i]).data
                     friendPair = friendPair.pop('user_id2')
+                    profile_img = getUserOptionalData(friendPair['user_id'])
+                    friendPair["profile_img"] = profile_img  
                     listOfFriends.append(friendPair)
             
             if listOfFriends2.exists():
                 for i in range(len(listOfFriends2)):
                     friendPair = FriendsSerializer(listOfFriends2[i]).data
                     friendPair = friendPair.pop('user_id1')
+                    profile_img = getUserOptionalData(friendPair['user_id'])
+                    friendPair["profile_img"] = profile_img    
                     listOfFriends.append(friendPair) 
 
             if habit_name == "No_Filter":         
@@ -521,6 +528,15 @@ class filterFriends(APIView):
 
 # LEADERBOARD ---------------------------------------------------------------------------------
 
+
+def getUserOptionalData(user_id):
+    userOptionalList = Optional.objects.filter(user_id=user_id)
+
+    if userOptionalList.exists():
+        data = UserOptionalSerializer(userOptionalList[0]).data
+        return data['profile_img']
+
+
 class getLeaderboard(APIView):
     #serializer_class = UserHabitsSerializer
     lookup_url_purpose = 'purpose' 
@@ -531,18 +547,22 @@ class getLeaderboard(APIView):
             # If they don't have an active session -> create one
             self.request.session.create() 
         
-        user_id = request.data.get(self.lookup_url_user_id)
-        purpose = request.data.get(self.lookup_url_purpose)
+        user_id = request.data.get(self.lookup_url_user_id) 
+        purpose = request.data.get(self.lookup_url_purpose) 
 
         if purpose != None:
-            arrayOfHabits = [] 
+            arrayOfHabits = []
+
             if purpose == "No_Filter":
                 listOfHabits = UserHabits.objects.order_by('-streak', 'user_id__user_name') 
                 
                 if listOfHabits.exists():
                     for habit in listOfHabits: 
-                        arrayOfHabits.append(UserHabitsSerializer(habit).data) 
-
+                        data = UserHabitsSerializer(habit).data
+                        profile_img = getUserOptionalData(data['user_id']["user_id"])
+                        data["profile_img"] = profile_img
+                        arrayOfHabits.append(data)
+                        
                     data = {"user_habits": arrayOfHabits}
 
                     return JsonResponse(data, status=status.HTTP_200_OK)
@@ -575,8 +595,10 @@ class getLeaderboard(APIView):
 
                         if friendHabits.exists():
                             for habit in friendHabits:
-                                
-                                arrayOfHabits.append(UserHabitsSerializer(habit).data)
+                                data = UserHabitsSerializer(habit).data
+                                profile_img = getUserOptionalData(data['user_id']["user_id"])
+                                data["profile_img"] = profile_img
+                                arrayOfHabits.append(data)
                     
                     arrayOfHabits.sort(key=lambda x: (-x['streak'], x['user_id']['user_name']))
 
@@ -594,7 +616,10 @@ class getLeaderboard(APIView):
 
                     if listOfHabits.exists():
                         for habit in listOfHabits: 
-                            arrayOfHabits.append(UserHabitsSerializer(habit).data) 
+                            data = UserHabitsSerializer(habit).data
+                            profile_img = getUserOptionalData(data['user_id']["user_id"])
+                            data["profile_img"] = profile_img
+                            arrayOfHabits.append(data) 
 
                         data = {"user_habits": arrayOfHabits}
 
@@ -607,7 +632,6 @@ class getLeaderboard(APIView):
             return Response({"Bad Request": "Invalid Parameter"}, status=status.HTTP_404_NOT_FOUND) 
 
         return Response({"Bad Request": "No Parameter found"}, status=status.HTTP_404_NOT_FOUND) 
-        
 
 
 # MAP PAGE ------------------------------------------------------------------------------------
