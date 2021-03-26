@@ -18,6 +18,7 @@ import Profile from "./Profile";
 import FriendsPage from "./FriendsPage";
 import LeaderboardPage from "./LeaderboardPage";
 import InspirationalPage from "./InspirationalPage";
+import IntroPage from "./IntroPage";
 import MenuTest from "./Menu";
 import AppBar from "./AppBar";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -25,10 +26,6 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   content: {
     marginTop: "64px",
-    marginLeft: theme.spacing(7) + 1,
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(7) + 1,
-    },
   },
 }));
 
@@ -80,22 +77,23 @@ function Home() {
       <br />
       <div className={classes.content}>
         <Switch>
-          {/* <Route path="/" component={AppBar} /> */}
           <Route
             exact
             path="/"
             render={() => {
               return !userId ? null : userId == "No Session" ? (
                 <div>
-                  <Redirect to="/login" />
-                  <Login />
+                  <Redirect to="/" />
+                  <IntroPage />
                 </div>
               ) : (
                 <Redirect to="/home" />
               );
             }}
           />
+          <Route exact path="/" component={IntroPage} />
           <Route exact path="/ErrorPage" component={ErrorPage} />
+
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <Route
@@ -104,8 +102,8 @@ function Home() {
             render={() => {
               return !userId ? null : userId == "No Session" ? (
                 <div>
-                  <Redirect to="/login" />
-                  <Login />
+                  <Redirect to="/" />
+                  <IntroPage />
                 </div>
               ) : (
                 <DailyReminders

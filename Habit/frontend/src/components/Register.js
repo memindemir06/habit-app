@@ -86,6 +86,7 @@ function Register() {
   };
 
   return (
+    <div style={{marginLeft: "-50px"}}>
     <Grid container spacing={3}>
       <Grid item xs={12} align="center">
         <Typography variant="h4" component="h4">
@@ -98,7 +99,6 @@ function Register() {
         </Collapse>
       </Grid>
       <Grid item xs={12} align="center">
-        {/* <form autoComplete="on"> */}
         <TextField
           required
           label="User Name"
@@ -137,6 +137,7 @@ function Register() {
           variant="outlined"
           margin="normal"
           onChange={passwordChange}
+          type="password"
         />
         <br />
         <TextField
@@ -145,6 +146,7 @@ function Register() {
           variant="outlined"
           margin="normal"
           onChange={validatePasswordChange}
+          type="password"
         />
         <br />
         <TextField
@@ -179,6 +181,7 @@ function Register() {
         </Button>
       </Grid>
     </Grid>
+    </div>
   );
 }
 

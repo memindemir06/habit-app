@@ -13,4 +13,5 @@ urlpatterns = [
     path('leaderboard', index),
     path('inspire', index),
     path('profile/<str:username>', index),
+    path('intro', index),
 ]

@@ -61,7 +61,7 @@ const HabitBlock = ({
         habit_id: habitId,
       }),
     };
-    fetch("api/removeHabit", requestOptions)
+    fetch("../api/removeHabit", requestOptions)
       .then((response) => {
         if (!response.ok) {
           console.log("Bad Response: ", response);
@@ -93,7 +93,7 @@ const HabitBlock = ({
         purpose: purpose,
       }),
     };
-    fetch("api/handleCompleted", requestOptions)
+    fetch("../api/handleCompleted", requestOptions)
       .then((response) => {
         if (!response.ok) {
           console.log("Bad Response: ", response);

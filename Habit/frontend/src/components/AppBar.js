@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   appBar: {
+    background: "#343d52",
+    color: "white",
+    boxShadow: "none",
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
@@ -129,29 +132,40 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
         })}
       >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
-          >
-            <MenuIcon />
-          </IconButton>
+          {isLoggedIn ? (
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, {
+                [classes.hide]: open,
+              })}
+            >
+              <MenuIcon />
+            </IconButton>
+          ) : (
+            <div style={{ width: "80px" }}></div>
+          )}
           <Typography
-            style={{ flexGrow: 1 }}
+            style={{ flexGrow: 1, color: "white", textDecoration: "none" }}
             align="center"
             variant="h6"
             className={classes.title}
           >
-            HAB!TS
+            <Link to="/" style={{ color: "white", textDecoration: "inherit" }}>
+              HAB!TS
+            </Link>
           </Typography>
           {!isLoggedIn ? (
-            <Button component={Link} to="/" color="inherit">
-              Login
-            </Button>
+            <div>
+              <Button component={Link} to="/login" color="inherit">
+                Login
+              </Button>
+              <Button component={Link} to="/register" color="inherit">
+                Register
+              </Button>
+            </div>
           ) : (
             <Button
               component={Link}
@@ -164,80 +178,83 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
           )}
         </Toolbar>
       </AppBar2>
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
-        classes={{
-          paper: clsx({
+
+      {isLoggedIn ? (
+        <Drawer
+          variant="permanent"
+          className={clsx(classes.drawer, {
             [classes.drawerOpen]: open,
             [classes.drawerClose]: !open,
-          }),
-        }}
-      >
-        <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
-          <ListItem
-            button
-            key="My Account"
-            onClick={handleDrawerClose}
-            component={Link}
-            to="/myprofile"
-          >
-            <ListItemIcon>
-              <MyAccountIcon />
-            </ListItemIcon>
-            <ListItemText primary="My Account" />
-          </ListItem>
-          <ListItem
-            button
-            key="Home"
-            onClick={handleDrawerClose}
-            component={Link}
-            to="/home"
-          >
-            <ListItemIcon>
-              <DailyRemindersIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home Page" />
-          </ListItem>
-          <ListItem
-            button
-            key="My Friends"
-            onClick={handleDrawerClose}
-            component={Link}
-            to="/friends"
-          >
-            <ListItemIcon>
-              <MyFriendsIcon />
-            </ListItemIcon>
-            <ListItemText primary="My Friends" />
-          </ListItem>
-          <ListItem
-            button
-            key="Leaderboard"
-            onClick={handleDrawerClose}
-            component={Link}
-            to="/leaderboard"
-          >
-            <ListItemIcon>
-              <LeaderboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Leaderboard" />
-          </ListItem>
-        </List>
-      </Drawer>
+          })}
+          classes={{
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
+          }}
+        >
+          <div className={classes.toolbar}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </div>
+          <Divider />
+          <List>
+            <ListItem
+              button
+              key="My Account"
+              onClick={handleDrawerClose}
+              component={Link}
+              to="/myprofile"
+            >
+              <ListItemIcon>
+                <MyAccountIcon />
+              </ListItemIcon>
+              <ListItemText primary="My Account" />
+            </ListItem>
+            <ListItem
+              button
+              key="Home"
+              onClick={handleDrawerClose}
+              component={Link}
+              to="/home"
+            >
+              <ListItemIcon>
+                <DailyRemindersIcon />
+              </ListItemIcon>
+              <ListItemText primary="Home Page" />
+            </ListItem>
+            <ListItem
+              button
+              key="My Friends"
+              onClick={handleDrawerClose}
+              component={Link}
+              to="/friends"
+            >
+              <ListItemIcon>
+                <MyFriendsIcon />
+              </ListItemIcon>
+              <ListItemText primary="My Friends" />
+            </ListItem>
+            <ListItem
+              button
+              key="Leaderboard"
+              onClick={handleDrawerClose}
+              component={Link}
+              to="/leaderboard"
+            >
+              <ListItemIcon>
+                <LeaderboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Leaderboard" />
+            </ListItem>
+          </List>
+        </Drawer>
+      ) : null}
     </div>
   );
 }

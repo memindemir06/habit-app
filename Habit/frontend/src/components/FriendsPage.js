@@ -240,10 +240,10 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
 
   return (
     <div style={buttonStyle}>
-      <Typography variant="h2" align="center">
-        {userName}
+      <Typography variant="h4" align="center">
+        {"u/" + userName}
       </Typography>
-      <Typography variant="h3" align="center">
+      <Typography variant="h4" align="center">
         FRIEND LIST
       </Typography>
       <br />

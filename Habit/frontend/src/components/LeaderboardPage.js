@@ -16,6 +16,40 @@ import {
 } from "@material-ui/core";
 import LeaderboardBlock from "./LeaderboardBlock";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  block: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "40%",
+    padding: theme.spacing(4),
+    margin: theme.spacing(8),
+    [theme.breakpoints.down("md")]: {
+      width: "60%",
+      margin: theme.spacing(2),
+      padding: theme.spacing(4),
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+    },
+  },
+  filterButton: {
+    alignSelf: "center",
+    margin: theme.spacing(1),
+    padding: theme.spacing(1),
+  },
+}));
 
 function LeaderboardPage({ leaveAccountCallback, userId }) {
   let params = useParams();
@@ -25,6 +59,8 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
   const [listOfFilters, setListOfFilters] = useState();
   const [openFilter, setOpenFilter] = useState(false);
   const [filterChosen, setFilterChosen] = useState("No_Filter");
+  const classes = useStyles();
+  const theme = useTheme();
 
   const [checkedHabits, setCheckedHabits] = useState({
     No_Filter: true,
@@ -175,92 +211,94 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
     return <LoadingPage />;
   } else {
     return (
-      <div style={buttonStyle}>
-        <Typography variant="h3" align="center">
-          Leaderboard
-        </Typography>
-        <br />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setOpenFilter(true)}
-          endIcon={<FilterListIcon />}
-        >
-          Filter Leaderboard
-        </Button>
-        <br />
-        <Dialog
-          open={openFilter}
-          onClose={() => setOpenFilter(false)}
-          fullWidth
-        >
-          <DialogTitle>{"Filter Leaderboard"}</DialogTitle>
-          <DialogContent dividers>
-            <FormControl component="fieldset" error={error}>
-              <FormLabel component="legend">Pick 1 option</FormLabel>
-              <FormGroup>
-                {Object.keys(checkedHabits).map(function (key, index) {
-                  return (
-                    <div>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            name={key}
-                            checked={checkedHabits[key]}
-                            onChange={handleHabitCheck}
-                            disabled={false}
-                          />
-                        }
-                        label={key}
-                      />
-                    </div>
-                  );
-                })}
-              </FormGroup>
-            </FormControl>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => {
-                setOpenFilter(false);
-              }}
-              color="primary"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                Object.keys(checkedHabits).map(function (key, index) {
-                  if (checkedHabits[key]) {
-                    getLeaderboard(userId, key);
-                  }
-                });
-              }}
-              color="primary"
-              disabled={error ? true : false}
-              autoFocus
-            >
-              Ok
-            </Button>
-          </DialogActions>
-        </Dialog>
-        {leaderboardList.length == 0 ? (
-          <NoFilterMessage />
-        ) : (
-          leaderboardList.map((user) => {
-            return (
-              <LeaderboardBlock
-                userId={user.user_id}
-                userName={user.user_id.user_name}
-                habitName={user.habit_id.habit_name}
-                streak={user.streak}
-                startDate={user.start_date}
-                profileImg={user.profile_img}
-              />
-            );
-          })
-        )}
-        {/* {leaderboardList.map((user) => {
+      <div className={classes.root}>
+        <div className={classes.block}>
+          <Typography variant="h3" align="center">
+            Leaderboard
+          </Typography>
+          <br />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenFilter(true)}
+            endIcon={<FilterListIcon />}
+            className={classes.filterButton}
+          >
+            Filter Leaderboard
+          </Button>
+          <br />
+          <Dialog
+            open={openFilter}
+            onClose={() => setOpenFilter(false)}
+            fullWidth
+          >
+            <DialogTitle>{"Filter Leaderboard"}</DialogTitle>
+            <DialogContent dividers>
+              <FormControl component="fieldset" error={error}>
+                <FormLabel component="legend">Pick 1 option</FormLabel>
+                <FormGroup>
+                  {Object.keys(checkedHabits).map(function (key, index) {
+                    return (
+                      <div>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              name={key}
+                              checked={checkedHabits[key]}
+                              onChange={handleHabitCheck}
+                              disabled={false}
+                            />
+                          }
+                          label={key}
+                        />
+                      </div>
+                    );
+                  })}
+                </FormGroup>
+              </FormControl>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => {
+                  setOpenFilter(false);
+                }}
+                color="primary"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  Object.keys(checkedHabits).map(function (key, index) {
+                    if (checkedHabits[key]) {
+                      getLeaderboard(userId, key);
+                    }
+                  });
+                }}
+                color="primary"
+                disabled={error ? true : false}
+                autoFocus
+              >
+                Ok
+              </Button>
+            </DialogActions>
+          </Dialog>
+          {leaderboardList.length == 0 ? (
+            <NoFilterMessage />
+          ) : (
+            leaderboardList.map((user) => {
+              return (
+                <LeaderboardBlock
+                  userId={user.user_id}
+                  userName={user.user_id.user_name}
+                  habitName={user.habit_id.habit_name}
+                  streak={user.streak}
+                  startDate={user.start_date}
+                  profileImg={user.profile_img}
+                />
+              );
+            })
+          )}
+          {/* {leaderboardList.map((user) => {
           return (
             <LeaderboardBlock
               userId={user.user_id}
@@ -271,6 +309,7 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
             />
           );
         })} */}
+        </div>
       </div>
     );
   }

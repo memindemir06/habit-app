@@ -88,10 +88,10 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
   const [open, setOpen] = useState(false);
   // const [habitAdded, setHabitAdded] = useState();
   const [value, setValue] = useState(0);
-  // const [habitsCompletedState, sethabitsCompletedState] = useState(false);
-  // const [habitsPending, setHabitsPending] = useState(false);
   const classes = useStyles();
   const theme = useTheme();
+  // const [habitsCompletedState, sethabitsCompletedState] = useState(false);
+  // const [habitsPending, setHabitsPending] = useState(false);
 
   useEffect(() => {
     if (userId) {
@@ -109,7 +109,7 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
         user_id: user_id,
       }),
     };
-    fetch("api/getUserHabits", requestOptions)
+    fetch("../api/getUserHabits", requestOptions)
       .then((response) => {
         if (!response.ok) {
           console.log("No User ID: ", response);
@@ -119,6 +119,7 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
       })
       .then((data) => {
         if (data) {
+          console.log(data);
           for (let habit in data.list_of_habits) {
             listOfAllHabits.add(data.list_of_habits[habit].habit_id.habit_id);
           }
@@ -133,7 +134,7 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
 
   const getAllHabits = () => {
     listOfAvailableHabits.length = 0;
-    fetch("api/getAllHabits")
+    fetch("../api/getAllHabits")
       .then((response) => {
         if (!response.ok) {
           console.log(response);
@@ -168,7 +169,7 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
         habit_name: habitName,
       }),
     };
-    fetch("api/addHabit", requestOptions)
+    fetch("../api/addHabit", requestOptions)
       .then((response) => {
         if (!response.ok) {
           console.log("Bad Response: ", response);
@@ -238,8 +239,8 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h3" align="center">
-        {userName}
+      <Typography variant="h4" align="center">
+        {"u/" + userName}
       </Typography>
       <br />
 
@@ -306,10 +307,10 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
                     habitName={habit.habit_id.habit_name}
                     startDate={habit.start_date}
                     streak={habit.streak}
-                    habitId={habit.habit_id.habit_id}
                     userId={userId}
-                    getHabits={getHabits}
+                    habitId={habit.habit_id.habit_id}
                     completed={habit.completed}
+                    getHabits={getHabits}
                   />
                   <br />
                 </div>

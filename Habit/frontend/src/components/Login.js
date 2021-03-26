@@ -47,52 +47,54 @@ function Login() {
   };
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} align="center">
-        <Typography variant="h4" component="h4">
-          Login
-        </Typography>
+    <div style={{ marginLeft: "-50px", marginTop: "100px" }}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} align="center">
+          <Typography variant="h4" component="h4">
+            Login
+          </Typography>
+        </Grid>
+        <Grid item xs={12} align="center">
+          <TextField
+            required
+            label="Enter your Email"
+            variant="outlined"
+            margin="normal"
+            onChange={emailChange}
+          />
+          <br />
+          <TextField
+            required
+            type="password"
+            label="Enter your Password"
+            variant="outlined"
+            margin="normal"
+            onChange={passwordChange}
+          />
+          <br />
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            size="large"
+            onClick={loginButtonPressed}
+          >
+            Login
+          </Button>
+          <br />
+          <br />
+          <Button
+            to="/register"
+            component={Link}
+            variant="contained"
+            color="secondary"
+            size="large"
+          >
+            Register
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item xs={12} align="center">
-        <TextField
-          required
-          label="Enter your Email"
-          variant="outlined"
-          margin="normal"
-          onChange={emailChange}
-        />
-        <br />
-        <TextField
-          required
-          type="password"
-          label="Enter your Password"
-          variant="outlined"
-          margin="normal"
-          onChange={passwordChange}
-        />
-        <br />
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          size="large"
-          onClick={loginButtonPressed}
-        >
-          Login
-        </Button>
-        <br />
-        <br />
-        <Button
-          to="/register"
-          component={Link}
-          variant="contained"
-          color="secondary"
-          size="large"
-        >
-          Register
-        </Button>
-      </Grid>
-    </Grid>
+    </div>
   );
 }
 

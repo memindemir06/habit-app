@@ -59,12 +59,12 @@ const LeaderboardBlock = ({
             }
             title={
               <div style={containerLeftStyle}>
-                <Typography variant="h5">{userName}</Typography>
+                <Typography variant="h6">{userName}</Typography>
               </div>
             }
             action={
               <div style={containerRightStyle}>
-                <Typography variant="h5">Streak: {streak}</Typography>
+                <Typography variant="h6">Streak: {streak}</Typography>
                 <IconButton onClick={handleExpandClick}>
                   {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </IconButton>

@@ -16,7 +16,7 @@ import {
 import FacebookIcon from "@material-ui/icons/Facebook";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import TwitterIcon from "@material-ui/icons/Twitter";
-import HabitBlock from "./HabitBlock";
+import ProfileHabitBlock from "./ProfileHabitBlock";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -267,7 +267,7 @@ function Profile({
         <div>
           <div className={classes.images}>
             <img className={classes.profileImage} src={profileImg} />
-            <img className={classes.backgroundImage} src={backgroundImg} />
+            <img className={classes.backgroundImage} src={null} />
             <Typography
               className={classes.username}
               variant="h4"
@@ -333,10 +333,10 @@ function Profile({
               <div className={classes.habitList}></div>
             </div>
             <Divider className={classes.divider} />
-            <Typography
-              variant="h4"
-              align="center"
-            > User Habits</Typography>
+            <Typography variant="h4" align="center">
+              {" "}
+              User Habits
+            </Typography>
             <br />
             {listOfHabits.map((habit) => {
               let index = listOfHabits.findIndex(
@@ -346,14 +346,10 @@ function Profile({
                 tempCompleted = true;
                 return (
                   <div>
-                    <HabitBlock
+                    <ProfileHabitBlock
                       habitName={habit.habit_id.habit_name}
                       startDate={habit.start_date}
                       streak={habit.streak}
-                      habitId={habit.habit_id.habit_id}
-                      userId={userId}
-                      getHabits={getHabits}
-                      completed={habit.completed}
                     />
                     <br />
                   </div>
