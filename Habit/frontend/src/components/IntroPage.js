@@ -95,6 +95,7 @@ const useStyles = makeStyles((theme) => ({
     transition: "0.25s",
 
     "&:hover, &:focus": {
+      border: "2px solid",
       borderColor: "yellow",
       color: "yellow",
       boxShadow: "0 0.5em 0.5em -0.4em yellow",
@@ -207,6 +208,8 @@ function IntroPage() {
               style={{
                 height: "100px",
                 display: "flex",
+                marginTop: "2em",
+                justifySelf: "flex-end",
                 justifyContent: "center",
                 alignItems: "center",
               }}

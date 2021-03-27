@@ -20,15 +20,30 @@ import ProfileHabitBlock from "./ProfileHabitBlock";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+
     padding: theme.spacing(4),
-    margin: theme.spacing(6),
-    [theme.breakpoints.down("md")]: {
-      margin: theme.spacing(2),
-      padding: theme.spacing(4),
-    },
+    margin: theme.spacing(16),
     [theme.breakpoints.down("sm")]: {
+      margin: 0,
+      marginLeft: theme.spacing(7),
+      padding: theme.spacing(1),
+    },
+    [theme.breakpoints.down("xs")]: {
       margin: theme.spacing(1),
       padding: theme.spacing(1),
+    },
+  },
+  mainContainer: {
+    width: "800px",
+    [theme.breakpoints.down("sm")]: {
+      width: "500px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "320px",
     },
   },
   images: {
@@ -70,19 +85,28 @@ const useStyles = makeStyles((theme) => ({
     bottom: "10px",
     right: "10px",
   },
+  nameContainer: {
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  },
   username: {
     position: "absolute",
+    top: "150px",
+    left: "250px",
     color: "white",
-    bottom: "20px",
-    left: "225px",
     [theme.breakpoints.down("sm")]: {
-      left: "calc(50% - 45px)",
-      top: "260px",
-      color: "black",
+      position: "relative",
+      top: "200px",
+      left: 0,
+      color: "inherit",
     },
   },
   profileInfo: {
-    marginTop: theme.spacing(12),
+    marginTop: theme.spacing(16),
     margin: theme.spacing(2),
     padding: theme.spacing(1),
   },
@@ -264,18 +288,20 @@ function Profile({
   return (
     <div className={classes.root}>
       {!settingsClicked ? (
-        <div>
+        <div className={classes.mainContainer}>
           <div className={classes.images}>
             <img className={classes.profileImage} src={profileImg} />
             <img className={classes.backgroundImage} src={null} />
-            <Typography
-              className={classes.username}
-              variant="h4"
-              align="center"
-            >
-              {isUser ? firstName : tempFirstName}{" "}
-              {isUser ? lastName : tempLastName}
-            </Typography>
+            <div className={classes.nameContainer}>
+              <Typography
+                className={classes.username}
+                variant="h4"
+                align="left"
+              >
+                {isUser ? firstName : tempFirstName}{" "}
+                {isUser ? lastName : tempLastName}
+              </Typography>
+            </div>
             {isUser ? (
               <IconButton
                 onClick={() => setSettingsClicked(!settingsClicked)}
@@ -287,6 +313,7 @@ function Profile({
               </IconButton>
             ) : null}
           </div>
+
           <div className={classes.profileInfo}>
             <Divider className={classes.divider} />
             <div className={classes.summary}>
@@ -306,7 +333,7 @@ function Profile({
                     onClick={() => (window.location.href = facebook)}
                   >
                     <ListItemIcon>
-                      <FacebookIcon color="primary" />
+                      <FacebookIcon style={{ color: "#4267B2" }} />
                     </ListItemIcon>
                     <ListItemText primary="Facebook" />
                   </ListItem>
@@ -315,7 +342,7 @@ function Profile({
                     onClick={() => (window.location.href = instagram)}
                   >
                     <ListItemIcon>
-                      <InstagramIcon color="secondary" />
+                      <InstagramIcon style={{ color: "#C13584" }} />
                     </ListItemIcon>
                     <ListItemText primary="Instagram" />
                   </ListItem>
@@ -324,7 +351,7 @@ function Profile({
                     onClick={() => (window.location.href = twitter)}
                   >
                     <ListItemIcon>
-                      <TwitterIcon color="primary" />
+                      <TwitterIcon style={{ color: "#1DA1F2" }} />
                     </ListItemIcon>
                     <ListItemText primary="Twitter" />
                   </ListItem>

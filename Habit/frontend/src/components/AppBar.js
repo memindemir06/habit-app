@@ -26,6 +26,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import LeaderboardIcon from "@material-ui/icons/FormatListNumbered";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import NightsStayIcon from "@material-ui/icons/NightsStay";
+import WbSunnyIcon from "@material-ui/icons/WbSunny";
 
 const drawerWidth = 240;
 
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
   },
   appBar: {
-    background: "#343d52",
+    background: theme.palette.secondary,
     color: "white",
     boxShadow: "none",
     zIndex: theme.zIndex.drawer + 1,
@@ -52,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
+
   menuButton: {
     marginRight: 36,
   },
@@ -96,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
 
   logoutButton: {
     position: "fixed",
-    bottom: 7,
+    bottom: 8,
     width: theme.spacing(7) + 1,
     [theme.breakpoints.up("sm")]: {
       width: theme.spacing(7) + 1,
@@ -136,6 +139,7 @@ const useStyles = makeStyles((theme) => ({
     transition: "0.25s",
 
     "&:hover, &:focus": {
+      border: "2px solid",
       borderColor: "yellow",
       color: "yellow",
       boxShadow: "0 0.5em 0.5em -0.4em yellow",
@@ -144,11 +148,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
+function AppBar({
+  isLoggedIn,
+  setIsLoggedIn,
+  setUserId,
+  darkState,
+  setDarkState,
+}) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [iconDark, setIconDark] = React.useState(false);
   const isScreenWide = useMediaQuery(theme.breakpoints.up("sm"));
+
+  const handleThemeChange = () => {
+    setDarkState(!darkState);
+    setIconDark(!iconDark);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -186,7 +202,7 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
             [classes.appBarShift]: open,
           })}
         >
-          <Toolbar>
+          <Toolbar style={{ paddingLeft: 0 }}>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -195,22 +211,38 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
               className={clsx(classes.menuButton, {
                 [classes.hide]: open,
               })}
+              style={{ marginLeft: "8px" }}
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              style={{ flexGrow: 1, color: "white", textDecoration: "none" }}
-              align="center"
-              variant="h6"
-              className={classes.title}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexGrow: 1,
+                textDecoration: "none",
+              }}
             >
-              <Link
-                to="/"
-                style={{ color: "white", textDecoration: "inherit" }}
+              <img src="logo.png" width="32px" height="32px" />
+              <Typography
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                  marginLeft: "16px",
+                }}
+                align="center"
+                variant="h6"
+                className={classes.title}
               >
-                HAB!TS
-              </Link>
-            </Typography>
+                <Link
+                  to="/"
+                  style={{ color: "white", textDecoration: "inherit" }}
+                >
+                  HAB!TS
+                </Link>
+              </Typography>
+            </div>
             <Button
               component={Link}
               to="/"
@@ -239,7 +271,6 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
               style={{ flexGrow: 1, color: "white", textDecoration: "none" }}
               align="center"
               variant="h6"
-              className={classes.title}
             >
               <Link
                 to="/"
@@ -276,7 +307,6 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
               }}
               align="left"
               variant="h6"
-              className={classes.title}
             >
               <Link
                 to="/"
@@ -326,7 +356,9 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
             </IconButton>
           </div>
           <Divider />
-          <List>
+          <List
+            style={{ height: "100%", display: "flex", flexDirection: "column" }}
+          >
             <ListItem
               button
               key="My Account"
@@ -375,13 +407,27 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
               </ListItemIcon>
               <ListItemText primary="Leaderboard" />
             </ListItem>
+            <div style={{ flexGrow: 1 }}></div>
+            <ListItem button key={iconDark} onClick={handleThemeChange}>
+              {iconDark ? (
+                <>
+                  <ListItemIcon>
+                    <WbSunnyIcon />
+                  </ListItemIcon>
+                </>
+              ) : (
+                <ListItemIcon>
+                  <NightsStayIcon />
+                </ListItemIcon>
+              )}
+              {open ? <ListItemText primary="Change Theme" /> : null}
+            </ListItem>
             <ListItem
               button
               key="Logout"
               component={Link}
               to="/"
               onClick={handleLogout}
-              className={classes.logoutButton}
             >
               <ListItemIcon>
                 <ExitToAppIcon />
@@ -445,6 +491,20 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
                 <LeaderboardIcon />
               </ListItemIcon>
               <ListItemText primary="Leaderboard" />
+            </ListItem>
+            <ListItem button key={iconDark} onClick={handleThemeChange}>
+              {iconDark ? (
+                <>
+                  <ListItemIcon>
+                    <WbSunnyIcon />
+                  </ListItemIcon>
+                </>
+              ) : (
+                <ListItemIcon>
+                  <NightsStayIcon />
+                </ListItemIcon>
+              )}
+              <ListItemText primary="Change Theme" />
             </ListItem>
             <ListItem
               button

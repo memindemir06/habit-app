@@ -23,6 +23,7 @@ import MenuTest from "./Menu";
 import AppBar from "./AppBar";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { purple, yellow } from "@material-ui/core/colors";
 
 const useStyles = makeStyles(() => ({
   content: {
@@ -39,6 +40,13 @@ function Home() {
   const [lastName, setLastName] = useState();
   const [email, setEmail] = useState(null);
   const classes = useStyles();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [darkState, setDarkState] = useState(false);
+  const palletType = darkState ? "dark" : "light";
+  const mainPrimaryColor = darkState ? "#8e24aa" : "#253559";
+  const bgPaperColor = darkState ? "#202531" : "white";
+  const bgDefaultColor = darkState ? "#181C25" : "#fafafa";
+  const mainSecondaryColor = darkState ? "#FCCA56" : "#253559";
 
   const theme = createMuiTheme({
     typography: {
@@ -55,10 +63,23 @@ function Home() {
         "'Segoe UI Symbol'",
       ].join(","),
     },
+
+    palette: {
+      type: palletType,
+      primary: {
+        main: mainPrimaryColor,
+      },
+      secondary: {
+        main: mainSecondaryColor,
+      },
+      background: {
+        paper: bgPaperColor,
+        default: bgDefaultColor,
+      },
+    },
   });
 
   let temp = null;
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // let path = useLocation();
 
@@ -92,6 +113,8 @@ function Home() {
           isLoggedIn={isLoggedIn}
           setIsLoggedIn={setIsLoggedIn}
           setUserId={setUserId}
+          darkState={darkState}
+          setDarkState={setDarkState}
         />
         <br />
         <div className={classes.content}>
@@ -131,6 +154,8 @@ function Home() {
                     firstName={firstName}
                     lastName={lastName}
                     leaveAccountCallback={backToLogin}
+                    darkState={darkState}
+                    setDarkState={setDarkState}
                   />
                 );
               }}

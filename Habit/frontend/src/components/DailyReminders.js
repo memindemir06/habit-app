@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     backgroundColor: "transparent",
     boxShadow: "none",
-    color: "black",
     display: "flex",
   },
   divider: {
@@ -77,7 +76,14 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-function DailyReminders({ userId, userName, firstName, lastName }) {
+function DailyReminders({
+  userId,
+  userName,
+  firstName,
+  lastName,
+  darkState,
+  setDarkState,
+}) {
   const params = useParams();
   const history = useHistory();
 
@@ -90,6 +96,7 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
   const [value, setValue] = useState(0);
   const classes = useStyles();
   const theme = useTheme();
+  const tabColor = darkState ? "#ffffff" : "#000000";
   // const [habitsCompletedState, sethabitsCompletedState] = useState(false);
   // const [habitsPending, setHabitsPending] = useState(false);
 
@@ -250,8 +257,8 @@ function DailyReminders({ userId, userName, firstName, lastName }) {
           onChange={handleChange}
           aria-label="simple tabs example"
         >
-          <Tab style={{ marginLeft: "2em" }} label="Pending" />
-          <Tab label="Completed" />
+          <Tab style={{ marginLeft: "2em", color: tabColor }} label="Pending" />
+          <Tab style={{ color: tabColor }} label="Completed" />
           <div style={{ flexGrow: 1 }}></div>
           <Button
             variant="contained"
