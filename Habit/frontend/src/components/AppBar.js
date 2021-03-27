@@ -1,5 +1,6 @@
 import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AppBar2 from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -23,12 +24,15 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import LeaderboardIcon from "@material-ui/icons/FormatListNumbered";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    position: "relative",
   },
   appBar: {
     background: "#343d52",
@@ -89,12 +93,62 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+
+  logoutButton: {
+    position: "fixed",
+    bottom: 7,
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up("sm")]: {
+      width: theme.spacing(7) + 1,
+    },
+  },
+  appBarLogout: {
+    background: "transparent",
+    boxShadow: "none",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: "auto",
+  },
+
+  toolbarLogout: {
+    height: "100px",
+    padding: "0 5em",
+    [theme.breakpoints.down("sm")]: {
+      padding: "0 12px",
+    },
+  },
+  getStarted: {
+    width: "150px",
+    [theme.breakpoints.down("xs")]: {
+      width: "80px",
+      padding: theme.spacing(1),
+      fontSize: "8px",
+    },
+    cursor: "pointer",
+    background: "none",
+    border: "2px solid",
+    font: "inherit",
+    lineHeight: 1,
+    margin: "0.5em",
+    padding: "1em 2em",
+    color: "white",
+    transition: "0.25s",
+
+    "&:hover, &:focus": {
+      borderColor: "yellow",
+      color: "yellow",
+      boxShadow: "0 0.5em 0.5em -0.4em yellow",
+      transform: "translateY(-0.25em)",
+    },
+  },
 }));
 
 function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const isScreenWide = useMediaQuery(theme.breakpoints.up("sm"));
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -125,14 +179,14 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar2
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          {isLoggedIn ? (
+      {isLoggedIn && isScreenWide ? (
+        <AppBar2
+          position="fixed"
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: open,
+          })}
+        >
+          <Toolbar>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -144,29 +198,19 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
             >
               <MenuIcon />
             </IconButton>
-          ) : (
-            <div style={{ width: "80px" }}></div>
-          )}
-          <Typography
-            style={{ flexGrow: 1, color: "white", textDecoration: "none" }}
-            align="center"
-            variant="h6"
-            className={classes.title}
-          >
-            <Link to="/" style={{ color: "white", textDecoration: "inherit" }}>
-              HAB!TS
-            </Link>
-          </Typography>
-          {!isLoggedIn ? (
-            <div>
-              <Button component={Link} to="/login" color="inherit">
-                Login
-              </Button>
-              <Button component={Link} to="/register" color="inherit">
-                Register
-              </Button>
-            </div>
-          ) : (
+            <Typography
+              style={{ flexGrow: 1, color: "white", textDecoration: "none" }}
+              align="center"
+              variant="h6"
+              className={classes.title}
+            >
+              <Link
+                to="/"
+                style={{ color: "white", textDecoration: "inherit" }}
+              >
+                HAB!TS
+              </Link>
+            </Typography>
             <Button
               component={Link}
               to="/"
@@ -175,11 +219,90 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
             >
               Logout
             </Button>
-          )}
-        </Toolbar>
-      </AppBar2>
+          </Toolbar>
+        </AppBar2>
+      ) : isLoggedIn && !isScreenWide ? (
+        <AppBar2 position="fixed" className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, {
+                [classes.hide]: open,
+              })}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              style={{ flexGrow: 1, color: "white", textDecoration: "none" }}
+              align="center"
+              variant="h6"
+              className={classes.title}
+            >
+              <Link
+                to="/"
+                style={{ color: "white", textDecoration: "inherit" }}
+              >
+                HAB!TS
+              </Link>
+            </Typography>
+            <Button
+              component={Link}
+              to="/"
+              color="inherit"
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          </Toolbar>
+        </AppBar2>
+      ) : (
+        <AppBar2 position="absolute" className={classes.appBarLogout}>
+          <Toolbar className={classes.toolbarLogout}>
+            <img
+              src="logo.png"
+              style={{ marginLeft: "32px" }}
+              width="32px"
+              height="32px"
+            />
+            <Typography
+              style={{
+                flexGrow: 1,
+                color: "white",
+                textDecoration: "none",
+                marginLeft: "16px",
+              }}
+              align="left"
+              variant="h6"
+              className={classes.title}
+            >
+              <Link
+                to="/"
+                style={{ color: "white", textDecoration: "inherit" }}
+              >
+                HAB!TS
+              </Link>
+            </Typography>
+            <div>
+              <Button component={Link} to="/login" color="inherit">
+                Login
+              </Button>
+              <Button
+                className={classes.getStarted}
+                component={Link}
+                to="/register"
+                color="inherit"
+              >
+                Get Started
+              </Button>
+            </div>
+          </Toolbar>
+        </AppBar2>
+      )}
 
-      {isLoggedIn ? (
+      {isLoggedIn && isScreenWide ? (
         <Drawer
           variant="permanent"
           className={clsx(classes.drawer, {
@@ -252,8 +375,91 @@ function AppBar({ isLoggedIn, setIsLoggedIn, setUserId }) {
               </ListItemIcon>
               <ListItemText primary="Leaderboard" />
             </ListItem>
+            <ListItem
+              button
+              key="Logout"
+              component={Link}
+              to="/"
+              onClick={handleLogout}
+              className={classes.logoutButton}
+            >
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              {open ? <ListItemText primary="Logout" /> : null}
+            </ListItem>
           </List>
         </Drawer>
+      ) : isLoggedIn && !isScreenWide ? (
+        <SwipeableDrawer
+          anchor="top"
+          open={open}
+          onClose={handleDrawerClose}
+          onOpen={handleDrawerOpen}
+        >
+          <List>
+            <ListItem
+              button
+              key="My Account"
+              onClick={handleDrawerClose}
+              component={Link}
+              to="/myprofile"
+            >
+              <ListItemIcon>
+                <MyAccountIcon />
+              </ListItemIcon>
+              <ListItemText primary="My Account" />
+            </ListItem>
+            <ListItem
+              button
+              key="Home"
+              onClick={handleDrawerClose}
+              component={Link}
+              to="/home"
+            >
+              <ListItemIcon>
+                <DailyRemindersIcon />
+              </ListItemIcon>
+              <ListItemText primary="Home Page" />
+            </ListItem>
+            <ListItem
+              button
+              key="My Friends"
+              onClick={handleDrawerClose}
+              component={Link}
+              to="/friends"
+            >
+              <ListItemIcon>
+                <MyFriendsIcon />
+              </ListItemIcon>
+              <ListItemText primary="My Friends" />
+            </ListItem>
+            <ListItem
+              button
+              key="Leaderboard"
+              onClick={handleDrawerClose}
+              component={Link}
+              to="/leaderboard"
+            >
+              <ListItemIcon>
+                <LeaderboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Leaderboard" />
+            </ListItem>
+            <ListItem
+              button
+              key="Logout"
+              component={Link}
+              to="/"
+              onClick={handleLogout}
+            >
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </ListItem>
+          </List>
+        </SwipeableDrawer>
       ) : null}
     </div>
   );

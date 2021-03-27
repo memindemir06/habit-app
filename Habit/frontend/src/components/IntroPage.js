@@ -11,14 +11,28 @@ import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   introSummary: {
-    marginTop: "-20px",
-    padding: theme.spacing(12),
-    [theme.breakpoints.down("md")]: {
-      padding: theme.spacing(6),
-    },
+    height: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "-84px",
+    padding: theme.spacing(16),
+    paddingTop: theme.spacing(12),
     [theme.breakpoints.down("sm")]: {
-      padding: theme.spacing(1),
+      height: "100%",
+      padding: "12em 0",
     },
+    background: "rgb(106,48,147)",
+    background:
+      "-moz-linear-gradient(150deg, rgba(106,48,147,1) 0%, rgba(160,68,255,1) 100%)",
+    background:
+      "-webkit-linear-gradient(150deg, rgba(106,48,147,1) 0%, rgba(160,68,255,1) 100%)",
+    background:
+      "linear-gradient(150deg, rgba(106,48,147,1) 0%, rgba(160,68,255,1) 100%)",
+    filter:
+      "progid:DXImageTransform.Microsoft.gradient(startColorstr='#6a3093',endColorstr='#a044ff',GradientType=1)",
+    color: "white",
+    /*
     background: "rgb(41,51,236)",
     background:
       "-moz-linear-gradient(150deg, rgba(41,51,236,1) 0%, rgba(20,255,252,1) 100%)",
@@ -29,28 +43,29 @@ const useStyles = makeStyles((theme) => ({
     filter:
       "progid:DXImageTransform.Microsoft.gradient(startColorstr='#2933ec',endColorstr='#14fffc',GradientType=1)",
     color: "white",
+    */
   },
   introText: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "left",
+    height: "100%",
   },
   btn: {
-    width: "300px",
+    width: "150px",
     fontSize: "17px",
     fontWeight: "bold",
     color: "#fff",
     cursor: "pointer",
     margin: "20px",
-    height: "55px",
+    height: "50px",
     textAlign: "center",
     border: "none",
     backgroundSize: "300% 100%",
     backgroundImage:
       "linear-gradient(to right, #f5ce62, #e43603, #fa7199, #e85a19)",
     boxShadow: "0 4px 15px 0 rgba(229, 66, 10, 0.75)",
-    borderRadius: "50px",
     mozTransition: "all .4s ease-in-out",
     oTransition: "all .4s ease-in-out",
     webkitTransition: "all .4s ease-in-out",
@@ -64,6 +79,26 @@ const useStyles = makeStyles((theme) => ({
     },
     "&:focus": {
       outline: "none",
+    },
+  },
+
+  getStarted: {
+    width: "150px",
+    cursor: "pointer",
+    background: "none",
+    border: "2px solid",
+    font: "inherit",
+    lineHeight: 1,
+    margin: "0.5em",
+    padding: "1em 2em",
+    color: "white",
+    transition: "0.25s",
+
+    "&:hover, &:focus": {
+      borderColor: "yellow",
+      color: "yellow",
+      boxShadow: "0 0.5em 0.5em -0.4em yellow",
+      transform: "translateY(-0.25em)",
     },
   },
 
@@ -81,18 +116,32 @@ const useStyles = makeStyles((theme) => ({
 
   textStyle: {
     margin: theme.spacing(2),
-    fontWeight: "bold",
+    fontWeight: 700,
+    letterSpacing: "1.5px",
+    textTransform: "uppercase",
+  },
+
+  pStyle: {
+    margin: theme.spacing(2),
+    fontWeight: 400,
+    textAlign: "justify",
+    letterSpacing: "1.5px",
   },
 
   introHome: {
-    padding: theme.spacing(12),
+    height: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: theme.spacing(16),
     [theme.breakpoints.down("md")]: {
-      padding: theme.spacing(6),
+      padding: theme.spacing(12),
     },
     [theme.breakpoints.down("sm")]: {
-      padding: theme.spacing(1),
+      height: "100%",
+      padding: "12em 0",
     },
-    background: "#fffdd0",
+    background: "#f2f7f2",
     color: "black",
   },
 
@@ -100,7 +149,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "right",
+    alignItems: "flex-end",
+  },
+  mainGrid: {
+    height: "80%",
   },
 }));
 
@@ -110,37 +162,65 @@ function IntroPage() {
   return (
     <div>
       <div className={classes.introSummary}>
-        <Grid container spacing={6}>
+        <Grid className={classes.mainGrid} spacing={6} container>
           <Grid item className={classes.introText} xs={12} sm={6}>
             <Typography align="left" className={classes.textStyle} variant="h3">
-              Welcome to Hab!ts
+              A new journey starts here.
             </Typography>
+            <Divider
+              style={{
+                alignSelf: "left",
+                width: "200px",
+                height: "2px",
+                background: "#fff",
+                margin: "1em",
+              }}
+            />
             <Typography
               align="left"
-              className={classes.textStyle}
+              className={classes.pStyle}
               variant="subtitle"
             >
-              We help you in achieving you ideal lifestyle
+              Take on a new{" "}
+              <span
+                style={{
+                  color: "yellow",
+                  fontWeight: 600,
+                  textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
+                }}
+              >
+                hab!t
+              </span>{" "}
+              and meet others who share the same{" "}
+              <span
+                style={{
+                  color: "yellow",
+                  fontWeight: 600,
+                  textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
+                }}
+              >
+                hab!ts
+              </span>{" "}
+              as you.
             </Typography>
-            <Typography align="left" className={classes.textStyle} variant="h5">
-              Take on new Hab!ts
-            </Typography>
-            <Typography
-              align="left"
-              className={classes.textStyle}
-              variant="subtitle"
+            <div
+              style={{
+                height: "100px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              And help others
-            </Typography>
-            <Button
-              variant="outlined"
-              color="primary"
-              className={classes.btn}
-              component={Link}
-              to="/register"
-            >
-              Create an Account
-            </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                className={classes.getStarted}
+                component={Link}
+                to="/register"
+              >
+                Get Started
+              </Button>
+            </div>
           </Grid>
           <Grid item className={classes.imageContainer} xs={12} sm={6}>
             <img src="section-1.svg" width="100%" height="100%" />
@@ -148,7 +228,7 @@ function IntroPage() {
         </Grid>
       </div>
       <div className={classes.introHome}>
-        <Grid container spacing={6}>
+        <Grid container>
           <Grid item className={classes.imageContainer} xs={12} sm={6}>
             <img src="section-2.svg" width="100%" height="100%" />
           </Grid>
@@ -164,54 +244,50 @@ function IntroPage() {
               className={classes.textStyle}
               variant="h3"
             >
-              Track your Hab!ts
+              Track
             </Typography>
+            <Divider
+              style={{
+                alignSelf: "right",
+                width: "200px",
+                height: "2px",
+                background: "rgb(106,48,147)",
+                margin: "1em",
+              }}
+            />
             <Typography
               align="right"
-              className={classes.textStyle}
+              className={classes.pStyle}
+              style={{ textAlign: "right" }}
               variant="subtitle"
             >
-              Set up new Hab!ts
-            </Typography>
-            <Typography
-              align="right"
-              className={classes.textStyle}
-              variant="h5"
-            >
-              Keep track of your development
-            </Typography>
-            <Typography
-              align="right"
-              className={classes.textStyle}
-              variant="subtitle"
-            >
-              Maintain your Hab!t streaks
+              Set up new Hab!ts and keep track of your development. Try to
+              maintain your Hab!t streaks.
             </Typography>
           </Grid>
         </Grid>
       </div>
       <div className={classes.introSummary}>
-        <Grid container spacing={6}>
+        <Grid container>
           <Grid item className={classes.introText} xs={12} sm={6}>
             <Typography align="left" className={classes.textStyle} variant="h3">
-              Compete with Friends
+              Compete
             </Typography>
+            <Divider
+              style={{
+                alignSelf: "left",
+                width: "200px",
+                height: "2px",
+                background: "#fff",
+                margin: "1em",
+              }}
+            />
             <Typography
               align="left"
-              className={classes.textStyle}
+              className={classes.pStyle}
               variant="subtitle"
             >
-              Make new friends
-            </Typography>
-            <Typography align="left" className={classes.textStyle} variant="h5">
-              Take on new Hab!ts
-            </Typography>
-            <Typography
-              align="left"
-              className={classes.textStyle}
-              variant="subtitle"
-            >
-              And help others
+              Keep up with your habit and have your name in leaderboard.
             </Typography>
           </Grid>
           <Grid item className={classes.friendImageContainer} xs={12} sm={6}>
@@ -221,7 +297,7 @@ function IntroPage() {
         </Grid>
       </div>
       <div className={classes.introHome}>
-        <Grid container spacing={6}>
+        <Grid container>
           <Grid item className={classes.imageContainer} xs={12} sm={6}>
             <img src="leaderboard.svg" width="100%" height="100%" />
           </Grid>
@@ -231,29 +307,23 @@ function IntroPage() {
               className={classes.textStyle}
               variant="h3"
             >
-              Engage with others
+              Find others
             </Typography>
+            <Divider
+              style={{
+                alignSelf: "right",
+                width: "200px",
+                height: "2px",
+                background: "rgb(106,48,147)",
+                margin: "1em",
+              }}
+            />
             <Typography
               align="right"
-              className={classes.textStyle}
+              className={classes.pStyle}
               variant="subtitle"
             >
-              Meet similar people
-            </Typography>
-            <Typography
-              align="right"
-              className={classes.textStyle}
-              variant="h5"
-            >
-              Compare progress
-            </Typography>
-            <Typography
-              align="right"
-              className={classes.textStyle}
-              variant="subtitle"
-              style={{ marginBottom: "20px" }}
-            >
-              Make new connections
+              Explore the map to meet people who has similar habits with you.
             </Typography>
           </Grid>
         </Grid>
