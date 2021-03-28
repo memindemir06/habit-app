@@ -146,6 +146,59 @@ const useStyles = makeStyles((theme) => ({
       transform: "translateY(-0.25em)",
     },
   },
+  drawerButton: {
+    [theme.breakpoints.up("md")]: {
+      "&::before": {
+        content: "''",
+        position: "absolute",
+        bottom: "1%",
+        left: "25%",
+        display: "block",
+        width: "50%",
+        height: "3px",
+        border: "1px solid",
+        borderColor: theme.palette.primary.main,
+        borderRadius: "20px",
+        zIndex: -1,
+        backgroundColor: theme.palette.primary.main,
+        webkitTransformOrigin: "right top",
+        msTransformOrigin: "right top",
+        transformOrigin: "right top",
+        webkitTransform: "scale(0, 1)",
+        msTransform: "scale(0, 1)",
+        transform: "scale(0, 1)",
+        webkitTransition: "transform 0.3s cubic-bezier(1, 0, 0, 1)",
+        transition: "transform 0.3s cubic-bezier(1, 0, 0, 1)",
+      },
+
+      "&:hover::before, &:focus::before": {
+        webkitTransformOrigin: "left top",
+        msTransformOrigin: "left top",
+        transformOrigin: "left top",
+        webkitTransform: "scale(1, 1)",
+        msTransform: "scale(1, 1)",
+        transform: "scale(1, 1)",
+      },
+    },
+  },
+  buttonNight: {
+    transition: "0.25s",
+    "&:hover, &:focus": {
+      "& $nightIcon": {
+        color: "#191970",
+      },
+    },
+  },
+  buttonDay: {
+    transition: "0.25s",
+    "&:hover, &:focus": {
+      "& $sunnyIcon": {
+        color: "#ffcc33",
+      },
+    },
+  },
+  sunnyIcon: { color: "inherit" },
+  nightIcon: { color: "inherit" },
 }));
 
 function AppBar({
@@ -213,7 +266,7 @@ function AppBar({
               })}
               style={{ marginLeft: "8px" }}
             >
-              <MenuIcon />
+              <ChevronRightIcon />
             </IconButton>
             <div
               style={{
@@ -365,6 +418,7 @@ function AppBar({
               onClick={handleDrawerClose}
               component={Link}
               to="/myprofile"
+              className={classes.drawerButton}
             >
               <ListItemIcon>
                 <MyAccountIcon />
@@ -377,6 +431,7 @@ function AppBar({
               onClick={handleDrawerClose}
               component={Link}
               to="/home"
+              className={classes.drawerButton}
             >
               <ListItemIcon>
                 <DailyRemindersIcon />
@@ -389,6 +444,7 @@ function AppBar({
               onClick={handleDrawerClose}
               component={Link}
               to="/friends"
+              className={classes.drawerButton}
             >
               <ListItemIcon>
                 <MyFriendsIcon />
@@ -401,6 +457,7 @@ function AppBar({
               onClick={handleDrawerClose}
               component={Link}
               to="/leaderboard"
+              className={classes.drawerButton}
             >
               <ListItemIcon>
                 <LeaderboardIcon />
@@ -408,19 +465,42 @@ function AppBar({
               <ListItemText primary="Leaderboard" />
             </ListItem>
             <div style={{ flexGrow: 1 }}></div>
-            <ListItem button key={iconDark} onClick={handleThemeChange}>
+            <ListItem
+              className={clsx({
+                [classes.buttonNight]: !iconDark,
+                [classes.buttonDay]: iconDark,
+              })}
+              button
+              key={iconDark}
+              onClick={handleThemeChange}
+            >
               {iconDark ? (
                 <>
                   <ListItemIcon>
-                    <WbSunnyIcon />
+                    <WbSunnyIcon className={classes.sunnyIcon} />
                   </ListItemIcon>
                 </>
               ) : (
                 <ListItemIcon>
-                  <NightsStayIcon />
+                  <NightsStayIcon className={classes.nightIcon} />
                 </ListItemIcon>
               )}
-              {open ? <ListItemText primary="Change Theme" /> : null}
+              {open ? (
+                <>
+                  <ListItemText
+                    className={clsx({
+                      [classes.hide]: !iconDark,
+                    })}
+                    primary="Light Mode"
+                  />{" "}
+                  <ListItemText
+                    className={clsx({
+                      [classes.hide]: iconDark,
+                    })}
+                    primary="Dark Mode"
+                  />{" "}
+                </>
+              ) : null}
             </ListItem>
             <ListItem
               button

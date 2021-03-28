@@ -46,7 +46,7 @@ function Home() {
   const mainPrimaryColor = darkState ? "#8e24aa" : "#253559";
   const bgPaperColor = darkState ? "#202531" : "white";
   const bgDefaultColor = darkState ? "#181C25" : "#fafafa";
-  const mainSecondaryColor = darkState ? "#FCCA56" : "#253559";
+  const mainSecondaryColor = darkState ? "#FCCA56" : "#F1E8B8";
 
   const theme = createMuiTheme({
     typography: {
@@ -243,6 +243,8 @@ function Home() {
                   <LeaderboardPage
                     userId={userId}
                     leaveAccountCallback={backToLogin}
+                    darkState={darkState}
+                    setDarkState={setDarkState}
                   />
                 );
               }}

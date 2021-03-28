@@ -13,6 +13,7 @@ import {
   FormLabel,
   FormGroup,
   Checkbox,
+  Divider,
 } from "@material-ui/core";
 import LeaderboardBlock from "./LeaderboardBlock";
 import FilterListIcon from "@material-ui/icons/FilterList";
@@ -24,34 +25,79 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    padding: theme.spacing(4),
+    margin: theme.spacing(16),
+    [theme.breakpoints.down("sm")]: {
+      margin: 0,
+      marginLeft: theme.spacing(7),
+      padding: theme.spacing(1),
+    },
+    [theme.breakpoints.down("xs")]: {
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+    },
   },
   block: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: "40%",
-    padding: theme.spacing(4),
+    width: "500px",
+    background: theme.palette.primary.main,
     margin: theme.spacing(8),
     [theme.breakpoints.down("md")]: {
-      width: "60%",
       margin: theme.spacing(2),
-      padding: theme.spacing(4),
     },
     [theme.breakpoints.down("sm")]: {
-      width: "100%",
       margin: theme.spacing(1),
-      padding: theme.spacing(1),
     },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
+    border: "3px solid",
+    borderColor: theme.palette.secondary.main,
+    boxShadow:
+      "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
   },
   filterButton: {
     alignSelf: "center",
     margin: theme.spacing(1),
     padding: theme.spacing(1),
   },
+  lbHeader: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    borderBottom: "3px solid",
+    borderBottomColor: theme.palette.secondary.main,
+  },
+  lbHeaderContent: {
+    color: "#fafafa",
+    textTransform: "uppercase",
+    margin: theme.spacing(1),
+  },
+  lbTitles: {
+    width: "100%",
+    margin: theme.spacing(1),
+    paddingRight: theme.spacing(2),
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    color: "rgba(255,255,255,0.9)",
+  },
+  lbTitleContent: {
+    textTransform: "uppercase",
+  },
 }));
 
-function LeaderboardPage({ leaveAccountCallback, userId }) {
+function LeaderboardPage({
+  leaveAccountCallback,
+  userId,
+  darkState,
+  setDarkState,
+}) {
   let params = useParams();
   let history = useHistory();
   const [leaderboardList, setLeaderboardList] = useState(null);
@@ -213,20 +259,59 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
     return (
       <div className={classes.root}>
         <div className={classes.block}>
-          <Typography variant="h3" align="center">
-            Leaderboard
-          </Typography>
-          <br />
+          <div className={classes.lbHeader}>
+            <Typography
+              variant="h3"
+              align="center"
+              className={classes.lbHeaderContent}
+              style={{ marginBottom: 0 }}
+            >
+              Users
+            </Typography>
+            <Typography
+              variant="h4"
+              align="center"
+              className={classes.lbHeaderContent}
+            >
+              Leaderboard
+            </Typography>
+          </div>
+
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             onClick={() => setOpenFilter(true)}
             endIcon={<FilterListIcon />}
             className={classes.filterButton}
           >
             Filter Leaderboard
           </Button>
-          <br />
+
+          <div className={classes.lbTitles}>
+            <Typography
+              variant="h6"
+              align="center"
+              className={classes.lbTitleContent}
+            >
+              Rank
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              className={classes.lbTitleContent}
+              style={{ marginRight: theme.spacing(6) }}
+            >
+              Name
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              className={classes.lbTitleContent}
+            >
+              Streak
+            </Typography>
+          </div>
+
           <Dialog
             open={openFilter}
             onClose={() => setOpenFilter(false)}
@@ -285,7 +370,7 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
           {leaderboardList.length == 0 ? (
             <NoFilterMessage />
           ) : (
-            leaderboardList.map((user) => {
+            leaderboardList.map((user, index) => {
               return (
                 <LeaderboardBlock
                   userId={user.user_id}
@@ -294,6 +379,9 @@ function LeaderboardPage({ leaveAccountCallback, userId }) {
                   streak={user.streak}
                   startDate={user.start_date}
                   profileImg={user.profile_img}
+                  darkState={darkState}
+                  setDarkState={setDarkState}
+                  userIndex={index}
                 />
               );
             })
