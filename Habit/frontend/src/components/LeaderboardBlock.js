@@ -23,15 +23,25 @@ const useStyles = makeStyles((theme) => ({
   cardContainer: {
     borderRadius: "36px",
     boxShadow: "none",
+    background: theme.palette.primary.main,
     "&:hover": {
       borderColor: theme.palette.secondary.main,
     },
   },
-  darkCard: {
-    background: "#4460a2",
+  firstShadow: {
+    webkitBoxShadow: "inset 0 0 30px #FFBF00",
+    mozBoxShadow: "inset 0 0 30px #FFBF00",
+    boxShadow: "inset 0 0 30px #FFBF00",
   },
-  lightCard: {
-    background: "#bf57db",
+  secondShadow: {
+    webkitBoxShadow: "inset 0 0 30px #FFBF00",
+    mozBoxShadow: "inset 0 0 30px #FFBF00",
+    boxShadow: "inset 0 0 30px #C4CAF3",
+  },
+  thirdShadow: {
+    webkitBoxShadow: "inset 0 0 30px #FFBF00",
+    mozBoxShadow: "inset 0 0 30px #FFBF00",
+    boxShadow: "inset 0 0 30px #E4624C",
   },
   cardHeader: {
     padding: "0 1em",
@@ -47,8 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
   streak: {
     fontWeight: "800",
-    margin: theme.spacing(2),
-    marginRight: theme.spacing(4),
+    margin: theme.spacing(1),
   },
   containerLeftStyle: {
     display: "flex",
@@ -93,16 +102,25 @@ const LeaderboardBlock = ({
       <Grid item xs={12}>
         <Card
           className={clsx(classes.cardContainer, {
-            [classes.darkCard]: !darkState,
-            [classes.lightCard]: darkState,
+            [classes.firstShadow]: userIndex == 0,
+            [classes.secondShadow]: userIndex == 1,
+            [classes.thirdShadow]: userIndex == 2,
           })}
         >
           <CardHeader
             avatar={
               <div className={classes.cardAvatarContainer}>
-                <Typography className={classes.streak} variant="subtitle">
-                  {userIndex + 1}
-                </Typography>
+                {userIndex == 0 || userIndex == 1 || userIndex == 2 ? (
+                  <img
+                    src={`trophy${userIndex}.svg`}
+                    width="32px"
+                    height="32px"
+                  />
+                ) : (
+                  <Typography className={classes.streak} variant="subtitle">
+                    {userIndex + 1}
+                  </Typography>
+                )}
                 <Tooltip title="View Profile">
                   <IconButton onClick={handleProfileClick}>
                     <Avatar src={profileImg} />

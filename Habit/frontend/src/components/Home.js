@@ -46,7 +46,18 @@ function Home() {
   const mainPrimaryColor = darkState ? "#8e24aa" : "#253559";
   const bgPaperColor = darkState ? "#202531" : "white";
   const bgDefaultColor = darkState ? "#181C25" : "#fafafa";
-  const mainSecondaryColor = darkState ? "#FCCA56" : "#F1E8B8";
+  const mainSecondaryColor = darkState ? "#FCCA56" : "#B08623";
+
+  /*
+  colorCodes:
+  purple-dark: 691b7e
+  purple-main: 8e24aa --primary-dark
+  purple-light: bf57db
+
+  space-cadet-dark: 172036
+  space-cadet-main: 253559 --primary-light
+  space-cadet-light: 5d79bb
+  */
 
   const theme = createMuiTheme({
     typography: {

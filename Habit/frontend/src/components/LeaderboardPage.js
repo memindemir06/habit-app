@@ -15,6 +15,7 @@ import {
   Checkbox,
   Divider,
 } from "@material-ui/core";
+import clsx from "clsx";
 import LeaderboardBlock from "./LeaderboardBlock";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -43,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     width: "500px",
-    background: theme.palette.primary.main,
     margin: theme.spacing(8),
     [theme.breakpoints.down("md")]: {
       margin: theme.spacing(2),
@@ -60,9 +60,16 @@ const useStyles = makeStyles((theme) => ({
       "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
   },
   filterButton: {
-    alignSelf: "center",
+    alignSelf: "flex-end",
     margin: theme.spacing(1),
     padding: theme.spacing(1),
+    textTransform: "none",
+  },
+  lightCard: {
+    background: "#172036",
+  },
+  darkCard: {
+    background: "#691b7e",
   },
   lbHeader: {
     width: "100%",
@@ -258,7 +265,12 @@ function LeaderboardPage({
   } else {
     return (
       <div className={classes.root}>
-        <div className={classes.block}>
+        <div
+          className={clsx(classes.block, {
+            [classes.lightCard]: !darkState,
+            [classes.darkCard]: darkState,
+          })}
+        >
           <div className={classes.lbHeader}>
             <Typography
               variant="h3"
@@ -281,10 +293,10 @@ function LeaderboardPage({
             variant="contained"
             color="secondary"
             onClick={() => setOpenFilter(true)}
-            endIcon={<FilterListIcon />}
+            startIcon={<FilterListIcon />}
             className={classes.filterButton}
           >
-            Filter Leaderboard
+            Filters
           </Button>
 
           <div className={classes.lbTitles}>

@@ -171,7 +171,7 @@ const useStyles = makeStyles((theme) => ({
         transition: "transform 0.3s cubic-bezier(1, 0, 0, 1)",
       },
 
-      "&:hover::before, &:focus::before": {
+      "&:hover::before": {
         webkitTransformOrigin: "left top",
         msTransformOrigin: "left top",
         transformOrigin: "left top",
