@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   cardContainer: {
     borderRadius: "36px",
     boxShadow: "none",
-    background: theme.palette.primary.main,
+    background: "#253559",
     "&:hover": {
       borderColor: theme.palette.secondary.main,
     },
@@ -71,6 +71,15 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
+  cardInfoContainer: {
+    margin: theme.spacing(1),
+    paddingRight: theme.spacing(2),
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    color: "rgba(255,255,255,0.9)",
+    fontWeight: "800",
+  },
 }));
 
 const LeaderboardBlock = ({
@@ -95,6 +104,24 @@ const LeaderboardBlock = ({
 
   const handleProfileClick = () => {
     history.push("/profile/" + userName);
+  };
+
+  const parseDate = (dateString) => {
+    const b = dateString.split(/\D+/);
+    const offsetMult = dateString.indexOf("+") !== -1 ? -1 : 1;
+    const hrOffset = offsetMult * (+b[7] || 0);
+    const minOffset = offsetMult * (+b[8] || 0);
+    return new Date(
+      Date.UTC(
+        +b[0],
+        +b[1] - 1,
+        +b[2],
+        +b[3] + hrOffset,
+        +b[4] + minOffset,
+        +b[5],
+        +b[6] || 0
+      )
+    );
   };
 
   return (
@@ -144,9 +171,16 @@ const LeaderboardBlock = ({
             className={classes.cardHeader}
           />
           <Collapse in={expanded} timeout="auto">
-            <CardContent>
-              <Typography variant="h6">Habit Name: {habitName}</Typography>
-              <Typography variant="h6">Start Date: {startDate}</Typography>
+            <CardContent className={classes.cardInfoContainer}>
+              <Typography variant="subtitle">
+                Habit: <span style={{ marginLeft: "1em" }}>{habitName}</span>
+              </Typography>
+              <Typography variant="subtitle">
+                Started on:{" "}
+                <span style={{ marginLeft: "1em" }}>
+                  {parseDate(startDate).toLocaleDateString()}
+                </span>
+              </Typography>
             </CardContent>
           </Collapse>
         </Card>

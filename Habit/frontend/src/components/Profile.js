@@ -95,8 +95,8 @@ const useStyles = makeStyles((theme) => ({
   },
   username: {
     position: "absolute",
-    top: "150px",
-    left: "250px",
+    top: "145px",
+    left: "225px",
     color: "white",
     [theme.breakpoints.down("sm")]: {
       position: "relative",

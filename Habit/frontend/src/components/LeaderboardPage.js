@@ -26,13 +26,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    padding: theme.spacing(4),
-    margin: theme.spacing(16),
-    [theme.breakpoints.down("sm")]: {
-      margin: 0,
-      marginLeft: theme.spacing(7),
-      padding: theme.spacing(1),
-    },
+    padding: theme.spacing(1),
+    marginLeft: theme.spacing(7),
     [theme.breakpoints.down("xs")]: {
       margin: theme.spacing(1),
       padding: theme.spacing(1),
@@ -69,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     background: "#172036",
   },
   darkCard: {
-    background: "#691b7e",
+    background: "#172036",
   },
   lbHeader: {
     width: "100%",

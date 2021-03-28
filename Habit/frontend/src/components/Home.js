@@ -43,10 +43,10 @@ function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [darkState, setDarkState] = useState(false);
   const palletType = darkState ? "dark" : "light";
-  const mainPrimaryColor = darkState ? "#8e24aa" : "#253559";
+  const mainPrimaryColor = darkState ? "#4460a2" : "#253559";
+  const mainSecondaryColor = darkState ? "#deb659" : "#B08623";
   const bgPaperColor = darkState ? "#202531" : "white";
   const bgDefaultColor = darkState ? "#181C25" : "#fafafa";
-  const mainSecondaryColor = darkState ? "#FCCA56" : "#B08623";
 
   /*
   colorCodes:
@@ -57,38 +57,50 @@ function Home() {
   space-cadet-dark: 172036
   space-cadet-main: 253559 --primary-light
   space-cadet-light: 5d79bb
+
+  previous dark palette: primary: 8e24aa 2EC4B6, secondary: FCCA56 BFAB25
   */
 
-  const theme = createMuiTheme({
-    typography: {
-      fontFamily: [
-        "'Open Sans'",
-        "-apple-system",
-        "BlinkMacSystemFont",
-        "'Segoe UI'",
-        "'Helvetica Neue'",
-        "Arial",
-        "sans-serif",
-        "'Apple Color Emoji'",
-        "'Segoe UI Emoji'",
-        "'Segoe UI Symbol'",
-      ].join(","),
-    },
+  const theme = React.useMemo(
+    () =>
+      createMuiTheme({
+        typography: {
+          fontFamily: [
+            "'Open Sans'",
+            "-apple-system",
+            "BlinkMacSystemFont",
+            "'Segoe UI'",
+            "'Helvetica Neue'",
+            "Arial",
+            "sans-serif",
+            "'Apple Color Emoji'",
+            "'Segoe UI Emoji'",
+            "'Segoe UI Symbol'",
+          ].join(","),
+        },
 
-    palette: {
-      type: palletType,
-      primary: {
-        main: mainPrimaryColor,
-      },
-      secondary: {
-        main: mainSecondaryColor,
-      },
-      background: {
-        paper: bgPaperColor,
-        default: bgDefaultColor,
-      },
-    },
-  });
+        palette: {
+          type: palletType,
+          primary: {
+            main: mainPrimaryColor,
+          },
+          secondary: {
+            main: mainSecondaryColor,
+          },
+          background: {
+            paper: bgPaperColor,
+            default: bgDefaultColor,
+          },
+        },
+      }),
+    [
+      palletType,
+      mainPrimaryColor,
+      mainSecondaryColor,
+      bgPaperColor,
+      bgDefaultColor,
+    ]
+  );
 
   let temp = null;
 
