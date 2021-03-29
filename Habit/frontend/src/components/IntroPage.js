@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import Slide from "@material-ui/core/Slide";
 
 const useStyles = makeStyles((theme) => ({
   introSummary: {
@@ -22,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
       height: "100%",
       padding: "12em 0",
     },
+    /*
     background: "rgb(106,48,147)",
     background:
       "-moz-linear-gradient(150deg, rgba(106,48,147,1) 0%, rgba(160,68,255,1) 100%)",
@@ -32,18 +34,17 @@ const useStyles = makeStyles((theme) => ({
     filter:
       "progid:DXImageTransform.Microsoft.gradient(startColorstr='#6a3093',endColorstr='#a044ff',GradientType=1)",
     color: "white",
-    /*
-    background: "rgb(41,51,236)",
-    background:
-      "-moz-linear-gradient(150deg, rgba(41,51,236,1) 0%, rgba(20,255,252,1) 100%)",
-    background:
-      "-webkit-linear-gradient(150deg, rgba(41,51,236,1) 0%, rgba(20,255,252,1) 100%)",
-    background:
-      "linear-gradient(150deg, rgba(41,51,236,1) 0%, rgba(20,255,252,1) 100%)",
-    filter:
-      "progid:DXImageTransform.Microsoft.gradient(startColorstr='#2933ec',endColorstr='#14fffc',GradientType=1)",
-    color: "white",
     */
+    background: "rgb(23,32,54)",
+    background:
+      "-moz-linear-gradient(150deg, rgba(23,32,54,1) 0%, rgba(37,53,89,1) 100%)",
+    background:
+      "-webkit-linear-gradient(150deg, rgba(23,32,54,1) 0%, rgba(37,53,89,1) 100%)",
+    background:
+      "linear-gradient(150deg, rgba(23,32,54,1) 0%, rgba(37,53,89,1) 100%)",
+    filter:
+      "progid:DXImageTransform.Microsoft.gradient(startColorstr='#172036',endColorstr='#253559',GradientType=1)",
+    color: "white",
   },
   introText: {
     display: "flex",
@@ -142,7 +143,7 @@ const useStyles = makeStyles((theme) => ({
       height: "100%",
       padding: "12em 0",
     },
-    background: "#f2f7f2",
+    background: "#fafafa",
     color: "black",
   },
 
@@ -164,77 +165,108 @@ function IntroPage() {
     <div>
       <div className={classes.introSummary}>
         <Grid className={classes.mainGrid} spacing={6} container>
-          <Grid item className={classes.introText} xs={12} sm={6}>
-            <Typography align="left" className={classes.textStyle} variant="h3">
-              A new journey starts here.
-            </Typography>
-            <Divider
-              style={{
-                alignSelf: "left",
-                width: "200px",
-                height: "2px",
-                background: "#fff",
-                margin: "1em",
-              }}
-            />
-            <Typography
-              align="left"
-              className={classes.pStyle}
-              variant="subtitle"
-            >
-              Take on a new{" "}
-              <span
+          <Slide
+            direction="right"
+            in={true}
+            timeout={{
+              appear: 500,
+              enter: 1000,
+            }}
+          >
+            <Grid item className={classes.introText} xs={12} sm={6}>
+              <Typography
+                align="left"
+                className={classes.textStyle}
+                variant="h3"
+              >
+                A new journey starts here.
+              </Typography>
+              <Divider
                 style={{
-                  color: "yellow",
-                  fontWeight: 600,
-                  textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
+                  alignSelf: "left",
+                  width: "200px",
+                  height: "2px",
+                  background: "#fff",
+                  margin: "1em",
+                }}
+              />
+              <Typography
+                align="left"
+                className={classes.pStyle}
+                variant="subtitle"
+              >
+                Take on a new{" "}
+                <span
+                  style={{
+                    color: "yellow",
+                    fontWeight: 600,
+                    textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
+                  }}
+                >
+                  hab!t
+                </span>{" "}
+                and meet others who share the same{" "}
+                <span
+                  style={{
+                    color: "yellow",
+                    fontWeight: 600,
+                    textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
+                  }}
+                >
+                  hab!ts
+                </span>{" "}
+                as you.
+              </Typography>
+              <div
+                style={{
+                  height: "100px",
+                  display: "flex",
+                  marginTop: "2em",
+                  justifySelf: "flex-end",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                hab!t
-              </span>{" "}
-              and meet others who share the same{" "}
-              <span
-                style={{
-                  color: "yellow",
-                  fontWeight: 600,
-                  textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
-                }}
-              >
-                hab!ts
-              </span>{" "}
-              as you.
-            </Typography>
-            <div
-              style={{
-                height: "100px",
-                display: "flex",
-                marginTop: "2em",
-                justifySelf: "flex-end",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Button
-                variant="outlined"
-                color="primary"
-                className={classes.getStarted}
-                component={Link}
-                to="/register"
-              >
-                Get Started
-              </Button>
-            </div>
-          </Grid>
-          <Grid item className={classes.imageContainer} xs={12} sm={6}>
-            <img src="section-1.svg" width="100%" height="100%" />
-          </Grid>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  className={classes.getStarted}
+                  component={Link}
+                  to="/register"
+                >
+                  Get Started
+                </Button>
+              </div>
+            </Grid>
+          </Slide>
+          <Slide
+            direction="left"
+            in={true}
+            timeout={{
+              appear: 800,
+              enter: 1000,
+            }}
+          >
+            <Grid item className={classes.imageContainer} xs={12} sm={6}>
+              <img src="section-1.svg" width="100%" height="100%" />
+            </Grid>
+          </Slide>
         </Grid>
       </div>
       <div className={classes.introHome}>
         <Grid container>
-          <Grid item className={classes.imageContainer} xs={12} sm={6}>
-            <img src="section-2.svg" width="100%" height="100%" />
-          </Grid>
+          <Slide
+            direction="right"
+            in={true}
+            timeout={{
+              appear: 500,
+              enter: 1000,
+            }}
+          >
+            <Grid item className={classes.imageContainer} xs={12} sm={6}>
+              <img src="section-2.svg" width="100%" height="100%" />
+            </Grid>
+          </Slide>
           <Grid
             item
             className={classes.introHomeText}

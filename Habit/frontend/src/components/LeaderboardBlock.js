@@ -34,13 +34,13 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "inset 0 0 30px #FFBF00",
   },
   secondShadow: {
-    webkitBoxShadow: "inset 0 0 30px #FFBF00",
-    mozBoxShadow: "inset 0 0 30px #FFBF00",
+    webkitBoxShadow: "inset 0 0 30px #C4CAF3",
+    mozBoxShadow: "inset 0 0 30px #C4CAF3",
     boxShadow: "inset 0 0 30px #C4CAF3",
   },
   thirdShadow: {
-    webkitBoxShadow: "inset 0 0 30px #FFBF00",
-    mozBoxShadow: "inset 0 0 30px #FFBF00",
+    webkitBoxShadow: "inset 0 0 30px #C4CAF3",
+    mozBoxShadow: "inset 0 0 30px #C4CAF3",
     boxShadow: "inset 0 0 30px #E4624C",
   },
   cardHeader: {

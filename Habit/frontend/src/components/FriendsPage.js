@@ -17,11 +17,85 @@ import {
   FormGroup,
   Checkbox,
   InputAdornment,
+  Divider,
+  Container,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import Snackbar from "@material-ui/core/Snackbar";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: theme.spacing(1),
+    marginRight: theme.spacing(3),
+    marginLeft: theme.spacing(8),
+    [theme.breakpoints.down("xs")]: {
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+    },
+  },
+
+  pageTitleContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    alignSelf: "flex-start",
+    margin: theme.spacing(1),
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      justifyContent: "center",
+    },
+  },
+
+  pageTitle: {
+    marginTop: 32,
+    textTransform: "uppercase",
+    fontWeight: "800",
+  },
+
+  inputContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    maxHeight: 75,
+    minHeight: 75,
+    paddingTop: 24,
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "center",
+    },
+    [theme.breakpoints.down("xs")]: {
+      justifyContent: "center",
+      flexDirection: "column",
+    },
+  },
+
+  inputField: {
+    marginRight: "10px",
+  },
+
+  inputButton: {
+    marginTop: 16,
+    maxHeight: 32,
+    minHeight: 32,
+  },
+
+  filterButton: {
+    marginTop: 40,
+    maxHeight: 32,
+    minHeight: 32,
+    [theme.breakpoints.down("sm")]: {
+      width: "60%",
+      alignSelf: "center",
+    },
+  },
+}));
 
 function FriendsPage({ leaveAccountCallback, userId, userName }) {
   const [friendsList, setFriendsList] = useState(null);
@@ -44,6 +118,8 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
   const { No_Filter, Gym, Smoking, Drugs } = checkedHabits;
 
   const error = [No_Filter, Gym, Smoking, Drugs].filter((v) => v).length !== 1;
+  const classes = useStyles();
+  const theme = useTheme();
 
   // var filterChosen = "No_Filter";
   const [filterChosen, setFilterChosen] = useState("No_Filter");
@@ -184,21 +260,6 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
       });
   };
 
-  const buttonStyle = {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  };
-
-  const friendSearchStyle = {
-    display: "flex",
-  };
-
-  const noBorder = {
-    marginRight: "10px",
-  };
-
   const handleHabitCheck = (event) => {
     setCheckedHabits({
       ...checkedHabits,
@@ -239,49 +300,54 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
   }
 
   return (
-    <div style={buttonStyle}>
-      <Typography variant="h4" align="center">
-        {"u/" + userName}
-      </Typography>
-      <Typography variant="h4" align="center">
-        FRIEND LIST
-      </Typography>
-      <br />
-      <div style={friendSearchStyle}>
-        <TextField
-          style={noBorder}
-          id="filled-basic"
-          label="Type Friend Username"
-          onChange={friendSearchChange}
-          variant="outlined"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
+    <div className={classes.root}>
+      <div className={classes.pageTitleContainer}>
+        <Typography className={classes.pageTitle} variant="h4" align="center">
+          Your friends
+        </Typography>
+        <div className={classes.inputContainer}>
+          <TextField
+            className={classes.inputField}
+            id="filled-basic"
+            label="Type Friend Username"
+            onChange={friendSearchChange}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Button
+            variant="contained"
+            color="secondary"
+            endIcon={<AddCircleIcon />}
+            onClick={submitFriendSearch}
+            className={classes.inputButton}
+            disableElevation
+          >
+            {" "}
+            ADD A FRIEND{" "}
+          </Button>
+        </div>
         <Button
           variant="contained"
-          color="secondary"
-          endIcon={<AddCircleIcon />}
-          onClick={submitFriendSearch}
-          disableElevation
+          color="primary"
+          className={classes.filterButton}
+          onClick={() => setOpenFilter(true)}
+          endIcon={<FilterListIcon />}
         >
-          {" "}
-          ADD A FRIEND{" "}
+          Filter Friends
         </Button>
       </div>
-      <br />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setOpenFilter(true)}
-        endIcon={<FilterListIcon />}
-      >
-        Filter Friends
-      </Button>
+      <Divider
+        style={{
+          width: "99%",
+          margin: "0 1em 1em 1em",
+          alignSelf: "flex-start",
+        }}
+      />
       <Dialog open={openFilter} onClose={() => setOpenFilter(false)} fullWidth>
         <DialogTitle>{"Filter by habit"}</DialogTitle>
         <DialogContent dividers>
@@ -334,51 +400,61 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
           </Button>
         </DialogActions>
       </Dialog>
-      <br />
-      <Grid item xs={12} align="center">
-        <Collapse in={friendAlreadyExists}>
-          <Alert
-            severity={
-              friendAlreadyExists == "success"
-                ? "success"
-                : friendAlreadyExists == "error"
-                ? "error"
-                : displayExists
-            }
-            onClose={() => {
-              setFriendAlreadyExists(null);
-            }}
-          >
-            {friendAlreadyExists == "success"
-              ? "Friend added successfully!"
+      <Snackbar
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        open={friendAlreadyExists}
+        autoHideDuration={2000}
+        onClose={() => {
+          setFriendAlreadyExists(null);
+        }}
+      >
+        <Alert
+          severity={
+            friendAlreadyExists == "success"
+              ? "success"
               : friendAlreadyExists == "error"
-              ? "Friend already exists!"
-              : displayMessageExists}
-          </Alert>
-        </Collapse>
-      </Grid>
-      <br />
-      {friendsList.length == 0 ? (
-        <NoFilterMessage />
-      ) : (
-        friendsList.map((friend) => {
-          return (
-            <div>
-              <FriendBlock
-                userName={friend.user_name}
-                firstName={friend.first_name}
-                lastName={friend.last_name}
-                email={friend.email}
-                userId={userId}
-                friendUserId={friend.user_id}
-                filterFriends={filterFriends}
-                profileImg={friend.profile_img}
-              />
-              <br />
-            </div>
-          );
-        })
-      )}
+              ? "error"
+              : displayExists
+          }
+          onClose={() => {
+            setFriendAlreadyExists(null);
+          }}
+        >
+          {friendAlreadyExists == "success"
+            ? "Friend added successfully!"
+            : friendAlreadyExists == "error"
+            ? "Friend already exists!"
+            : displayMessageExists}
+        </Alert>
+      </Snackbar>
+      <div style={{ width: "100%" }}>
+        <Grid container spacing={1}>
+          {friendsList.length == 0 ? (
+            <NoFilterMessage />
+          ) : (
+            friendsList.map((friend) => {
+              return (
+                <Grid item xs={12}>
+                  <FriendBlock
+                    userName={friend.user_name}
+                    firstName={friend.first_name}
+                    lastName={friend.last_name}
+                    email={friend.email}
+                    userId={userId}
+                    friendUserId={friend.user_id}
+                    filterFriends={filterFriends}
+                    profileImg={friend.profile_img}
+                  />
+                  <br />
+                </Grid>
+              );
+            })
+          )}
+        </Grid>
+      </div>
     </div>
   );
 }
