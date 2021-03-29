@@ -19,6 +19,7 @@ import clsx from "clsx";
 import LeaderboardBlock from "./LeaderboardBlock";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Footer from "./Footer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,6 +92,17 @@ const useStyles = makeStyles((theme) => ({
   },
   lbTitleContent: {
     textTransform: "uppercase",
+  },
+  footer: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    minHeight: 100,
+    display: "flex",
+    width: "100vw",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
 }));
 
@@ -259,141 +271,142 @@ function LeaderboardPage({
     return <LoadingPage />;
   } else {
     return (
-      <div className={classes.root}>
-        <div
-          className={clsx(classes.block, {
-            [classes.lightCard]: !darkState,
-            [classes.darkCard]: darkState,
-          })}
-        >
-          <div className={classes.lbHeader}>
-            <Typography
-              variant="h3"
-              align="center"
-              className={classes.lbHeaderContent}
-              style={{ marginBottom: 0 }}
-            >
-              Users
-            </Typography>
-            <Typography
-              variant="h4"
-              align="center"
-              className={classes.lbHeaderContent}
-            >
-              Leaderboard
-            </Typography>
-          </div>
-
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => setOpenFilter(true)}
-            startIcon={<FilterListIcon />}
-            className={classes.filterButton}
+      <div>
+        <div className={classes.root}>
+          <div
+            className={clsx(classes.block, {
+              [classes.lightCard]: !darkState,
+              [classes.darkCard]: darkState,
+            })}
           >
-            Filters
-          </Button>
-
-          <div className={classes.lbTitles}>
-            <Typography
-              variant="h6"
-              align="center"
-              className={classes.lbTitleContent}
-            >
-              Rank
-            </Typography>
-            <Typography
-              variant="h6"
-              align="center"
-              className={classes.lbTitleContent}
-              style={{ marginRight: theme.spacing(6) }}
-            >
-              Name
-            </Typography>
-            <Typography
-              variant="h6"
-              align="center"
-              className={classes.lbTitleContent}
-            >
-              Streak
-            </Typography>
-          </div>
-
-          <Dialog
-            open={openFilter}
-            onClose={() => setOpenFilter(false)}
-            fullWidth
-          >
-            <DialogTitle>{"Filter Leaderboard"}</DialogTitle>
-            <DialogContent dividers>
-              <FormControl component="fieldset" error={error}>
-                <FormLabel component="legend">Pick 1 option</FormLabel>
-                <FormGroup>
-                  {Object.keys(checkedHabits).map(function (key, index) {
-                    return (
-                      <div>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name={key}
-                              checked={checkedHabits[key]}
-                              onChange={handleHabitCheck}
-                              disabled={false}
-                            />
-                          }
-                          label={key}
-                        />
-                      </div>
-                    );
-                  })}
-                </FormGroup>
-              </FormControl>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => {
-                  setOpenFilter(false);
-                }}
-                color="primary"
+            <div className={classes.lbHeader}>
+              <Typography
+                variant="h3"
+                align="center"
+                className={classes.lbHeaderContent}
+                style={{ marginBottom: 0 }}
               >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => {
-                  Object.keys(checkedHabits).map(function (key, index) {
-                    if (checkedHabits[key]) {
-                      getLeaderboard(userId, key);
-                    }
-                  });
-                }}
-                color="primary"
-                disabled={error ? true : false}
-                autoFocus
+                Users
+              </Typography>
+              <Typography
+                variant="h4"
+                align="center"
+                className={classes.lbHeaderContent}
               >
-                Ok
-              </Button>
-            </DialogActions>
-          </Dialog>
-          {leaderboardList.length == 0 ? (
-            <NoFilterMessage />
-          ) : (
-            leaderboardList.map((user, index) => {
-              return (
-                <LeaderboardBlock
-                  userId={user.user_id}
-                  userName={user.user_id.user_name}
-                  habitName={user.habit_id.habit_name}
-                  streak={user.streak}
-                  startDate={user.start_date}
-                  profileImg={user.profile_img}
-                  darkState={darkState}
-                  setDarkState={setDarkState}
-                  userIndex={index}
-                />
-              );
-            })
-          )}
-          {/* {leaderboardList.map((user) => {
+                Leaderboard
+              </Typography>
+            </div>
+
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => setOpenFilter(true)}
+              startIcon={<FilterListIcon />}
+              className={classes.filterButton}
+            >
+              Filters
+            </Button>
+
+            <div className={classes.lbTitles}>
+              <Typography
+                variant="h6"
+                align="center"
+                className={classes.lbTitleContent}
+              >
+                Rank
+              </Typography>
+              <Typography
+                variant="h6"
+                align="center"
+                className={classes.lbTitleContent}
+                style={{ marginRight: theme.spacing(6) }}
+              >
+                Name
+              </Typography>
+              <Typography
+                variant="h6"
+                align="center"
+                className={classes.lbTitleContent}
+              >
+                Streak
+              </Typography>
+            </div>
+
+            <Dialog
+              open={openFilter}
+              onClose={() => setOpenFilter(false)}
+              fullWidth
+            >
+              <DialogTitle>{"Filter Leaderboard"}</DialogTitle>
+              <DialogContent dividers>
+                <FormControl component="fieldset" error={error}>
+                  <FormLabel component="legend">Pick 1 option</FormLabel>
+                  <FormGroup>
+                    {Object.keys(checkedHabits).map(function (key, index) {
+                      return (
+                        <div>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                name={key}
+                                checked={checkedHabits[key]}
+                                onChange={handleHabitCheck}
+                                disabled={false}
+                              />
+                            }
+                            label={key}
+                          />
+                        </div>
+                      );
+                    })}
+                  </FormGroup>
+                </FormControl>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => {
+                    setOpenFilter(false);
+                  }}
+                  color="primary"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    Object.keys(checkedHabits).map(function (key, index) {
+                      if (checkedHabits[key]) {
+                        getLeaderboard(userId, key);
+                      }
+                    });
+                  }}
+                  color="primary"
+                  disabled={error ? true : false}
+                  autoFocus
+                >
+                  Ok
+                </Button>
+              </DialogActions>
+            </Dialog>
+            {leaderboardList.length == 0 ? (
+              <NoFilterMessage />
+            ) : (
+              leaderboardList.map((user, index) => {
+                return (
+                  <LeaderboardBlock
+                    userId={user.user_id}
+                    userName={user.user_id.user_name}
+                    habitName={user.habit_id.habit_name}
+                    streak={user.streak}
+                    startDate={user.start_date}
+                    profileImg={user.profile_img}
+                    darkState={darkState}
+                    setDarkState={setDarkState}
+                    userIndex={index}
+                  />
+                );
+              })
+            )}
+            {/* {leaderboardList.map((user) => {
           return (
             <LeaderboardBlock
               userId={user.user_id}
@@ -404,7 +417,9 @@ function LeaderboardPage({
             />
           );
         })} */}
+          </div>
         </div>
+        <Footer className={classes.footer} />
       </div>
     );
   }

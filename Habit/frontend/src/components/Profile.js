@@ -17,6 +17,7 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import ProfileHabitBlock from "./ProfileHabitBlock";
+import Footer from "./Footer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -153,6 +154,17 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
   },
+  footer: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    minHeight: 100,
+    display: "flex",
+    width: "100vw",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 }));
 
 function Profile({
@@ -167,6 +179,8 @@ function Profile({
   setLastName,
   setEmail,
   isUser,
+  darkState,
+  setDarkState,
 }) {
   const [tempUserId, setTempUserId] = useState("");
   const [tempUserName, setTempUserName] = useState("");
@@ -286,140 +300,150 @@ function Profile({
 
   let tempCompleted = false;
   return (
-    <div className={classes.root}>
-      {!settingsClicked ? (
-        <div className={classes.mainContainer}>
-          <div className={classes.images}>
-            <img className={classes.profileImage} src={profileImg} />
-            <img className={classes.backgroundImage} src={null} />
-            <div className={classes.nameContainer}>
-              <Typography
-                className={classes.username}
-                variant="h4"
-                align="left"
-              >
-                {isUser ? firstName : tempFirstName}{" "}
-                {isUser ? lastName : tempLastName}
-              </Typography>
-            </div>
-            {isUser ? (
-              <IconButton
-                onClick={() => setSettingsClicked(!settingsClicked)}
-                color="gray"
-                size="medium"
-                className={classes.settings}
-              >
-                <SettingsIcon fontSize="small" />
-              </IconButton>
-            ) : null}
-          </div>
+    <div>
+      <div>
+        {!settingsClicked ? (
+          <div className={classes.root}>
+            <div className={classes.mainContainer}>
+              <div className={classes.images}>
+                <img className={classes.profileImage} src={profileImg} />
+                <img className={classes.backgroundImage} src={null} />
+                <div className={classes.nameContainer}>
+                  <Typography
+                    className={classes.username}
+                    variant="h4"
+                    align="left"
+                  >
+                    {isUser ? firstName : tempFirstName}{" "}
+                    {isUser ? lastName : tempLastName}
+                  </Typography>
+                </div>
+                {isUser ? (
+                  <IconButton
+                    onClick={() => setSettingsClicked(!settingsClicked)}
+                    color="gray"
+                    size="medium"
+                    className={classes.settings}
+                  >
+                    <SettingsIcon fontSize="small" />
+                  </IconButton>
+                ) : null}
+              </div>
 
-          <div className={classes.profileInfo}>
-            <Divider className={classes.divider} />
-            <div className={classes.summary}>
-              <div className={classes.description}>
-                <Typography variant="h6" style={{ maxWidth: "100%" }}>
-                  {"u/" + (isUser ? userName : tempUserName)}
+              <div className={classes.profileInfo}>
+                <Divider className={classes.divider} />
+                <div className={classes.summary}>
+                  <div className={classes.description}>
+                    <Typography variant="h6" style={{ maxWidth: "100%" }}>
+                      {"u/" + (isUser ? userName : tempUserName)}
+                    </Typography>
+                    <br />
+                    <Typography variant="body1" style={{ maxWidth: "100%" }}>
+                      {description}
+                    </Typography>
+                  </div>
+                  <div className={classes.socials}>
+                    <List component="nav" aria-label="main mailbox folders">
+                      <ListItem
+                        button
+                        onClick={() => (window.location.href = facebook)}
+                      >
+                        <ListItemIcon>
+                          <FacebookIcon style={{ color: "#4267B2" }} />
+                        </ListItemIcon>
+                        <ListItemText primary="Facebook" />
+                      </ListItem>
+                      <ListItem
+                        button
+                        onClick={() => (window.location.href = instagram)}
+                      >
+                        <ListItemIcon>
+                          <InstagramIcon style={{ color: "#C13584" }} />
+                        </ListItemIcon>
+                        <ListItemText primary="Instagram" />
+                      </ListItem>
+                      <ListItem
+                        button
+                        onClick={() => (window.location.href = twitter)}
+                      >
+                        <ListItemIcon>
+                          <TwitterIcon style={{ color: "#1DA1F2" }} />
+                        </ListItemIcon>
+                        <ListItemText primary="Twitter" />
+                      </ListItem>
+                    </List>
+                  </div>
+                  <div className={classes.habitList}></div>
+                </div>
+                <Divider className={classes.divider} />
+                <Typography variant="h4" align="center">
+                  {" "}
+                  User Habits
                 </Typography>
                 <br />
-                <Typography variant="body1" style={{ maxWidth: "100%" }}>
-                  {description}
-                </Typography>
+                {listOfHabits.map((habit) => {
+                  let index = listOfHabits.findIndex(
+                    (habitItem) => habitItem.habit_id === habit.habit_id
+                  );
+                  if (habit.completed) {
+                    tempCompleted = true;
+                    return (
+                      <div>
+                        <ProfileHabitBlock
+                          habitName={habit.habit_id.habit_name}
+                          startDate={habit.start_date}
+                          streak={habit.streak}
+                        />
+                        <br />
+                      </div>
+                    );
+                  } else if (
+                    index == listOfHabits.length - 1 &&
+                    !tempCompleted
+                  ) {
+                    return (
+                      <div>
+                        <h3>No habits here...</h3>
+                      </div>
+                    );
+                  }
+                })}
               </div>
-              <div className={classes.socials}>
-                <List component="nav" aria-label="main mailbox folders">
-                  <ListItem
-                    button
-                    onClick={() => (window.location.href = facebook)}
-                  >
-                    <ListItemIcon>
-                      <FacebookIcon style={{ color: "#4267B2" }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Facebook" />
-                  </ListItem>
-                  <ListItem
-                    button
-                    onClick={() => (window.location.href = instagram)}
-                  >
-                    <ListItemIcon>
-                      <InstagramIcon style={{ color: "#C13584" }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Instagram" />
-                  </ListItem>
-                  <ListItem
-                    button
-                    onClick={() => (window.location.href = twitter)}
-                  >
-                    <ListItemIcon>
-                      <TwitterIcon style={{ color: "#1DA1F2" }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Twitter" />
-                  </ListItem>
-                </List>
-              </div>
-              <div className={classes.habitList}></div>
             </div>
-            <Divider className={classes.divider} />
-            <Typography variant="h4" align="center">
-              {" "}
-              User Habits
-            </Typography>
-            <br />
-            {listOfHabits.map((habit) => {
-              let index = listOfHabits.findIndex(
-                (habitItem) => habitItem.habit_id === habit.habit_id
-              );
-              if (habit.completed) {
-                tempCompleted = true;
-                return (
-                  <div>
-                    <ProfileHabitBlock
-                      habitName={habit.habit_id.habit_name}
-                      startDate={habit.start_date}
-                      streak={habit.streak}
-                    />
-                    <br />
-                  </div>
-                );
-              } else if (index == listOfHabits.length - 1 && !tempCompleted) {
-                return (
-                  <div>
-                    <h3>No habits here...</h3>
-                  </div>
-                );
-              }
-            })}
           </div>
-        </div>
-      ) : (
-        <ProfileSettings
-          userId={userId}
-          userName={userName}
-          firstName={firstName}
-          lastName={lastName}
-          email={email}
-          description={description}
-          facebook={facebook}
-          instagram={instagram}
-          twitter={twitter}
-          profileImg={profileImg}
-          backgroundImg={backgroundImg}
-          loaded={loaded}
-          setUserId={setUserId}
-          setUserName={setUserName}
-          setFirstName={setFirstName}
-          setLastName={setLastName}
-          setEmail={setEmail}
-          setDescription={setDescription}
-          setFacebook={setFacebook}
-          setInstgram={setInstagram}
-          setTwitter={setTwitter}
-          setProfileImg={setProfileImg}
-          setBackgroundImg={setBackgroundImg}
-          setLoaded={setLoaded}
-          setSettingsClicked={setSettingsClicked}
-        />
-      )}
+        ) : (
+          <ProfileSettings
+            userId={userId}
+            userName={userName}
+            firstName={firstName}
+            lastName={lastName}
+            email={email}
+            description={description}
+            facebook={facebook}
+            instagram={instagram}
+            twitter={twitter}
+            profileImg={profileImg}
+            backgroundImg={backgroundImg}
+            loaded={loaded}
+            setUserId={setUserId}
+            setUserName={setUserName}
+            setFirstName={setFirstName}
+            setLastName={setLastName}
+            setEmail={setEmail}
+            setDescription={setDescription}
+            setFacebook={setFacebook}
+            setInstagram={setInstagram}
+            setTwitter={setTwitter}
+            setProfileImg={setProfileImg}
+            setBackgroundImg={setBackgroundImg}
+            setLoaded={setLoaded}
+            setSettingsClicked={setSettingsClicked}
+            darkState={darkState}
+            setDarkState={setDarkState}
+          />
+        )}
+      </div>
+      <Footer className={classes.footer} />
     </div>
   );
 }

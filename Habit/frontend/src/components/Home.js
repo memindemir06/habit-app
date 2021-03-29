@@ -134,7 +134,6 @@ function Home() {
           darkState={darkState}
           setDarkState={setDarkState}
         />
-        <br />
         <div className={classes.content}>
           <Switch>
             <Route
@@ -199,6 +198,8 @@ function Home() {
                     setFirstName={setFirstName}
                     setLastName={setLastName}
                     setEmail={setEmail}
+                    darkState={darkState}
+                    setDarkState={setDarkState}
                   />
                 );
               }}
