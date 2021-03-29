@@ -1,9 +1,11 @@
 import React from "react";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const LoadingPage = () => {
   return (
     <div className="center">
-      <h1>Loading...</h1>
+      <CircularProgress />
     </div>
   );
 };

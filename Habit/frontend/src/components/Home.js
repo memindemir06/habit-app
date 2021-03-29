@@ -19,7 +19,6 @@ import FriendsPage from "./FriendsPage";
 import LeaderboardPage from "./LeaderboardPage";
 import InspirationalPage from "./InspirationalPage";
 import IntroPage from "./IntroPage";
-import MenuTest from "./Menu";
 import AppBar from "./AppBar";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -139,7 +138,6 @@ function Home() {
           darkState={darkState}
           setDarkState={setDarkState}
         />
-        <br />
         <div className={classes.content}>
           <Switch>
             <Route
@@ -205,6 +203,8 @@ function Home() {
                     setFirstName={setFirstName}
                     setLastName={setLastName}
                     setEmail={setEmail}
+                    darkState={darkState}
+                    setDarkState={setDarkState}
                   />
                 );
               }}

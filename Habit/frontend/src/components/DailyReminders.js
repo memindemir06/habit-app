@@ -8,8 +8,6 @@ import {
   Tabs,
   AppBar,
   Divider,
-} from "@material-ui/core";
-import {
   Dialog,
   List,
   ListItem,
@@ -21,6 +19,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CloseIcon from "@material-ui/icons/Close";
 import SwipeableViews from "react-swipeable-views";
 import PropTypes from "prop-types";
+import Footer from "./Footer";
 // Components
 import HabitBlock from "./HabitBlock";
 import LoadingPage from "./LoadingPage";
@@ -47,6 +46,17 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     marginLeft: theme.spacing(3),
     width: "340px",
+  },
+  footer: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    minHeight: 100,
+    display: "flex",
+    width: "100vw",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
 }));
 
@@ -245,127 +255,133 @@ function DailyReminders({
   let tempCompleted = false;
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h4" align="center">
-        {"u/" + userName}
-      </Typography>
-      <br />
+    <div>
+      <div className={classes.root}>
+        <Typography variant="h4" align="center">
+          {"u/" + userName}
+        </Typography>
+        <br />
 
-      <AppBar position="static" className={classes.tabs}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="simple tabs example"
-        >
-          <Tab style={{ marginLeft: "2em", color: tabColor }} label="Pending" />
-          <Tab style={{ color: tabColor }} label="Completed" />
-          <div style={{ flexGrow: 1 }}></div>
-          <Button
-            variant="contained"
-            color="secondary"
-            style={{ marginRight: "2em" }}
-            endIcon={<AddCircleIcon />}
-            onClick={() => setOpen(true)}
+        <AppBar position="static" className={classes.tabs}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="simple tabs example"
           >
-            ADD A HABIT
-          </Button>
-        </Tabs>
-      </AppBar>
-      <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
-        <TabPanel value={value} index={0}>
-          {listOfHabits.map((habit) => {
-            let index = listOfHabits.findIndex(
-              (habitItem) => habitItem.habit_id === habit.habit_id
-            );
-            if (!habit.completed) {
-              tempPending = true;
-              return (
-                <div>
-                  <HabitBlock
-                    habitName={habit.habit_id.habit_name}
-                    startDate={habit.start_date}
-                    streak={habit.streak}
-                    habitId={habit.habit_id.habit_id}
-                    userId={userId}
-                    getHabits={getHabits}
-                    completed={habit.completed}
-                  />
-                </div>
-              );
-            } else if (index == listOfHabits.length - 1 && !tempPending) {
-              return (
-                <div>
-                  <h3>No habits here...</h3>
-                </div>
-              );
-            }
-          })}
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          {listOfHabits.map((habit) => {
-            let index = listOfHabits.findIndex(
-              (habitItem) => habitItem.habit_id === habit.habit_id
-            );
-            if (habit.completed) {
-              tempCompleted = true;
-              return (
-                <div>
-                  <HabitBlock
-                    habitName={habit.habit_id.habit_name}
-                    startDate={habit.start_date}
-                    streak={habit.streak}
-                    userId={userId}
-                    habitId={habit.habit_id.habit_id}
-                    completed={habit.completed}
-                    getHabits={getHabits}
-                  />
-                  <br />
-                </div>
-              );
-            } else if (index == listOfHabits.length - 1 && !tempCompleted) {
-              return (
-                <div>
-                  <h3>No habits here...</h3>
-                </div>
-              );
-            }
-          })}
-        </TabPanel>
-      </SwipeableViews>
-
-      <div style={mainStyle}>
-        <div style={reminderStyle}>
-          <Dialog
-            onClose={() => setOpen(false)}
-            aria-labelledby="simple-dialog-title"
-            open={open}
-          >
-            <MuiDialogTitle
-              style={dialogTitleStyle}
-              disableTypography
-              id="simple-dialog-title"
+            <Tab
+              style={{ marginLeft: "2em", color: tabColor }}
+              label="Pending"
+            />
+            <Tab style={{ color: tabColor }} label="Completed" />
+            <div style={{ flexGrow: 1 }}></div>
+            <Button
+              variant="contained"
+              color="secondary"
+              style={{ marginRight: "2em" }}
+              endIcon={<AddCircleIcon />}
+              onClick={() => setOpen(true)}
             >
-              <Typography variant="h6">Select a Habit</Typography>
-              {open ? (
-                <IconButton aria-label="close" onClick={() => setOpen(false)}>
-                  <CloseIcon />
-                </IconButton>
-              ) : null}
-            </MuiDialogTitle>
-            <List>
-              {listOfAvailableHabits.map((habit) => (
-                <ListItem
-                  button
-                  onClick={() => handleListItemClick(habit)}
-                  key={habit}
-                >
-                  <ListItemText primary={habit} />
-                </ListItem>
-              ))}
-            </List>
-          </Dialog>
+              ADD A HABIT
+            </Button>
+          </Tabs>
+        </AppBar>
+        <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
+          <TabPanel value={value} index={0}>
+            {listOfHabits.map((habit) => {
+              let index = listOfHabits.findIndex(
+                (habitItem) => habitItem.habit_id === habit.habit_id
+              );
+              if (!habit.completed) {
+                tempPending = true;
+                return (
+                  <div>
+                    <HabitBlock
+                      habitName={habit.habit_id.habit_name}
+                      startDate={habit.start_date}
+                      streak={habit.streak}
+                      habitId={habit.habit_id.habit_id}
+                      userId={userId}
+                      getHabits={getHabits}
+                      completed={habit.completed}
+                    />
+                  </div>
+                );
+              } else if (index == listOfHabits.length - 1 && !tempPending) {
+                return (
+                  <div>
+                    <h3>No habits here...</h3>
+                  </div>
+                );
+              }
+            })}
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            {listOfHabits.map((habit) => {
+              let index = listOfHabits.findIndex(
+                (habitItem) => habitItem.habit_id === habit.habit_id
+              );
+              if (habit.completed) {
+                tempCompleted = true;
+                return (
+                  <div>
+                    <HabitBlock
+                      habitName={habit.habit_id.habit_name}
+                      startDate={habit.start_date}
+                      streak={habit.streak}
+                      userId={userId}
+                      habitId={habit.habit_id.habit_id}
+                      completed={habit.completed}
+                      getHabits={getHabits}
+                    />
+                    <br />
+                  </div>
+                );
+              } else if (index == listOfHabits.length - 1 && !tempCompleted) {
+                return (
+                  <div>
+                    <h3>No habits here...</h3>
+                  </div>
+                );
+              }
+            })}
+          </TabPanel>
+        </SwipeableViews>
+
+        <div style={mainStyle}>
+          <div style={reminderStyle}>
+            <Dialog
+              onClose={() => setOpen(false)}
+              aria-labelledby="simple-dialog-title"
+              open={open}
+            >
+              <MuiDialogTitle
+                style={dialogTitleStyle}
+                disableTypography
+                id="simple-dialog-title"
+              >
+                <Typography variant="h6">Select a Habit</Typography>
+                {open ? (
+                  <IconButton aria-label="close" onClick={() => setOpen(false)}>
+                    <CloseIcon />
+                  </IconButton>
+                ) : null}
+              </MuiDialogTitle>
+              <List>
+                {listOfAvailableHabits.map((habit) => (
+                  <ListItem
+                    button
+                    onClick={() => handleListItemClick(habit)}
+                    key={habit}
+                  >
+                    <ListItemText primary={habit} />
+                  </ListItem>
+                ))}
+              </List>
+            </Dialog>
+          </div>
         </div>
       </div>
+      <Footer className={classes.footer} />
     </div>
   );
 }

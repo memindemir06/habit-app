@@ -1,18 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useDebugValue } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import {
+  Button,
+  Box,
+  Typography,
+  Tab,
+  Tabs,
+  AppBar,
+  Divider,
+  Dialog,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  TextField,
+} from "@material-ui/core";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import SwipeableViews from "react-swipeable-views";
+import PropTypes from "prop-types";
+import LoadingPage from "./LoadingPage";
 import { DropzoneDialog } from "material-ui-dropzone";
-import { Button, Typography, TextField, IconButton } from "@material-ui/core";
 import axios from "axios";
 // import EditIcon from "@material-ui/icons/EditRounded";
 import SaveIcon from "@material-ui/icons/SaveRounded";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 // import CancelIcon from "@material-ui/icons/Cancel";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import Footer from "./Footer";
 
-const profileStyle = {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-};
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: theme.spacing(1),
+    marginRight: theme.spacing(3),
+    marginLeft: theme.spacing(8),
+    [theme.breakpoints.down("xs")]: {
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+    },
+  },
+  profileStyle: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  backButton: {
+    alignSelf: "flex-end",
+  },
+  title: {
+    alignSelf: "flex-start",
+    textTransform: "uppercase",
+    fontWeight: "800",
+  },
+  tabs: {
+    backgroundColor: "transparent",
+    boxShadow: "none",
+    display: "flex",
+  },
+  input: {
+    margin: 8,
+    minWidth: 400,
+    [theme.breakpoints.down("xs")]: {
+      minWidth: 300,
+    },
+  },
+}));
 
 const ProfileSettings = ({
   userId,
@@ -34,18 +91,24 @@ const ProfileSettings = ({
   setEmail,
   setDescription,
   setFacebook,
-  setInstgram,
+  setInstagram,
   setTwitter,
   setProfileImg,
   setBackgroundImg,
   setLoaded,
   setSettingsClicked,
+  darkState,
+  setDarkState,
 }) => {
   // const [open, setOpen] = useState(false);
   const [profileImgOpen, setProfileImgOpen] = useState(false);
   const [backgroundImgOpen, setBackgroundImgOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const [blankField, setBlankField] = useState(false);
+  const [value, setValue] = useState(0);
+  const tabColor = darkState ? "#ffffff" : "#000000";
+  const classes = useStyles();
+  const theme = useTheme();
 
   const userNameChange = (e) => {
     setUserName(e.target.value);
@@ -58,6 +121,10 @@ const ProfileSettings = ({
   };
   const emailChange = (e) => {
     setEmail(e.target.value);
+  };
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
   };
 
   const handleSaveChangesRequired = () => {
@@ -167,12 +234,12 @@ const ProfileSettings = ({
 
   const UploadProfileImg = () => {
     return (
-      <div style={profileStyle}>
+      <div className={classes.profileStyle}>
         <Button
+          variant="contained"
+          color="secondary"
           onClick={() => setProfileImgOpen(true)}
           color="primary"
-          variant="outlined"
-          size="large"
         >
           {profileImg ? "Change Profile Picture" : "Add Profile Picture"}
         </Button>
@@ -191,12 +258,12 @@ const ProfileSettings = ({
   };
   const UploadBackgroundImg = () => {
     return (
-      <div style={profileStyle}>
+      <div className={classes.profileStyle}>
         <Button
+          variant="contained"
+          color="secondary"
           onClick={() => setBackgroundImgOpen(true)}
           color="primary"
-          variant="outlined"
-          size="large"
         >
           {backgroundImg
             ? "Change Background Picture"
@@ -215,148 +282,206 @@ const ProfileSettings = ({
     );
   };
 
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
+
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box p={3}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+
   return (
-    <div className="App">
-      <div className="required" style={profileStyle}>
-        <Button
-          variant="contained"
-          color="secondary"
-          startIcon={<ArrowBackIcon />}
-          onClick={backToProfile}
+    <div className={classes.root}>
+      <Button
+        variant="contained"
+        color="secondary"
+        startIcon={<ArrowBackIcon />}
+        onClick={backToProfile}
+        className={classes.backButton}
+      >
+        Back to Profile
+      </Button>
+      <Typography className={classes.title} variant="h4" align="center">
+        Profile Settings
+      </Typography>
+      <Divider
+        style={{
+          width: "100%",
+          margin: theme.spacing(1),
+          alignSelf: "flex-start",
+        }}
+      />
+
+      <AppBar position="static" className={classes.tabs}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="simple tabs example"
         >
-          Back to Profile
-        </Button>
-        <br />
-        <Typography variant="h3" align="center">
-          Profile Settings
-        </Typography>
-        <br />
-        <Typography variant="h4" align="center">
-          Required Fields
-        </Typography>
-        <br />
-        <TextField
-          disabled={edit}
-          label="Username"
-          style={{ margin: 8 }}
-          margin="normal"
-          variant="outlined"
-          multiline={true}
-          value={userName}
-          onChange={userNameChange}
-          required={true}
-        />
-        <br />
-        <TextField
-          disabled={edit}
-          label="Email"
-          style={{ margin: 8 }}
-          margin="normal"
-          variant="outlined"
-          multiline={true}
-          value={email}
-          onChange={emailChange}
-          required={true}
-        />
-        <br />
-        <TextField
-          disabled={edit}
-          label="First Name"
-          style={{ margin: 8 }}
-          margin="normal"
-          variant="outlined"
-          multiline={true}
-          value={firstName}
-          onChange={firstNameChange}
-          required={true}
-        />
-        <br />
-        <TextField
-          disabled={edit}
-          label="Last Name"
-          style={{ margin: 8 }}
-          margin="normal"
-          variant="outlined"
-          multiline={true}
-          value={lastName}
-          onChange={lastNameChange}
-          required={true}
-        />
-        <br />
-        <Button
-          variant="contained"
-          color="primary"
-          endIcon={<SaveIcon />}
-          onClick={handleSaveChangesRequired}
-          disableElevation
-        >
-          Save Changes Required
-        </Button>
-      </div>
-      <br />
-      <div className="optionals" style={profileStyle}>
-        <Typography variant="h4" align="center">
-          Optional Fields
-        </Typography>
-        <br />
-        <UploadProfileImg />
-        <br />
-        <UploadBackgroundImg />
-        <br />
-        <TextField
-          disabled={edit}
-          label="Description"
-          style={{ margin: 8 }}
-          margin="normal"
-          variant="outlined"
-          multiline={true}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <br />
-        <TextField
-          disabled={edit}
-          label="Facebook"
-          style={{ margin: 8 }}
-          margin="normal"
-          variant="outlined"
-          multiline={true}
-          value={facebook}
-          onChange={(e) => setFacebook(e.target.value)}
-        />
-        <br />
-        <TextField
-          disabled={edit}
-          label="Instagram"
-          style={{ margin: 8 }}
-          margin="normal"
-          variant="outlined"
-          multiline={true}
-          value={instagram}
-          onChange={(e) => setInstagram(e.target.value)}
-        />
-        <br />
-        <TextField
-          disabled={edit}
-          label="Twitter"
-          style={{ margin: 8 }}
-          margin="normal"
-          variant="outlined"
-          multiline={true}
-          value={twitter}
-          onChange={(e) => setTwitter(e.target.value)}
-        />
-        <br />
-        <Button
-          variant="contained"
-          color="primary"
-          endIcon={<SaveIcon />}
-          onClick={handleOptionalSubmit}
-          disableElevation
-        >
-          Save Changes Optional
-        </Button>
-      </div>
+          <Tab
+            style={{ marginLeft: "2em", color: tabColor }}
+            label="Required"
+          />
+          <Tab style={{ color: tabColor }} label="Optional" />
+          <div style={{ flexGrow: 1 }}></div>
+        </Tabs>
+      </AppBar>
+      <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
+        <TabPanel value={value} index={0}>
+          <div className="required" className={classes.profileStyle}>
+            <br />
+            <br />
+            <Typography variant="h4" align="center">
+              Required Fields
+            </Typography>
+            <br />
+            <TextField
+              disabled={edit}
+              label="Username"
+              margin="normal"
+              variant="outlined"
+              multiline={true}
+              value={userName}
+              onChange={userNameChange}
+              required={true}
+              className={classes.input}
+            />
+            <br />
+            <TextField
+              disabled={edit}
+              label="Email"
+              margin="normal"
+              variant="outlined"
+              multiline={true}
+              value={email}
+              onChange={emailChange}
+              required={true}
+              className={classes.input}
+            />
+            <br />
+            <TextField
+              disabled={edit}
+              label="First Name"
+              margin="normal"
+              variant="outlined"
+              multiline={true}
+              value={firstName}
+              onChange={firstNameChange}
+              required={true}
+              className={classes.input}
+            />
+            <br />
+            <TextField
+              disabled={edit}
+              label="Last Name"
+              margin="normal"
+              variant="outlined"
+              multiline={true}
+              value={lastName}
+              onChange={lastNameChange}
+              required={true}
+              className={classes.input}
+            />
+            <br />
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<SaveIcon />}
+              onClick={handleSaveChangesRequired}
+              disableElevation
+            >
+              Save Changes
+            </Button>
+          </div>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <div className="optionals" className={classes.profileStyle}>
+            <Typography variant="h4" align="center">
+              Optional Fields
+            </Typography>
+            <br />
+            <UploadProfileImg />
+            <br />
+            <UploadBackgroundImg />
+            <br />
+            <TextField
+              disabled={edit}
+              label="Description"
+              margin="normal"
+              variant="outlined"
+              multiline={true}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className={classes.input}
+            />
+            <br />
+            <TextField
+              disabled={edit}
+              label="Facebook"
+              margin="normal"
+              variant="outlined"
+              multiline={true}
+              value={facebook}
+              onChange={(e) => setFacebook(e.target.value)}
+              className={classes.input}
+            />
+            <br />
+            <TextField
+              disabled={edit}
+              label="Instagram"
+              margin="normal"
+              variant="outlined"
+              multiline={true}
+              value={instagram}
+              onChange={(e) => setInstagram(e.target.value)}
+              className={classes.input}
+            />
+            <br />
+            <TextField
+              disabled={edit}
+              label="Twitter"
+              margin="normal"
+              variant="outlined"
+              multiline={true}
+              value={twitter}
+              onChange={(e) => setTwitter(e.target.value)}
+              className={classes.input}
+            />
+            <br />
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<SaveIcon />}
+              onClick={handleOptionalSubmit}
+              disableElevation
+            >
+              Save Changes
+            </Button>
+          </div>
+        </TabPanel>
+      </SwipeableViews>
     </div>
   );
 };

@@ -25,6 +25,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import Footer from "./Footer";
 import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    minHeight: "100%",
     padding: theme.spacing(1),
     marginRight: theme.spacing(3),
     marginLeft: theme.spacing(8),
@@ -94,6 +96,18 @@ const useStyles = makeStyles((theme) => ({
       width: "60%",
       alignSelf: "center",
     },
+  },
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    minHeight: 100,
+    display: "flex",
+    width: "100vw",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "-100px",
   },
 }));
 
@@ -300,161 +314,168 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
   }
 
   return (
-    <div className={classes.root}>
-      <div className={classes.pageTitleContainer}>
-        <Typography className={classes.pageTitle} variant="h4" align="center">
-          Your friends
-        </Typography>
-        <div className={classes.inputContainer}>
-          <TextField
-            className={classes.inputField}
-            id="filled-basic"
-            label="Type Friend Username"
-            onChange={friendSearchChange}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
+    <div style={{ position: "relative", minHeight: "100%" }}>
+      <div className={classes.root}>
+        <div className={classes.pageTitleContainer}>
+          <Typography className={classes.pageTitle} variant="h4" align="center">
+            Your friends
+          </Typography>
+          <div className={classes.inputContainer}>
+            <TextField
+              className={classes.inputField}
+              id="filled-basic"
+              label="Type Friend Username"
+              onChange={friendSearchChange}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button
+              variant="contained"
+              color="secondary"
+              endIcon={<AddCircleIcon />}
+              onClick={submitFriendSearch}
+              className={classes.inputButton}
+              disableElevation
+            >
+              {" "}
+              ADD A FRIEND{" "}
+            </Button>
+          </div>
           <Button
             variant="contained"
-            color="secondary"
-            endIcon={<AddCircleIcon />}
-            onClick={submitFriendSearch}
-            className={classes.inputButton}
-            disableElevation
+            color="primary"
+            className={classes.filterButton}
+            onClick={() => setOpenFilter(true)}
+            endIcon={<FilterListIcon />}
           >
-            {" "}
-            ADD A FRIEND{" "}
+            Filter Friends
           </Button>
         </div>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.filterButton}
-          onClick={() => setOpenFilter(true)}
-          endIcon={<FilterListIcon />}
+        <Divider
+          style={{
+            width: "99%",
+            margin: "0 1em 1em 1em",
+            alignSelf: "flex-start",
+          }}
+        />
+        <Dialog
+          open={openFilter}
+          onClose={() => setOpenFilter(false)}
+          fullWidth
         >
-          Filter Friends
-        </Button>
-      </div>
-      <Divider
-        style={{
-          width: "99%",
-          margin: "0 1em 1em 1em",
-          alignSelf: "flex-start",
-        }}
-      />
-      <Dialog open={openFilter} onClose={() => setOpenFilter(false)} fullWidth>
-        <DialogTitle>{"Filter by habit"}</DialogTitle>
-        <DialogContent dividers>
-          <FormControl component="fieldset" error={error}>
-            <FormLabel component="legend">Pick 1 option</FormLabel>
-            <FormGroup>
-              {Object.keys(checkedHabits).map(function (key, index) {
-                return (
-                  <div>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name={key}
-                          checked={checkedHabits[key]}
-                          onChange={handleHabitCheck}
-                          disabled={false}
-                        />
-                      }
-                      label={key}
-                    />
-                  </div>
-                );
-              })}
-            </FormGroup>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            // Needs to be changed
-            onClick={() => {
-              setOpenFilter(false);
-            }}
-            color="primary"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              Object.keys(checkedHabits).map(function (key, index) {
-                if (checkedHabits[key]) {
-                  filterFriends(userId, key);
-                }
-              });
-            }}
-            color="primary"
-            disabled={error ? true : false}
-            autoFocus
-          >
-            Ok
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Snackbar
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-        open={friendAlreadyExists}
-        autoHideDuration={2000}
-        onClose={() => {
-          setFriendAlreadyExists(null);
-        }}
-      >
-        <Alert
-          severity={
-            friendAlreadyExists == "success"
-              ? "success"
-              : friendAlreadyExists == "error"
-              ? "error"
-              : displayExists
-          }
+          <DialogTitle>{"Filter by habit"}</DialogTitle>
+          <DialogContent dividers>
+            <FormControl component="fieldset" error={error}>
+              <FormLabel component="legend">Pick 1 option</FormLabel>
+              <FormGroup>
+                {Object.keys(checkedHabits).map(function (key, index) {
+                  return (
+                    <div>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            name={key}
+                            checked={checkedHabits[key]}
+                            onChange={handleHabitCheck}
+                            disabled={false}
+                          />
+                        }
+                        label={key}
+                      />
+                    </div>
+                  );
+                })}
+              </FormGroup>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              // Needs to be changed
+              onClick={() => {
+                setOpenFilter(false);
+              }}
+              color="primary"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                Object.keys(checkedHabits).map(function (key, index) {
+                  if (checkedHabits[key]) {
+                    filterFriends(userId, key);
+                  }
+                });
+              }}
+              color="primary"
+              disabled={error ? true : false}
+              autoFocus
+            >
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          open={friendAlreadyExists}
+          autoHideDuration={2000}
           onClose={() => {
             setFriendAlreadyExists(null);
           }}
         >
-          {friendAlreadyExists == "success"
-            ? "Friend added successfully!"
-            : friendAlreadyExists == "error"
-            ? "Friend already exists!"
-            : displayMessageExists}
-        </Alert>
-      </Snackbar>
-      <div style={{ width: "100%" }}>
-        <Grid container spacing={1}>
-          {friendsList.length == 0 ? (
-            <NoFilterMessage />
-          ) : (
-            friendsList.map((friend) => {
-              return (
-                <Grid item xs={12}>
-                  <FriendBlock
-                    userName={friend.user_name}
-                    firstName={friend.first_name}
-                    lastName={friend.last_name}
-                    email={friend.email}
-                    userId={userId}
-                    friendUserId={friend.user_id}
-                    filterFriends={filterFriends}
-                    profileImg={friend.profile_img}
-                  />
-                  <br />
-                </Grid>
-              );
-            })
-          )}
-        </Grid>
+          <Alert
+            severity={
+              friendAlreadyExists == "success"
+                ? "success"
+                : friendAlreadyExists == "error"
+                ? "error"
+                : displayExists
+            }
+            onClose={() => {
+              setFriendAlreadyExists(null);
+            }}
+          >
+            {friendAlreadyExists == "success"
+              ? "Friend added successfully!"
+              : friendAlreadyExists == "error"
+              ? "Friend already exists!"
+              : displayMessageExists}
+          </Alert>
+        </Snackbar>
+        <div style={{ width: "100%" }}>
+          <Grid container spacing={1}>
+            {friendsList.length == 0 ? (
+              <NoFilterMessage />
+            ) : (
+              friendsList.map((friend) => {
+                return (
+                  <Grid item xs={12}>
+                    <FriendBlock
+                      userName={friend.user_name}
+                      firstName={friend.first_name}
+                      lastName={friend.last_name}
+                      email={friend.email}
+                      userId={userId}
+                      friendUserId={friend.user_id}
+                      filterFriends={filterFriends}
+                      profileImg={friend.profile_img}
+                    />
+                    <br />
+                  </Grid>
+                );
+              })
+            )}
+          </Grid>
+        </div>
       </div>
+      <Footer className={classes.footer} />
     </div>
   );
 }
