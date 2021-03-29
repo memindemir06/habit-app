@@ -378,7 +378,7 @@ function AppBar({
                 to="/register"
                 color="inherit"
               >
-                Get Started
+                Register
               </Button>
             </div>
           </Toolbar>

@@ -17,9 +17,7 @@ import ErrorPage from "./ErrorPage";
 import Profile from "./Profile";
 import FriendsPage from "./FriendsPage";
 import LeaderboardPage from "./LeaderboardPage";
-import InspirationalPage from "./InspirationalPage";
 import IntroPage from "./IntroPage";
-import MenuTest from "./Menu";
 import AppBar from "./AppBar";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -104,14 +102,11 @@ function Home() {
 
   let temp = null;
 
-  // let path = useLocation();
-
   useEffect(() => {
     fetch("../api/activeSession")
       .then((response) => response.json())
       .then((data) => {
         if (data.user_id == null) {
-          console.log("No Session");
           setUserId("No Session");
         } else {
           temp = data.user_id;
@@ -158,7 +153,6 @@ function Home() {
             />
             <Route exact path="/" component={IntroPage} />
             <Route exact path="/ErrorPage" component={ErrorPage} />
-
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route
@@ -304,6 +298,7 @@ function Home() {
                 );
               }}
             />
+            {/* <Redirect to="/ErrorPage" /> */}
           </Switch>
         </div>
       </ThemeProvider>

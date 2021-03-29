@@ -26,7 +26,7 @@ SECRET_KEY = 'znj2r07kc)dbwfya%r#tc&0bi_h0so#7a%$k@%m(es+8c9^nb7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -140,5 +140,3 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 # FOR IMAGEFIELD
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/'
-# MEDIA_URL = '/gallery/'
-# MEDIA_URL = '/media/'

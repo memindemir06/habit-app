@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import { Grid, Button, TextField, Typography } from "@material-ui/core";
-import { Link, useHistory, Redirect } from "react-router-dom";
+import {
+  Grid,
+  Button,
+  TextField,
+  Typography,
+  Collapse,
+} from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import { Link, useHistory } from "react-router-dom";
 
 function Login() {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [invalid, setInvalid] = useState(false);
 
   const emailChange = (event) => {
     setEmail(event.target.value);
@@ -29,8 +37,8 @@ function Login() {
     fetch("api/login", requestOptions)
       .then((response) => {
         if (!response.ok) {
+          setInvalid(true);
           // SET ALERT -> Validate at start of function
-          console.log("Invalid data");
         } else {
           return response.json();
         }
@@ -39,9 +47,6 @@ function Login() {
         if (data) {
           history.push("/../");
           history.go(0);
-        } else {
-          // SET ALERT
-          console.log("Invalid Data");
         }
       });
   };
@@ -53,6 +58,13 @@ function Login() {
           <Typography variant="h4" component="h4">
             Login
           </Typography>
+        </Grid>
+        <Grid item xs={12} align="center">
+          <Collapse in={invalid}>
+            <Alert severity="error" onClose={() => setInvalid(false)}>
+              Email or Password invalid
+            </Alert>
+          </Collapse>
         </Grid>
         <Grid item xs={12} align="center">
           <TextField

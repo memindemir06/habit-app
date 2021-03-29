@@ -8,14 +8,14 @@ import {
   Tabs,
   AppBar,
   Divider,
-} from "@material-ui/core";
-import {
   Dialog,
   List,
   ListItem,
   ListItemText,
   IconButton,
+  Collapse,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CloseIcon from "@material-ui/icons/Close";
@@ -92,19 +92,40 @@ function DailyReminders({
   const [listOfHabits, setListOfHabits] = useState(null);
   const [listOfAvailableHabits, setListOfAvailableHabits] = useState([]);
   const [open, setOpen] = useState(false);
-  // const [habitAdded, setHabitAdded] = useState();
   const [value, setValue] = useState(0);
+  const [quote, setQuote] = useState(null);
+  const [author, setAuthor] = useState(null);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [habitStatus, setHabitStatus] = useState(null);
   const classes = useStyles();
   const theme = useTheme();
   const tabColor = darkState ? "#ffffff" : "#000000";
-  // const [habitsCompletedState, sethabitsCompletedState] = useState(false);
-  // const [habitsPending, setHabitsPending] = useState(false);
 
   useEffect(() => {
     if (userId) {
       getHabits(userId);
+      fetchAPI();
     }
   }, [userId]);
+
+  let fetchAPI = () => {
+    fetch("https://type.fit/api/quotes")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        let randomQuoteIdx = null;
+        while (randomQuoteIdx == null) {
+          randomQuoteIdx = Math.floor(Math.random() * data.length);
+          if (data[randomQuoteIdx].author) {
+            break;
+          }
+          randomQuoteIdx = null;
+        }
+        setQuote(data[randomQuoteIdx].text);
+        setAuthor(data[randomQuoteIdx].author);
+      });
+  };
 
   const getHabits = (user_id) => {
     const requestOptions = {
@@ -191,11 +212,13 @@ function DailyReminders({
         } else {
           console.log(data);
           getHabits(userId);
+          setHabitStatus(true);
+          setAlertOpen(true);
         }
       });
   };
 
-  if (!userId || !listOfHabits) {
+  if (!userId || !listOfHabits || !author) {
     return <LoadingPage />;
   }
 
@@ -250,7 +273,25 @@ function DailyReminders({
         {"u/" + userName}
       </Typography>
       <br />
-
+      <Typography variant="h6" align="center">
+        {quote}
+      </Typography>
+      <Typography variant="h6" align="center">
+        {"By " + author}
+      </Typography>
+      <br />
+      <Collapse in={alertOpen}>
+        {habitStatus ? (
+          <Alert severity="success" onClose={() => setAlertOpen(false)}>
+            Habit Added :)
+          </Alert>
+        ) : (
+          <Alert severity="warning" onClose={() => setAlertOpen(false)}>
+            Habit Deleted :(
+          </Alert>
+        )}
+      </Collapse>
+      <br />
       <AppBar position="static" className={classes.tabs}>
         <Tabs
           value={value}
@@ -289,6 +330,8 @@ function DailyReminders({
                     userId={userId}
                     getHabits={getHabits}
                     completed={habit.completed}
+                    setHabitStatus={setHabitStatus}
+                    setAlertOpen={setAlertOpen}
                   />
                 </div>
               );

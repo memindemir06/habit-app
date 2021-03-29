@@ -3,6 +3,8 @@ from .views import index
 
 app_name = 'frontend'
 
+# url(r'^.*$', index.as_view(), name="home")
+
 urlpatterns = [
     path('', index, name=''),
     path('register', index),
@@ -14,4 +16,7 @@ urlpatterns = [
     path('inspire', index),
     path('profile/<str:username>', index),
     path('intro', index),
+    path('ErrorPage', index),
+    path(r'^.*$', index),
+    path('quotes.txt', index),
 ]

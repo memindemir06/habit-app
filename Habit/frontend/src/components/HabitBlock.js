@@ -31,6 +31,8 @@ const HabitBlock = ({
   habitId,
   userId,
   getHabits,
+  setHabitStatus,
+  setAlertOpen,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [streakClicked, setStreakClicked] = useState(completed);
@@ -75,6 +77,8 @@ const HabitBlock = ({
           console.log("No Data!");
         } else {
           console.log(habitName);
+          setHabitStatus(false);
+          setAlertOpen(true);
           getHabits(userId);
         }
       });
@@ -111,6 +115,24 @@ const HabitBlock = ({
       });
   };
 
+  const parseDate = (dateString) => {
+    const b = dateString.split(/\D+/);
+    const offsetMult = dateString.indexOf("+") !== -1 ? -1 : 1;
+    const hrOffset = offsetMult * (+b[7] || 0);
+    const minOffset = offsetMult * (+b[8] || 0);
+    return new Date(
+      Date.UTC(
+        +b[0],
+        +b[1] - 1,
+        +b[2],
+        +b[3] + hrOffset,
+        +b[4] + minOffset,
+        +b[5],
+        +b[6] || 0
+      )
+    );
+  };
+
   return (
     <div>
       <Grid container justify="center" alignItems="center">
@@ -141,7 +163,9 @@ const HabitBlock = ({
             />
             <Collapse in={expanded} timeout="auto">
               <CardContent>
-                <Typography variant="h6">Start Date: {startDate}</Typography>
+                <Typography variant="h6">
+                  Start Date: {parseDate(startDate).toLocaleDateString()}
+                </Typography>
                 <Typography variant="h6">Streak: {streak}</Typography>
                 <Typography variant="h6">
                   Completed: {completed ? "True" : "False"}

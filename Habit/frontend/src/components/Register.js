@@ -19,7 +19,9 @@ function Register() {
   const [password, setPassword] = useState("");
   const [validatePassword, setValidatePassword] = useState("");
   const [dob, setDob] = useState("");
-  const [passwordsMatch, setPasswordsMatch] = useState(true); // For the design
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [dobAlert, setDobAlert] = useState(false);
+  const [btnDisable, setBtnDisable] = useState(true);
 
   // Handles State Changes
   const userNameChange = (event) => {
@@ -52,6 +54,24 @@ function Register() {
   };
   const dobChange = (event) => {
     setDob(event.target.value);
+    getAge(event.target.value);
+  };
+
+  const getAge = (dateString) => {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    if (age < 13) {
+      setDobAlert(true);
+      setBtnDisable(true);
+    } else {
+      setDobAlert(false);
+      setBtnDisable(false);
+    }
   };
 
   const submitButtonPressed = () => {
@@ -86,101 +106,107 @@ function Register() {
   };
 
   return (
-    <div style={{marginLeft: "-50px"}}>
-    <Grid container spacing={3}>
-      <Grid item xs={12} align="center">
-        <Typography variant="h4" component="h4">
-          Create an Account
-        </Typography>
+    <div style={{ marginLeft: "-50px" }}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} align="center">
+          <Typography variant="h4" component="h4">
+            Create an Account
+          </Typography>
+        </Grid>
+        <Grid item xs={12} align="center">
+          <Collapse in={!passwordsMatch}>
+            <Alert severity="error">Passwords do not match!</Alert>
+          </Collapse>
+          <Collapse in={dobAlert}>
+            <Alert severity="error">
+              You are not old enough to create an account!
+            </Alert>
+          </Collapse>
+        </Grid>
+        <Grid item xs={12} align="center">
+          <TextField
+            required
+            label="User Name"
+            variant="outlined"
+            margin="normal"
+            onChange={userNameChange}
+          />
+          <br />
+          <TextField
+            required
+            label="First Name"
+            variant="outlined"
+            margin="normal"
+            onChange={firstNameChange}
+          />
+          <br />
+          <TextField
+            required
+            label="Last Name"
+            variant="outlined"
+            margin="normal"
+            onChange={lastNameChange}
+          />
+          <br />
+          <TextField
+            required
+            label="Enter Email"
+            variant="outlined"
+            margin="normal"
+            onChange={emailChange}
+          />
+          <br />
+          <TextField
+            required
+            label="Enter Password"
+            variant="outlined"
+            margin="normal"
+            onChange={passwordChange}
+            type="password"
+          />
+          <br />
+          <TextField
+            required
+            label="Validate Password"
+            variant="outlined"
+            margin="normal"
+            onChange={validatePasswordChange}
+            type="password"
+          />
+          <br />
+          <TextField
+            required
+            variant="outlined"
+            margin="normal"
+            type="date"
+            label="Date of Birth"
+            InputLabelProps={{ shrink: true }}
+            onChange={dobChange}
+          />
+          <br /> <br />
+          {/* </form> */}
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            size="large"
+            onClick={submitButtonPressed}
+            disabled={btnDisable}
+          >
+            Create Account
+          </Button>
+          <br /> <br />
+          <Button
+            to="/"
+            component={Link}
+            variant="contained"
+            color="secondary"
+            size="large"
+          >
+            Back
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item xs={12} align="center">
-        <Collapse in={!passwordsMatch}>
-          <Alert severity="error">Passwords do not match!</Alert>
-        </Collapse>
-      </Grid>
-      <Grid item xs={12} align="center">
-        <TextField
-          required
-          label="User Name"
-          variant="outlined"
-          margin="normal"
-          onChange={userNameChange}
-        />
-        <br />
-        <TextField
-          required
-          label="First Name"
-          variant="outlined"
-          margin="normal"
-          onChange={firstNameChange}
-        />
-        <br />
-        <TextField
-          required
-          label="Last Name"
-          variant="outlined"
-          margin="normal"
-          onChange={lastNameChange}
-        />
-        <br />
-        <TextField
-          required
-          label="Enter Email"
-          variant="outlined"
-          margin="normal"
-          onChange={emailChange}
-        />
-        <br />
-        <TextField
-          required
-          label="Enter Password"
-          variant="outlined"
-          margin="normal"
-          onChange={passwordChange}
-          type="password"
-        />
-        <br />
-        <TextField
-          required
-          label="Validate Password"
-          variant="outlined"
-          margin="normal"
-          onChange={validatePasswordChange}
-          type="password"
-        />
-        <br />
-        <TextField
-          required
-          variant="outlined"
-          margin="normal"
-          type="date"
-          label="Date of Birth"
-          InputLabelProps={{ shrink: true }}
-          onChange={dobChange}
-        />
-        <br /> <br />
-        {/* </form> */}
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          size="large"
-          onClick={submitButtonPressed}
-        >
-          Create Account
-        </Button>
-        <br /> <br />
-        <Button
-          to="/"
-          component={Link}
-          variant="contained"
-          color="secondary"
-          size="large"
-        >
-          Back
-        </Button>
-      </Grid>
-    </Grid>
     </div>
   );
 }

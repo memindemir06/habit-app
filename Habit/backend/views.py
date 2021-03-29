@@ -1,4 +1,3 @@
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -7,6 +6,45 @@ from .models import Users, UserHabits, Optional, UserFriends, Habits
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer, UserOptionalSerializer, FriendsSerializer, AllHabitsSerializer, ImageSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.files.storage import FileSystemStorage
+from django.urls import path
+# from django.shortcuts import render_to_response
+# from django.template import RequestContext
+# from django.http import HttpResponse, HttpResponseRedirect
+# from django.shortcuts import redirect
+
+# def permission_denied_view(request, exception=None):
+#     # response = render_to_response('ErrorPage.js',context_instance=RequestContext(request))
+#     # response.status_code = 403
+#     # return HttpResponse('Custom Error working', status=403)
+#     return redirect('/ErrorPage')
+
+# def page_not_found(request, exception=None):
+#     # response = render_to_response('ErrorPage.js',context_instance=RequestContext(request))
+#     # response.status_code = 404
+#     # return HttpResponse('Page not found :)', status=404)
+#     # return redirect('/ErrorPage')
+#     # response = HttpResponse(status=404)
+#     # response['Location'] = '/ErrorPage'
+#     # return response
+#     return HttpResponseRedirect('/ErrorPage')
+
+# def error_view(request, exception=None):
+#     # response = render_to_response('ErrorPage.js',context_instance=RequestContext(request))
+#     # response.status_code = 500
+#     # return HttpResponse('custom 500 error boi', status=404)
+#     return redirect('/ErrorPage')
+
+
+# urlpatterns = [
+#     path('403/', permission_denied_view),
+#     path('404/', page_not_found),
+#     path('500/', error_view)
+# ]
+
+# handler403 = permission_denied_view
+# handler404 = page_not_found
+# handler500 = error_view
+
 
 class index(generics.ListAPIView):
    queryset = Users.objects.all()

@@ -1,6 +1,7 @@
 from django.urls import path, include
 from .views import index, Login, Logout, Register, activeSession, userIdValid, getUserHabits, getUserOptionals, filterFriends, removeFriend, addFriend, getLeaderboard, removeHabit, addHabit, getAllHabits, handleCompleted, updateProfileOptionals, updateProfileRequired, updateProfileImages, getOtherUserInfo
 
+
 urlpatterns = [
     path('users', index.as_view()),
     path('login', Login.as_view()),

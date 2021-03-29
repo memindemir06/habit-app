@@ -18,12 +18,21 @@ from django.urls import path, include
 from . import settings
 from django.contrib.staticfiles.urls import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+# from ..views import index
+# from "../frontend/views" 
+# from ..frontend.views import index
+
+# handler404 = 'backend.views.page_not_found'
+# handler403 = 'backend.views.permission_denied_view'
+# handler500 = 'backend.views.error_view'
  
 urlpatterns = [
     path('admin/admin', admin.site.urls),
     path('', include('frontend.urls')),
     path('api/', include('backend.urls')),
 ]
-
-# urlpatterns += staticfiles_urlpatterns()
+# urlpatterns += ("r'^.*$'",index)
+# urlpatterns(r'^.*$', TemplateView.as_view(), name="home")
+urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
