@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
-import { Button } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import LoadingPage from "./LoadingPage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,16 +29,22 @@ const MapPage = ({ userId }) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const getLocation = () => {};
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      });
+    }
+  };
 
   return (
     <div className={classes.root}>
       <div className={classes.headerContainer}>
-      <Button variant="outlined" color="primary" onClick={getLocation}>
-          Get Your Location
-        </Button>
         <Button variant="outlined" color="primary" onClick={getLocation}>
-          Get Your Location
+          Allow your Location
         </Button>
         <Button
           variant="contained"
@@ -47,12 +54,19 @@ const MapPage = ({ userId }) => {
           Filter
         </Button>
       </div>
-      <Map
-        google={google}
-        zoom={12}
-        className={classes.mapStyles}
-        initialCenter={{ lat: 53.46685, lng: -2.233884 }}
-      />
+      {location ? (
+        <Map
+          google={google}
+          zoom={12}
+          className={classes.mapStyles}
+          initialCenter={location}
+        />
+      ) : (
+        // Loading... 
+        <Typography variant="h4" align="center">
+          Allow Location
+        </Typography>
+      )}
     </div>
   );
 };

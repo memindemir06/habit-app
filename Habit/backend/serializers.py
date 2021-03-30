@@ -31,7 +31,7 @@ class UserOptionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Optional
         depth = 1
-        fields = ('user_id', 'phone_number', 'description', 'facebook', 'instagram', 'twitter', 'profile_img',  'background_img')
+        fields = ('user_id', 'phone_number', 'description', 'facebook', 'instagram', 'twitter', 'profile_img',  'background_img', 'location', 'permissions')
         
 
 class FriendsSerializer(serializers.ModelSerializer):
@@ -51,3 +51,4 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Optional
         fields = ('user_id', 'phone_number', 'description', 'facebook', 'instagram', 'twitter')
+

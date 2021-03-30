@@ -2,7 +2,6 @@ from django.db import models
 import random
 import string
 
-
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
 
 def generate_unique_code():
@@ -37,7 +36,8 @@ class Optional(models.Model):
     twitter = models.CharField(max_length=100, null=True, default="https://twitter.com/")
     profile_img = models.ImageField(upload_to="gallery", null=True, default="/boris.webp")
     background_img = models.ImageField(upload_to="gallery", null=True, default="/default_background.jpeg")
-    # location = models.CharField(max_length=20, null=True)
+    location = models.CharField(max_length=255, null=True) 
+    permission = models.CharField(max_length=15, default="private") 
 
 
 class Habits(models.Model):

@@ -636,6 +636,76 @@ class getLeaderboard(APIView):
 
 # MAP PAGE ------------------------------------------------------------------------------------
 
+class updateLocation(APIView):
+    lookup_url_user_id = 'user_id'
+    lookup_url_location = 'location'
     
+    def post(self, request, format=None):
+        user_id = request.data.get(self.lookup_url_user_id) 
+        location = request.data.get(self.lookup_url_location) 
+        
+        if user_id != None and location != None:
+            listOfUsers = Optional.objects.filter(user_id=user_id)
+            
+            if listOfUsers.exists():
+                listOfUsers[0].update(location=location)
+
+                return Response({"Good Request": "Location Added"}, status=status.HTTP_200_OK)
+        
+            return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"Bad Request": "User ID not found"}, status=status.HTTP_404_NOT_FOUND) 
 
 
+class updatePermission(APIView):
+    lookup_url_user_id = 'user_id'
+    lookup_url_permission = 'permission' 
+
+    def post(self, request, format=None):
+        user_id = request.data.get(self.lookup_url_user_id) 
+        permission = request.data.get(self.lookup_url_permission) 
+        
+        if user_id != None and permission != None:
+            listOfUsers = Optional.objects.filter(user_id=user_id)
+            
+            if listOfUsers.exists():
+                listOfUsers[0].update(permission=permission)
+
+                return Response({"Good Request": "Permission Updated"}, status=status.HTTP_200_OK)
+        
+            return Response({"Bad Request": "User ID not valid"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"Bad Request": "User ID not found"}, status=status.HTTP_404_NOT_FOUND) 
+
+
+class getLocations(APIView):
+    lookup_url_user_id = 'user_id'
+    lookup_url_filterChoice = 'filter'
+
+    def get(self, request, format=None):
+        user_id = request.data.get(self.lookup_url_user_id) 
+        filterChoice = request.data.get(self.lookup_url_filterChoice) 
+        
+        if user_id != None and filterChoice != None:
+            returnList = []
+
+            if filterChoice == "No Filter" or filterChoice == "Friends":
+                # iterate over friends + filter by permission == "Friends"
+                # Serialize it + add it to returnList
+
+                # If filterChoice == "No Filter" -> filter below 
+                # Serialize it + add it to list 
+                listOfUsers = Optional.objects.exclude(user_id=user_id).filter(permission="public")
+
+                for user in listOfUsers:
+                    userData = UserOptionalSerializer(user).data
+                    returnList.append(userData) 
+                
+                # else if filterChoice == "Friends" -> filter through friend by permission == "public" 
+                # serialize + add it to list
+
+                return JsonResponse({"data": returnList}, status=status.HTTP_200_OK)
+            else:
+                print()
+       
+        return Response({"Bad Request": "User ID not found"}, status=status.HTTP_404_NOT_FOUND) 
