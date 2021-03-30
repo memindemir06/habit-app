@@ -297,16 +297,13 @@ function Home() {
                     <Login />
                   </div>
                 ) : (
-                  <MapPage
-                    userId={userId}
-            
-                   />
+                  <MapPage userId={userId} />
                 );
               }}
             />
             {/* <Redirect to="/ErrorPage" /> */}
           </Switch>
-          <Footer className={classes.footer} />
+          {/*<Footer className={classes.footer} />*/}
         </div>
       </ThemeProvider>
     </Router>

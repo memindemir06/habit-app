@@ -1,55 +1,62 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
+import { Button } from "@material-ui/core";
+import FilterListIcon from "@material-ui/icons/FilterList";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginLeft: theme.spacing(8),
-    height: "100vh",
+    marginLeft: theme.spacing(7),
+    [theme.breakpoints.down("xs")]: {
+      margin: 0,
+    },
+  },
+  headerContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  mapStyles: {
+    height: "90%",
+    width: "80%",
   },
 }));
 
 const MapPage = ({ userId }) => {
-  const [latitude, setLatitude] = useState("None");
-  const [longitude, setLongitude] = useState("None");
   const [location, setLocation] = useState(null);
+  let map;
   const classes = useStyles();
   const theme = useTheme();
-  let map;
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      });
-    }
-  }, []);
-
-  function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-      center: location,
-      zoom: 3,
-    });
-    const marker = new google.maps.Marker({
-      position: location,
-      map: map,
-    });
-    s;
-  }
+  const getLocation = () => {};
 
   return (
-    <div>
-      <div id="map" className={classes.root}></div>
-      {/* Marker Cluster Library */}
-      <script src="https://unpkg.com/@googlemaps/markerclustererplus/dist/index.min.js"></script>
-      <script
-        async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjYMvvwMwy5ac0xD2W9KSyN1JY4Ak9hnA&callback=initMap&libraries=&v=weekly"
-      ></script>
+    <div className={classes.root}>
+      <div className={classes.headerContainer}>
+      <Button variant="outlined" color="primary" onClick={getLocation}>
+          Get Your Location
+        </Button>
+        <Button variant="outlined" color="primary" onClick={getLocation}>
+          Get Your Location
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<FilterListIcon />}
+        >
+          Filter
+        </Button>
+      </div>
+      <Map
+        google={google}
+        zoom={12}
+        className={classes.mapStyles}
+        initialCenter={{ lat: 53.46685, lng: -2.233884 }}
+      />
     </div>
   );
 };
 
-export default MapPage;
+export default GoogleApiWrapper({
+  apiKey: "AIzaSyAjYMvvwMwy5ac0xD2W9KSyN1JY4Ak9hnA",
+})(MapPage);
