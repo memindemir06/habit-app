@@ -28,6 +28,7 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import NightsStayIcon from "@material-ui/icons/NightsStay";
 import WbSunnyIcon from "@material-ui/icons/WbSunny";
+import ExploreIcon from "@material-ui/icons/Explore";
 
 const drawerWidth = 240;
 
@@ -464,6 +465,19 @@ function AppBar({
               </ListItemIcon>
               <ListItemText primary="Leaderboard" />
             </ListItem>
+            <ListItem
+              button
+              key="Map"
+              onClick={handleDrawerClose}
+              component={Link}
+              to="/map"
+              className={classes.drawerButton}
+            >
+              <ListItemIcon>
+                <ExploreIcon />
+              </ListItemIcon>
+              <ListItemText primary="Explore" />
+            </ListItem>
             <div style={{ flexGrow: 1 }}></div>
             <ListItem
               className={clsx({
@@ -571,6 +585,18 @@ function AppBar({
                 <LeaderboardIcon />
               </ListItemIcon>
               <ListItemText primary="Leaderboard" />
+            </ListItem>
+            <ListItem
+              button
+              key="Map"
+              onClick={handleDrawerClose}
+              component={Link}
+              to="/map"
+            >
+              <ListItemIcon>
+                <ExploreIcon />
+              </ListItemIcon>
+              <ListItemText primary="Explore" />
             </ListItem>
             <ListItem button key={iconDark} onClick={handleThemeChange}>
               {iconDark ? (

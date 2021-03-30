@@ -18,6 +18,7 @@ import Profile from "./Profile";
 import FriendsPage from "./FriendsPage";
 import LeaderboardPage from "./LeaderboardPage";
 import IntroPage from "./IntroPage";
+import MapPage from "./MapPage";
 import AppBar from "./AppBar";
 import Footer from "./Footer";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
@@ -296,7 +297,10 @@ function Home() {
                     <Login />
                   </div>
                 ) : (
-                  <ErrorPage />
+                  <MapPage
+                    userId={userId}
+            
+                   />
                 );
               }}
             />
