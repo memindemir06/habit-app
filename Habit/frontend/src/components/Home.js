@@ -19,6 +19,7 @@ import FriendsPage from "./FriendsPage";
 import LeaderboardPage from "./LeaderboardPage";
 import IntroPage from "./IntroPage";
 import AppBar from "./AppBar";
+import Footer from "./Footer";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { purple, yellow } from "@material-ui/core/colors";
@@ -301,6 +302,7 @@ function Home() {
             />
             {/* <Redirect to="/ErrorPage" /> */}
           </Switch>
+          <Footer className={classes.footer} />
         </div>
       </ThemeProvider>
     </Router>

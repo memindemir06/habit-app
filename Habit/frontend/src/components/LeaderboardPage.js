@@ -419,7 +419,6 @@ function LeaderboardPage({
         })} */}
           </div>
         </div>
-        <Footer className={classes.footer} />
       </div>
     );
   }

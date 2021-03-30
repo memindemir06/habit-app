@@ -32,10 +32,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4),
     margin: theme.spacing(8),
     [theme.breakpoints.down("md")]: {
-      margin: theme.spacing(2),
-      padding: theme.spacing(4),
+      margin: theme.spacing(4),
+      padding: theme.spacing(8),
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("xs")]: {
       margin: theme.spacing(1),
       padding: theme.spacing(1),
     },
@@ -281,102 +281,58 @@ function DailyReminders({
 
   return (
     <div>
-    <div className={classes.root}>
-      <Typography variant="h4" align="center">
-        {"u/" + userName}
-      </Typography>
-      <br />
-      <Typography variant="h6" align="center">
-        {quote}
-      </Typography>
-      <Typography variant="h6" align="center">
-        {"By " + author}
-      </Typography>
-      <br />
-      <Collapse in={alertOpen}>
-        {habitStatus ? (
-          <Alert severity="success" onClose={() => setAlertOpen(false)}>
-            Habit Added :)
-          </Alert>
-        ) : (
-          <Alert severity="warning" onClose={() => setAlertOpen(false)}>
-            Habit Deleted :(
-          </Alert>
-        )}
-      </Collapse>
-      <br />
-      <AppBar position="static" className={classes.tabs}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="simple tabs example"
-        >
-          <Tab style={{ marginLeft: "2em", color: tabColor }} label="Pending" />
-          <Tab style={{ color: tabColor }} label="Completed" />
-          <div style={{ flexGrow: 1 }}></div>
-          <Button
-            variant="contained"
-            color="secondary"
-            style={{ marginRight: "2em" }}
-            endIcon={<AddCircleIcon />}
-            onClick={() => setOpen(true)}
+      <div className={classes.root}>
+        <Typography variant="h4" align="center">
+          {"u/" + userName}
+        </Typography>
+        <br />
+        <Typography style={{ fontStyle: "italic" }} variant="h6" align="center">
+          ‟{quote}”
+        </Typography>
+        <Typography variant="h6" align="center">
+          {"By " + author}
+        </Typography>
+        <br />
+        <Collapse in={alertOpen}>
+          {habitStatus ? (
+            <Alert severity="success" onClose={() => setAlertOpen(false)}>
+              Habit Added :)
+            </Alert>
+          ) : (
+            <Alert severity="warning" onClose={() => setAlertOpen(false)}>
+              Habit Deleted :(
+            </Alert>
+          )}
+        </Collapse>
+        <br />
+        <AppBar position="static" className={classes.tabs}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="simple tabs example"
           >
-            ADD A HABIT
-          </Button>
-        </Tabs>
-      </AppBar>
-      <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
-        <TabPanel value={value} index={0}>
-          {listOfHabits.map((habit) => {
-            let index = listOfHabits.findIndex(
-              (habitItem) => habitItem.habit_id === habit.habit_id
-            );
-            if (!habit.completed) {
-              tempPending = true;
-              return (
-                <div>
-                  <HabitBlock
-                    habitName={habit.habit_id.habit_name}
-                    startDate={habit.start_date}
-                    streak={habit.streak}
-                    habitId={habit.habit_id.habit_id}
-                    userId={userId}
-                    getHabits={getHabits}
-                    completed={habit.completed}
-                    setHabitStatus={setHabitStatus}
-                    setAlertOpen={setAlertOpen}
-                  />
-                </div>
-              );
-            } else if (index == listOfHabits.length - 1 && !tempPending) {
-              return (
-                <div>
-                  <h3>No habits here...</h3>
-                </div>
-              );
-            }
-          })}
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          {listOfHabits.map((habit) => {
-            let index = listOfHabits.findIndex(
-              (habitItem) => habitItem.habit_id === habit.habit_id
-            );
-            if (habit.completed) {
-              tempCompleted = true;
-              return (
-                <div>
-                  <HabitBlock
-                    habitName={habit.habit_id.habit_name}
-                    startDate={habit.start_date}
-                    streak={habit.streak}
-                    userId={userId}
-                    habitId={habit.habit_id.habit_id}
-                    completed={habit.completed}
-                    getHabits={getHabits}
-                  />
-                  <br />
-                </div>
+            <Tab
+              style={{ marginLeft: "2em", color: tabColor }}
+              label="Pending"
+            />
+            <Tab style={{ color: tabColor }} label="Completed" />
+            <div style={{ flexGrow: 1 }}></div>
+            <Button
+              variant="contained"
+              color="secondary"
+              style={{ marginRight: "2em" }}
+              endIcon={<AddCircleIcon />}
+              onClick={() => setOpen(true)}
+            >
+              ADD A HABIT
+            </Button>
+          </Tabs>
+        </AppBar>
+        <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
+          <TabPanel value={value} index={0}>
+            {listOfHabits.map((habit) => {
+              let index = listOfHabits.findIndex(
+                (habitItem) => habitItem.habit_id === habit.habit_id
               );
               if (!habit.completed) {
                 tempPending = true;
@@ -390,6 +346,8 @@ function DailyReminders({
                       userId={userId}
                       getHabits={getHabits}
                       completed={habit.completed}
+                      setHabitStatus={setHabitStatus}
+                      setAlertOpen={setAlertOpen}
                     />
                   </div>
                 );
@@ -468,7 +426,6 @@ function DailyReminders({
           </div>
         </div>
       </div>
-      <Footer className={classes.footer} />
     </div>
   );
 }

@@ -314,7 +314,14 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
   }
 
   return (
-    <div style={{ position: "relative", minHeight: "100%" }}>
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
       <div className={classes.root}>
         <div className={classes.pageTitleContainer}>
           <Typography className={classes.pageTitle} variant="h4" align="center">
@@ -475,7 +482,6 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
           </Grid>
         </div>
       </div>
-      <Footer className={classes.footer} />
     </div>
   );
 }

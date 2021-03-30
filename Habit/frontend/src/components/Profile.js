@@ -443,7 +443,6 @@ function Profile({
           />
         )}
       </div>
-      <Footer className={classes.footer} />
     </div>
   );
 }

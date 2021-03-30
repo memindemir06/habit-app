@@ -163,156 +163,24 @@ function IntroPage() {
   const classes = useStyles();
 
   return (
-    <div>
-      <div>
-        <div className={classes.introSummary}>
-          <Grid className={classes.mainGrid} spacing={6} container>
-            <Slide
-              direction="right"
-              in={true}
-              timeout={{
-                appear: 500,
-                enter: 1000,
-              }}
-            >
-              <Grid item className={classes.introText} xs={12} sm={6}>
-                <Typography
-                  align="left"
-                  className={classes.textStyle}
-                  variant="h3"
-                >
-                  A NEW JOURNEY STARTS HERE
-                </Typography>
-                <Divider
-                  style={{
-                    alignSelf: "left",
-                    width: "200px",
-                    height: "2px",
-                    background: "#fff",
-                    margin: "1em",
-                  }}
-                />
-                <Typography
-                  align="left"
-                  className={classes.pStyle}
-                  variant="subtitle"
-                >
-                  Take on something new, and meet others who share the same{" "}
-                  <span
-                    style={{
-                      color: "yellow",
-                      fontWeight: 600,
-                      textShadow:
-                        "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
-                    }}
-                  >
-                    HAB!TS
-                  </span>{" "}
-                  as you
-                </Typography>
-                <div
-                  style={{
-                    height: "100px",
-                    display: "flex",
-                    marginTop: "2em",
-                    justifySelf: "flex-end",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    className={classes.getStarted}
-                    component={Link}
-                    to="/register"
-                  >
-                    Get Started
-                  </Button>
-                </div>
-              </Grid>
-            </Slide>
-            <Slide
-              direction="left"
-              in={true}
-              timeout={{
-                appear: 800,
-                enter: 1000,
-              }}
-            >
-              <Grid item className={classes.imageContainer} xs={12} sm={6}>
-                <img src="section-1.svg" width="100%" height="100%" />
-              </Grid>
-            </Slide>
-          </Grid>
-        </div>
-        <div className={classes.introHome}>
-          <Grid container>
-            <Slide
-              direction="right"
-              in={true}
-              timeout={{
-                appear: 500,
-                enter: 1000,
-              }}
-            >
-              <Grid item className={classes.imageContainer} xs={12} sm={6}>
-                <img src="section-2.svg" width="100%" height="100%" />
-              </Grid>
-            </Slide>
-            <Grid
-              item
-              className={classes.introHomeText}
-              style={{ marginBottom: "30px" }}
-              xs={12}
-              sm={6}
-            >
-              <Typography
-                align="right"
-                className={classes.textStyle}
-                variant="h3"
-              >
-                TRACK
-              </Typography>
-              <Divider
-                style={{
-                  alignSelf: "right",
-                  width: "200px",
-                  height: "2px",
-                  background: "rgb(106,48,147)",
-                  margin: "1em",
-                }}
-              />
-              <Typography
-                align="right"
-                className={classes.pStyle}
-                style={{ textAlign: "right" }}
-                variant="subtitle"
-              >
-                Set up new{" "}
-                <span
-                  style={{
-                    color: "yellow",
-                    fontWeight: 600,
-                    textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
-                  }}
-                >
-                  HAB!TS
-                </span>{" "}
-                to help keep track of, and maintain, your personal development
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-        <div className={classes.introSummary}>
-          <Grid container>
+    <>
+      <div className={classes.introSummary}>
+        <Grid className={classes.mainGrid} spacing={6} container>
+          <Slide
+            direction="right"
+            in={true}
+            timeout={{
+              appear: 500,
+              enter: 1000,
+            }}
+          >
             <Grid item className={classes.introText} xs={12} sm={6}>
               <Typography
                 align="left"
                 className={classes.textStyle}
                 variant="h3"
               >
-                COMPETE
+                A NEW JOURNEY STARTS HERE
               </Typography>
               <Divider
                 style={{
@@ -328,7 +196,7 @@ function IntroPage() {
                 className={classes.pStyle}
                 variant="subtitle"
               >
-                Stay on track with your{" "}
+                Take on something new, and meet others who share the same{" "}
                 <span
                   style={{
                     color: "yellow",
@@ -338,59 +206,183 @@ function IntroPage() {
                 >
                   HAB!TS
                 </span>{" "}
-                and make your way up the leaderboard
+                as you
               </Typography>
-            </Grid>
-            <Grid item className={classes.friendImageContainer} xs={12} sm={6}>
-              <img src="friend1.svg" width="80%" height="80%" />
-              <img src="friend2.svg" width="80%" height="80%" />
-            </Grid>
-          </Grid>
-        </div>
-        <div className={classes.introHome}>
-          <Grid container>
-            <Grid item className={classes.imageContainer} xs={12} sm={6}>
-              <img src="leaderboard.svg" width="100%" height="100%" />
-            </Grid>
-            <Grid item className={classes.introHomeText} xs={12} sm={6}>
-              <Typography
-                align="right"
-                className={classes.textStyle}
-                variant="h3"
-              >
-                EXPLORE
-              </Typography>
-              <Divider
+              <div
                 style={{
-                  alignSelf: "right",
-                  width: "200px",
-                  height: "2px",
-                  background: "rgb(106,48,147)",
-                  margin: "1em",
+                  height: "100px",
+                  display: "flex",
+                  marginTop: "2em",
+                  justifySelf: "flex-end",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-              />
-              <Typography
-                align="right"
-                className={classes.pStyle}
-                variant="subtitle"
               >
-                Explore our map to meet nearby people who share similar{" "}
-                <span
-                  style={{
-                    color: "yellow",
-                    fontWeight: 600,
-                    textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
-                  }}
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  className={classes.getStarted}
+                  component={Link}
+                  to="/register"
                 >
-                  HAB!TS
-                </span>{" "}
-              </Typography>
+                  Get Started
+                </Button>
+              </div>
             </Grid>
-          </Grid>
-        </div>
+          </Slide>
+          <Slide
+            direction="left"
+            in={true}
+            timeout={{
+              appear: 800,
+              enter: 1000,
+            }}
+          >
+            <Grid item className={classes.imageContainer} xs={12} sm={6}>
+              <img src="section-1.svg" width="100%" height="100%" />
+            </Grid>
+          </Slide>
+        </Grid>
       </div>
-      <Footer className={classes.footer} />
-    </div>
+      <div className={classes.introHome}>
+        <Grid container>
+          <Slide
+            direction="right"
+            in={true}
+            timeout={{
+              appear: 500,
+              enter: 1000,
+            }}
+          >
+            <Grid item className={classes.imageContainer} xs={12} sm={6}>
+              <img src="section-2.svg" width="100%" height="100%" />
+            </Grid>
+          </Slide>
+          <Grid
+            item
+            className={classes.introHomeText}
+            style={{ marginBottom: "30px" }}
+            xs={12}
+            sm={6}
+          >
+            <Typography
+              align="right"
+              className={classes.textStyle}
+              variant="h3"
+            >
+              TRACK
+            </Typography>
+            <Divider
+              style={{
+                alignSelf: "right",
+                width: "200px",
+                height: "2px",
+                background: "rgb(106,48,147)",
+                margin: "1em",
+              }}
+            />
+            <Typography
+              align="right"
+              className={classes.pStyle}
+              style={{ textAlign: "right" }}
+              variant="subtitle"
+            >
+              Set up new{" "}
+              <span
+                style={{
+                  color: "yellow",
+                  fontWeight: 600,
+                  textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
+                }}
+              >
+                HAB!TS
+              </span>{" "}
+              to help keep track of, and maintain, your personal development
+            </Typography>
+          </Grid>
+        </Grid>
+      </div>
+      <div className={classes.introSummary}>
+        <Grid container>
+          <Grid item className={classes.introText} xs={12} sm={6}>
+            <Typography align="left" className={classes.textStyle} variant="h3">
+              COMPETE
+            </Typography>
+            <Divider
+              style={{
+                alignSelf: "left",
+                width: "200px",
+                height: "2px",
+                background: "#fff",
+                margin: "1em",
+              }}
+            />
+            <Typography
+              align="left"
+              className={classes.pStyle}
+              variant="subtitle"
+            >
+              Stay on track with your{" "}
+              <span
+                style={{
+                  color: "yellow",
+                  fontWeight: 600,
+                  textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
+                }}
+              >
+                HAB!TS
+              </span>{" "}
+              and make your way up the leaderboard
+            </Typography>
+          </Grid>
+          <Grid item className={classes.friendImageContainer} xs={12} sm={6}>
+            <img src="friend1.svg" width="80%" height="80%" />
+            <img src="friend2.svg" width="80%" height="80%" />
+          </Grid>
+        </Grid>
+      </div>
+      <div className={classes.introHome}>
+        <Grid container>
+          <Grid item className={classes.imageContainer} xs={12} sm={6}>
+            <img src="leaderboard.svg" width="100%" height="100%" />
+          </Grid>
+          <Grid item className={classes.introHomeText} xs={12} sm={6}>
+            <Typography
+              align="right"
+              className={classes.textStyle}
+              variant="h3"
+            >
+              EXPLORE
+            </Typography>
+            <Divider
+              style={{
+                alignSelf: "right",
+                width: "200px",
+                height: "2px",
+                background: "rgb(106,48,147)",
+                margin: "1em",
+              }}
+            />
+            <Typography
+              align="right"
+              className={classes.pStyle}
+              variant="subtitle"
+            >
+              Explore our map to meet nearby people who share similar{" "}
+              <span
+                style={{
+                  color: "yellow",
+                  fontWeight: 600,
+                  textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
+                }}
+              >
+                HAB!TS
+              </span>{" "}
+            </Typography>
+          </Grid>
+        </Grid>
+      </div>
+    </>
   );
 }
 
