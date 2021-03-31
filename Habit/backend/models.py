@@ -29,15 +29,15 @@ class Users(models.Model):
 
 class Optional(models.Model):
     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
-    phone_number = models.CharField(max_length=15, null=True)
-    description = models.CharField(max_length=200, null=True)
-    facebook = models.CharField(max_length=100, null=True, default="https://www.facebook.com/") 
-    instagram = models.CharField(max_length=100, null=True, default="https://www.instagram.com/")
-    twitter = models.CharField(max_length=100, null=True, default="https://twitter.com/")
-    profile_img = models.ImageField(upload_to="gallery", null=True, default="/boris.webp")
-    background_img = models.ImageField(upload_to="gallery", null=True, default="/default_background.jpeg")
-    location = models.CharField(max_length=255, null=True) 
-    permission = models.CharField(max_length=15, default="private") 
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
+    description = models.CharField(max_length=200, null=True, blank=True)
+    facebook = models.CharField(max_length=100, null=True, default="https://www.facebook.com/", blank=True) 
+    instagram = models.CharField(max_length=100, null=True, default="https://www.instagram.com/", blank=True)
+    twitter = models.CharField(max_length=100, null=True, default="https://twitter.com/", blank=True)
+    profile_img = models.ImageField(upload_to="gallery", null=True, default="/boris.webp", blank=True)
+    background_img = models.ImageField(upload_to="gallery", null=True, default="/default_background.jpeg", blank=True)
+    location = models.CharField(max_length=255, null=True, blank=True) 
+    access_permission = models.CharField(max_length=15, default="private") 
 
 
 class Habits(models.Model):
