@@ -49,17 +49,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(3),
     width: "340px",
   },
-  footer: {
-    position: "fixed",
-    bottom: 0,
-    left: 0,
-    minHeight: 100,
-    display: "flex",
-    width: "100vw",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  },
 }));
 
 function TabPanel(props) {

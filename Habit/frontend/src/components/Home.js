@@ -25,9 +25,17 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { purple, yellow } from "@material-ui/core/colors";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   content: {
     marginTop: "64px",
+    minHeight: "100vh",
+  },
+  footer: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    minHeight: 100,
+    width: "100vw",
   },
 }));
 
@@ -303,8 +311,8 @@ function Home() {
             />
             {/* <Redirect to="/ErrorPage" /> */}
           </Switch>
-          {/*<Footer className={classes.footer} />*/}
         </div>
+        <Footer className={classes.footer} />
       </ThemeProvider>
     </Router>
   );
