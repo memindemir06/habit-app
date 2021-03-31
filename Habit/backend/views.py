@@ -493,7 +493,7 @@ class filterFriends(APIView):
                     friendPair = friendPair.pop('user_id1')
                     profile_img = getUserOptionalData(friendPair['user_id'])
                     friendPair["profile_img"] = profile_img    
-                    listOfFriends.append(friendPair) 
+                    listOfFriends.append(friendPair)
 
             if habit_name == "No_Filter":         
                 data = {
@@ -678,6 +678,14 @@ class updatePermission(APIView):
             return Response({"Bad Request": "User ID not found"}, status=status.HTTP_404_NOT_FOUND) 
 
 
+def getUserOptionals(user_id):
+    userOptionalData = Optional.objects.filter(user_id=user_id)
+
+    if userOptionalData.exists():
+        return user
+
+
+
 class getLocations(APIView):
     lookup_url_user_id = 'user_id'
     lookup_url_filterChoice = 'filter'
@@ -689,23 +697,69 @@ class getLocations(APIView):
         if user_id != None and filterChoice != None:
             returnList = []
 
+            # No Filter -> all users with permission=public && friends with permission=friends
+            # Friends -> all friends with permission = (public || friends) 
             if filterChoice == "No Filter" or filterChoice == "Friends":
+                publicFriendsOptionalData = []
                 # iterate over friends + filter by permission == "Friends"
-                # Serialize it + add it to returnList
+                # Serialize it + add it to returnList 
+                listOfFriends1 = UserFriends.objects.filter(user_id1 = user_id)
+                listOfFriends2 = UserFriends.objects.filter(user_id2 = user_id)
+
+                if listOfFriends1.exists(): 
+                    for i in range(len(listOfFriends1)):
+                        friendPair = FriendsSerializer(listOfFriends1[i]).data
+                        friendPair = friendPair.pop('user_id2')
+
+                        # get optional data 
+                        userOptionalData = Optional.objects.filter(user_id=friendPair['user_id'])  # ???
+                        if userOptionalData.exists():
+                            if userOptionalData[0].permission == 'friends':
+                                returnList.append(userOptionalData[0])
+                            elif userOptionalData[0].permission == 'public':
+                                publicFriendsOptionalData.append(userOptionalData[0])
+            
+                
+                if listOfFriends2.exists():
+                    for i in range(len(listOfFriends2)):
+                        friendPair = FriendsSerializer(listOfFriends2[i]).data
+                        friendPair = friendPair.pop('user_id1')
+                        
+                        # get optional data 
+                        userOptionalData = Optional.objects.filter(user_id=friendPair['user_id'])  # ???
+                        if userOptionalData.exists():
+                            if userOptionalData[0].permission == 'friends':
+                                returnList.append(userOptionalData[0])
+                            elif userOptionalData[0].permission == 'public':
+                                publicFriendsOptionalData.append(userOptionalData[0])
+
 
                 # If filterChoice == "No Filter" -> filter below 
                 # Serialize it + add it to list 
-                listOfUsers = Optional.objects.exclude(user_id=user_id).filter(permission="public")
+                if filterChoice == "No Filter":
+                    listOfUsers = Optional.objects.exclude(user_id=user_id).filter(permission="public")
 
-                for user in listOfUsers:
-                    userData = UserOptionalSerializer(user).data
-                    returnList.append(userData) 
+                    for user in listOfUsers:
+                        userData = UserOptionalSerializer(user).data
+                        returnList.append(userData) 
+
+                    # return response here ... 
                 
                 # else if filterChoice == "Friends" -> filter through friend by permission == "public" 
                 # serialize + add it to list
+                else:
+                    # Join publicFriends list to returnList
+                    print('')
 
                 return JsonResponse({"data": returnList}, status=status.HTTP_200_OK)
             else:
-                print()
+                # Filter by Habit 
+                habit = filterChoice 
+
+                # Query all users with that habit with permission=public 
+
+                # Query all friends with permission=friend -> filter ones with habit 
+                
+
        
         return Response({"Bad Request": "User ID not found"}, status=status.HTTP_404_NOT_FOUND) 

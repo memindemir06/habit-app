@@ -15,6 +15,8 @@ import {
 } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import LoadingPage from "./LoadingPage";
+// let api_key = require("dotenv").config();
+// console.log(process.env.REACT_APP_GOOGLE_API_KEY);
 
 const useStyles = makeStyles((theme) => ({
   root: {
