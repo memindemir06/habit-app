@@ -12,6 +12,7 @@ import {
   MenuItem,
   FormControl,
   Select,
+  Typography,
 } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import LoadingPage from "./LoadingPage";
@@ -20,6 +21,7 @@ import LoadingPage from "./LoadingPage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    height: "100%",
     marginLeft: theme.spacing(7),
     [theme.breakpoints.down("xs")]: {
       margin: 0,
@@ -34,8 +36,8 @@ const useStyles = makeStyles((theme) => ({
       "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
   },
   mapStyles: {
-    height: "90%",
-    width: "80%",
+    height: "50%",
+    width: "50%",
   },
   container: {
     display: "flex",
@@ -44,6 +46,13 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120,
+  },
+  mapContainer: {
+    position: "relative",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 }));
 
@@ -79,23 +88,34 @@ const MapPage = ({ userId }) => {
     }
   };
 
-  const handleTest = () => {
-    console.log(location);
+  const mapStyles = {
+    height: "70%",
+    width: "70%",
+    alignSelf: "center",
   };
 
   return (
     <div className={classes.root}>
       <div className={classes.headerContainer}>
         <div>
-          <Button onClick={handleClickOpen}>Open select dialog</Button>
+          <Button onClick={handleClickOpen}>Set Privacy</Button>
           <Dialog
             disableBackdropClick
             disableEscapeKeyDown
             open={open}
             onClose={handleClose}
           >
-            <DialogTitle>Fill the form</DialogTitle>
+            <DialogTitle>Select one of the privacy options.</DialogTitle>
             <DialogContent>
+              <Typography variant="subtitle1">
+                Private: Your location will not be visible to other users.
+              </Typography>
+              <Typography variant="subtitle1">
+                Friends: Your location will be visible only to your friends.
+              </Typography>
+              <Typography variant="subtitle1">
+                Public: Your location will be visible to other users.
+              </Typography>
               <form className={classes.container}>
                 <FormControl className={classes.formControl}>
                   <InputLabel id="demo-dialog-select-label">Privacy</InputLabel>
@@ -123,21 +143,29 @@ const MapPage = ({ userId }) => {
             </DialogActions>
           </Dialog>
         </div>
-        <Button variant="contained" color="primary" onClick={getLocation}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={getLocation}
+        >
           Get Your Location
         </Button>
         <Button
           variant="contained"
           color="primary"
+          size="small"
           endIcon={<FilterListIcon />}
         >
           Filter
         </Button>
       </div>
+
       <Map
         google={google}
         zoom={12}
         className={classes.mapStyles}
+        style={mapStyles}
         initialCenter={{ lat: 53.46685, lng: -2.233884 }}
       >
         <Marker position={location} />

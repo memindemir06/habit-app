@@ -6,13 +6,12 @@ import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minHeight: 100,
-    minWidth: "100%",
-    display: "none",
+    display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     padding: "0 8em",
+    marginLeft: theme.spacing(7),
     [theme.breakpoints.down("xs")]: {
       padding: theme.spacing(1),
     },
