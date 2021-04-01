@@ -160,7 +160,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function IntroPage() {
+function IntroPage(isIntroPage, setIsIntroPage) {
   const classes = useStyles();
 
   return (

@@ -106,13 +106,27 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(7) + 1,
     },
   },
-  appBarLogout: {
+  appBarIntro: {
     background: "transparent",
     boxShadow: "none",
     top: 0,
     left: 0,
     right: 0,
     bottom: "auto",
+    "& $toolbarLogout": {
+      height: "100px",
+    },
+  },
+  appBarLogout: {
+    background: theme.palette.primary.main,
+    boxShadow: "none",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: "auto",
+    "& $toolbarLogout": {
+      height: "auto",
+    },
   },
 
   toolbarLogout: {
@@ -139,7 +153,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     transition: "0.25s",
 
-    "&:hover, &:focus": {
+    "&:hover": {
       border: "2px solid",
       borderColor: "yellow",
       color: "yellow",
@@ -208,6 +222,7 @@ function AppBar({
   setUserId,
   darkState,
   setDarkState,
+  isIntroPage,
 }) {
   const classes = useStyles();
   const theme = useTheme();
@@ -344,7 +359,13 @@ function AppBar({
           </Toolbar>
         </AppBar2>
       ) : (
-        <AppBar2 position="absolute" className={classes.appBarLogout}>
+        <AppBar2
+          position="absolute"
+          className={clsx({
+            [classes.appBarIntro]: isIntroPage,
+            [classes.appBarLogout]: !isIntroPage,
+          })}
+        >
           <Toolbar className={classes.toolbarLogout}>
             <img
               src="logo.png"

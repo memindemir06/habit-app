@@ -50,6 +50,7 @@ function Home() {
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [darkState, setDarkState] = useState(false);
+  const [isIntroPage, setIsIntroPage] = useState(false);
   const palletType = darkState ? "dark" : "light";
   const mainPrimaryColor = darkState ? "#4460a2" : "#253559";
   const mainSecondaryColor = darkState ? "#deb659" : "#B08623";
@@ -143,6 +144,7 @@ function Home() {
           setUserId={setUserId}
           darkState={darkState}
           setDarkState={setDarkState}
+          isIntroPage={isIntroPage}
         />
         <div className={classes.content}>
           <Switch>
@@ -152,26 +154,78 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
+                    {setIsIntroPage(true)}
                     <Redirect to="/" />
-                    <IntroPage />
+                    <IntroPage
+                      isIntroPage={isIntroPage}
+                      setIsIntroPage={setIsIntroPage}
+                    />
                   </div>
                 ) : (
                   <Redirect to="/home" />
                 );
               }}
             />
-            <Route exact path="/" component={IntroPage} />
-            <Route exact path="/ErrorPage" component={ErrorPage} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
+            <Route
+              exact
+              path="/"
+              render={() => {
+                return (
+                  <div>
+                    {setIsIntroPage(true)}
+                    <IntroPage />
+                  </div>
+                );
+              }}
+            />
+            <Route
+              exact
+              path="/ErrorPage"
+              render={() => {
+                return (
+                  <div>
+                    {setIsIntroPage(false)}
+                    <ErrorPage />
+                  </div>
+                );
+              }}
+            />
+            <Route
+              exact
+              path="/login"
+              render={() => {
+                return (
+                  <div>
+                    {setIsIntroPage(false)}
+                    <Login />
+                  </div>
+                );
+              }}
+            />
+            <Route
+              exact
+              path="/register"
+              render={() => {
+                return (
+                  <div>
+                    {setIsIntroPage(false)}
+                    <Register />
+                  </div>
+                );
+              }}
+            />
             <Route
               exact
               path="/home"
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
+                    {setIsIntroPage(true)}
                     <Redirect to="/" />
-                    <IntroPage />
+                    <IntroPage
+                      isIntroPage={isIntroPage}
+                      setIsIntroPage={setIsIntroPage}
+                    />
                   </div>
                 ) : (
                   <DailyReminders
@@ -192,6 +246,7 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
+                    {setIsIntroPage(false)}
                     <Redirect to="/login" />
                     <Login />
                   </div>
@@ -220,6 +275,7 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
+                    {setIsIntroPage(false)}
                     <Redirect to="/login" />
                     <Login />
                   </div>
@@ -246,6 +302,7 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
+                    {setIsIntroPage(false)}
                     <Redirect to="/login" />
                     <Login />
                   </div>
@@ -264,6 +321,7 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
+                    {setIsIntroPage(false)}
                     <Redirect to="/login" />
                     <Login />
                   </div>
@@ -301,6 +359,7 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
+                    {setIsIntroPage(false)}
                     <Redirect to="/login" />
                     <Login />
                   </div>
