@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Box,
   Grid,
   Button,
   TextField,
@@ -27,15 +28,28 @@ const useStyles = makeStyles((theme) => ({
 
   mainContainer: {
     width: "400px",
-    marginTop: "3em",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("xs")]: {
       width: "300px",
     },
+  },
+
+  imgContainer: {
+    background: theme.palette.primary.main,
+    height: "64px",
+    width: "64px",
+    msTransform: "rotate(45deg)",
+    transform: "rotate(45deg)",
+    boxShadow:
+      "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19), 0 8px 24px 0 rgba(0, 0, 0, 0.22)",
   },
 
   pageTitle: {
     marginTop: 32,
     fontWeight: "600",
+  },
+  loginLink: {
+    fontWeight: "800",
+    color: theme.palette.text.primary,
   },
 }));
 
@@ -139,85 +153,109 @@ function Register() {
 
   return (
     <div className={classes.root}>
-      <Grid container className={classes.mainContainer} spacing={3}>
+      <Grid container className={classes.mainContainer} spacing={1}>
+        <Grid item xs={12} align="center">
+          <div className={classes.imgContainer}>
+            <Box
+              component={Link}
+              to={"/"}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <img
+                src="logo.png"
+                width="32px"
+                height="32px"
+                style={{
+                  msTransform: "rotate(-45deg)",
+                  transform: "rotate(-45deg)",
+                  marginTop: "15px",
+                }}
+              />
+            </Box>
+          </div>
+        </Grid>
         <Grid item xs={12} align="center">
           <Typography className={classes.pageTitle} variant="h4" component="h4">
             Create your account
           </Typography>
         </Grid>
         <Grid item xs={12} align="center">
-          <Collapse in={!passwordsMatch}>
-            <Alert severity="error">Passwords do not match!</Alert>
-          </Collapse>
-          <Collapse in={dobAlert}>
-            <Alert severity="error">
-              You are not old enough to create an account!
-            </Alert>
-          </Collapse>
-        </Grid>
-        <Grid item xs={12} align="center">
           <TextField
             required
-            label="User Name"
+            label="Username"
             variant="outlined"
             size="small"
-            style={{ width: "100%" }}
+            fullWidth={true}
             margin="normal"
             onChange={userNameChange}
           />
-          <br />
+        </Grid>
+        <Grid item xs={6} align="center">
           <TextField
             required
             label="First Name"
             variant="outlined"
             size="small"
-            style={{ width: "100%" }}
+            fullWidth={true}
             margin="normal"
             onChange={firstNameChange}
           />
-          <br />
+        </Grid>
+        <Grid item xs={6} align="center">
           <TextField
             required
             label="Last Name"
             variant="outlined"
             size="small"
-            style={{ width: "100%" }}
+            fullWidth={true}
             margin="normal"
             onChange={lastNameChange}
           />
-          <br />
+        </Grid>
+        <Grid item xs={12} align="center">
           <TextField
             required
-            label="Enter Email"
+            label="Email address"
             variant="outlined"
             margin="normal"
             size="small"
-            style={{ width: "100%" }}
+            fullWidth={true}
             onChange={emailChange}
           />
-          <br />
+        </Grid>
+        <Grid item xs={12} sm={6} align="center">
           <TextField
             required
-            label="Enter Password"
+            label="Password"
             variant="outlined"
             margin="normal"
             size="small"
-            style={{ width: "100%" }}
+            fullWidth={true}
             onChange={passwordChange}
             type="password"
           />
-          <br />
+        </Grid>
+        <Grid item xs={12} sm={6} align="center">
           <TextField
             required
-            label="Validate Password"
+            label="Validate password"
             variant="outlined"
             margin="normal"
             size="small"
-            style={{ width: "100%" }}
+            fullWidth={true}
             onChange={validatePasswordChange}
             type="password"
           />
-          <br />
+        </Grid>
+        <Grid item xs={12} align="center">
+          <Collapse in={!passwordsMatch}>
+            <Alert severity="error">Passwords do not match!</Alert>
+          </Collapse>
+        </Grid>
+        <Grid item xs={12} align="center">
           <TextField
             required
             variant="outlined"
@@ -225,34 +263,55 @@ function Register() {
             type="date"
             label="Date of Birth"
             size="small"
-            style={{ width: "100%" }}
+            fullWidth={true}
             InputLabelProps={{ shrink: true }}
             onChange={dobChange}
           />
-          <br /> <br />
-          {/* </form> */}
+        </Grid>
+        <Grid item xs={12} align="center">
+          <Collapse in={dobAlert}>
+            <Alert severity="error">
+              You are not old enough to create an account!
+            </Alert>
+          </Collapse>
+        </Grid>
+        <Grid item xs={12} align="center">
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             type="submit"
-            size="small"
-            style={{ width: "100%" }}
+            size="medium"
+            fullWidth={true}
             onClick={submitButtonPressed}
             disabled={btnDisable}
           >
             Create Account
           </Button>
-          <br /> <br />
+          {/*
           <Button
             to="/"
             component={Link}
             variant="contained"
             color="secondary"
             size="small"
-            style={{ width: "100%" }}
+            fullWidth={true}
           >
             Back
           </Button>
+          */}
+        </Grid>
+        <Grid item xs={8} align="right" style={{ marginTop: "2em" }}>
+          <Typography variant="body2">Already have an account? </Typography>
+        </Grid>
+        <Grid item xs={4} align="left" style={{ marginTop: "2em" }}>
+          <Typography
+            className={classes.loginLink}
+            variant="body2"
+            component={Link}
+            to={"/login"}
+          >
+            Log in
+          </Typography>
         </Grid>
       </Grid>
     </div>

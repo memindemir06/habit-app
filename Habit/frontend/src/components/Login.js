@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Box,
   Grid,
   Button,
   TextField,
@@ -26,16 +27,31 @@ const useStyles = makeStyles((theme) => ({
   },
 
   mainContainer: {
-    width: "400px",
-    marginTop: "3em",
+    width: "300px",
     [theme.breakpoints.down("sm")]: {
       width: "300px",
     },
   },
 
+  imgContainer: {
+    background: theme.palette.primary.main,
+    height: "64px",
+    width: "64px",
+    msTransform: "rotate(45deg)",
+    transform: "rotate(45deg)",
+    boxShadow:
+      "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19), 0 8px 24px 0 rgba(0, 0, 0, 0.22)",
+  },
+
   pageTitle: {
     marginTop: 32,
     fontWeight: "600",
+  },
+
+  loginLink: {
+    fontWeight: "800",
+    color: theme.palette.text.primary,
+    marginLeft: "5px",
   },
 }));
 
@@ -87,6 +103,29 @@ function Login() {
     <div className={classes.root}>
       <Grid container className={classes.mainContainer} spacing={3}>
         <Grid item xs={12} align="center">
+          <div className={classes.imgContainer}>
+            <Box
+              component={Link}
+              to={"/"}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <img
+                src="logo.png"
+                width="32px"
+                height="32px"
+                style={{
+                  msTransform: "rotate(-45deg)",
+                  transform: "rotate(-45deg)",
+                  marginTop: "15px",
+                }}
+              />
+            </Box>
+          </div>
+        </Grid>
+        <Grid item xs={12} align="center">
           <Typography className={classes.pageTitle} variant="h4" component="h4">
             Login
           </Typography>
@@ -101,37 +140,43 @@ function Login() {
         <Grid item xs={12} align="center">
           <TextField
             required
-            label="Enter your Email"
+            label="Email address"
             variant="outlined"
             margin="normal"
             size="small"
-            style={{ width: "100%" }}
+            fullWidth={true}
             onChange={emailChange}
           />
           <br />
           <TextField
             required
             type="password"
-            label="Enter your Password"
+            label="Password"
             variant="outlined"
             size="small"
             margin="normal"
-            style={{ width: "100%" }}
+            fullWidth={true}
             onChange={passwordChange}
+            onKeyPress={(ev) => {
+              if (ev.key === "Enter") {
+                loginButtonPressed();
+                ev.preventDefault();
+              }
+            }}
           />
         </Grid>
         <Grid item xs={12} align="center">
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             type="submit"
-            size="small"
-            style={{ width: "100%" }}
+            size="medium"
+            fullWidth={true}
             onClick={loginButtonPressed}
           >
-            Login
+            Log in
           </Button>
-          <br />
+          {/*<br />
           <br />
           <Button
             to="/register"
@@ -139,10 +184,29 @@ function Login() {
             variant="contained"
             color="secondary"
             size="small"
-            style={{ width: "100%" }}
+            fullWidth={true}
           >
             Register
-          </Button>
+          </Button>*/}
+        </Grid>
+        <Grid item xs={12} align="center" style={{ marginTop: "2em" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="body2">Don't have an account yet? </Typography>
+            <Typography
+              className={classes.loginLink}
+              variant="body2"
+              component={Link}
+              to={"/register"}
+            >
+              Register
+            </Typography>
+          </div>
         </Grid>
       </Grid>
     </div>
