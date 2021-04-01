@@ -1,5 +1,5 @@
-from django.urls import path, include
-from .views import index, Login, Logout, Register, activeSession, userIdValid, getUserHabits, getUserOptionals, filterFriends, removeFriend, addFriend, getLeaderboard, removeHabit, addHabit, getAllHabits, handleCompleted, updateProfileOptionals, updateProfileRequired, updateProfileImages, getOtherUserInfo, updateLocation, updatePermission
+from django.urls import path
+from .views import index, Login, Logout, Register, activeSession, userIdValid, getUserHabits, getUserOptionals, filterFriends, removeFriend, addFriend, getLeaderboard, removeHabit, addHabit, getAllHabits, handleCompleted, updateProfileOptionals, updateProfileRequired, updateProfileImages, getOtherUserInfo, updateLocation, updatePermission, getLocations, getUserLocation
 
 
 urlpatterns = [
@@ -24,5 +24,7 @@ urlpatterns = [
     path('updateProfileImage', updateProfileImages.as_view()),
     path('getOtherUserInfo', getOtherUserInfo.as_view()),
     path('updateLocation', updateLocation.as_view()),
-    path('updatePermission', updatePermission.as_view())
+    path('updatePermission', updatePermission.as_view()),
+    path('getLocations', getLocations.as_view()),
+    path('getUserLocation', getUserLocation.as_view()),
 ]

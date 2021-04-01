@@ -31,6 +31,9 @@ class Register(APIView):
             dob = serializer.data.get('dob')
             user = Users(user_name=user_name ,first_name=first_name, last_name=last_name, email=email, password=password, dob=dob)
             user.save()
+            
+            userOptional = Optional(user_id=user_id)
+            userOptional.save()
 
             self.request.session['user_id'] = user.user_id
             return Response(RegisterSerializer(user).data, status=status.HTTP_200_OK)
@@ -493,7 +496,7 @@ class filterFriends(APIView):
                     friendPair = friendPair.pop('user_id1')
                     profile_img = getUserOptionalData(friendPair['user_id'])
                     friendPair["profile_img"] = profile_img    
-                    listOfFriends.append(friendPair) 
+                    listOfFriends.append(friendPair)
 
             if habit_name == "No_Filter":         
                 data = {
@@ -648,7 +651,7 @@ class updateLocation(APIView):
             listOfUsers = Optional.objects.filter(user_id=user_id)
             
             if listOfUsers.exists():
-                listOfUsers[0].update(location=location)
+                listOfUsers.update(location=location)
 
                 return Response({"Good Request": "Location Added"}, status=status.HTTP_200_OK)
         
@@ -659,17 +662,17 @@ class updateLocation(APIView):
 
 class updatePermission(APIView):
     lookup_url_user_id = 'user_id'
-    lookup_url_permission = 'permission' 
+    lookup_url_access_permission = 'access_permission' 
 
     def post(self, request, format=None):
         user_id = request.data.get(self.lookup_url_user_id) 
-        permission = request.data.get(self.lookup_url_permission) 
+        access_permission = request.data.get(self.lookup_url_access_permission) 
         
-        if user_id != None and permission != None:
+        if user_id != None and access_permission != None:
             listOfUsers = Optional.objects.filter(user_id=user_id)
             
             if listOfUsers.exists():
-                listOfUsers[0].update(permission=permission)
+                listOfUsers.update(access_permission=access_permission)
 
                 return Response({"Good Request": "Permission Updated"}, status=status.HTTP_200_OK)
         
@@ -678,34 +681,100 @@ class updatePermission(APIView):
             return Response({"Bad Request": "User ID not found"}, status=status.HTTP_404_NOT_FOUND) 
 
 
+def getFriendsList(user_id):    # returns friends' user ids
+    listOfFriends = []
+
+    listOfFriends1 = UserFriends.objects.filter(user_id1 = user_id)
+    listOfFriends2 = UserFriends.objects.filter(user_id2 = user_id)
+
+    if listOfFriends1.exists(): 
+        for i in range(len(listOfFriends1)):
+            friendPair = FriendsSerializer(listOfFriends1[i]).data 
+            friendPair = friendPair.pop('user_id2')
+            listOfFriends.append(friendPair)
+
+    if listOfFriends2.exists(): 
+        for i in range(len(listOfFriends2)):
+            friendPair = FriendsSerializer(listOfFriends2[i]).data 
+            friendPair = friendPair.pop('user_id1')
+            listOfFriends.append(friendPair)
+
+    return listOfFriends
+
+
+def getFriendsOptionalData(friendList):
+    listOfOptionalData = [] 
+
+    for friend in friendList:
+        data = Optional.objects.filter(user_id=friend['user_id'])
+        if data.exists():
+            listOfOptionalData.append(UserOptionalSerializer(data[0]).data)
+    
+    return listOfOptionalData
+        
+
 class getLocations(APIView):
     lookup_url_user_id = 'user_id'
     lookup_url_filterChoice = 'filter'
 
-    def get(self, request, format=None):
+    def post(self, request, format=None):
         user_id = request.data.get(self.lookup_url_user_id) 
         filterChoice = request.data.get(self.lookup_url_filterChoice) 
         
         if user_id != None and filterChoice != None:
             returnList = []
+            friendList = getFriendsList(user_id)
+            listOfOptionalData = getFriendsOptionalData(friendList)
 
+            # No Filter -> all users with permission=public && friends with permission=friends
+            # Friends -> all friends with permission = (public || friends) 
             if filterChoice == "No Filter" or filterChoice == "Friends":
-                # iterate over friends + filter by permission == "Friends"
-                # Serialize it + add it to returnList
+                publicFriendsOptionalData = []
 
-                # If filterChoice == "No Filter" -> filter below 
-                # Serialize it + add it to list 
-                listOfUsers = Optional.objects.exclude(user_id=user_id).filter(permission="public")
+                for friend in listOfOptionalData:
+                    if friend['access_permission'] == 'friends':
+                        returnList.append(friend)
+                    elif friend['access_permission'] == 'public':
+                        publicFriendsOptionalData.append(friend)
+            
+                if filterChoice == "No Filter":
+                    listOfUsers = Optional.objects.exclude(user_id=user_id).filter(access_permission="public")
 
-                for user in listOfUsers:
-                    userData = UserOptionalSerializer(user).data
-                    returnList.append(userData) 
-                
+                    for user in listOfUsers:
+                        userData = UserOptionalSerializer(user).data
+                        returnList.append(userData) 
+
                 # else if filterChoice == "Friends" -> filter through friend by permission == "public" 
-                # serialize + add it to list
+                else:
+                    returnList = returnList + publicFriendsOptionalData
 
                 return JsonResponse({"data": returnList}, status=status.HTTP_200_OK)
-            else:
-                print()
-       
+            # else:
+            #     # Filter by Habit 
+            #     habit = filterChoice 
+
+            #     # Query all users with that habit with permission=public 
+            #     listOfUsers = Optional.objects.exclude(user_id=user_id).filter(permission="public")  # public people
+            #     # Query all friends with permission=friend -> filter ones with habit 
+                
         return Response({"Bad Request": "User ID not found"}, status=status.HTTP_404_NOT_FOUND) 
+
+
+
+class getUserLocation(APIView):
+    lookup_url_user_id = 'user_id'
+
+    def post(self, request, format=None):
+        user_id = request.data.get(self.lookup_url_user_id) 
+
+        if user_id != None:
+            userLocationList = Optional.objects.filter(user_id=user_id)
+            
+            if userLocationList.exists():
+                userLocation = UserOptionalSerializer(userLocationList[0]).data  
+                return Response(userLocation, status.HTTP_200_OK)
+
+            return Response({"OK Request": "User has no location"}, status=status.HTTP_200_OK) 
+            
+        return Response({"Bad Request": "User ID not found"}, status=status.HTTP_404_NOT_FOUND) 
+
