@@ -19,12 +19,13 @@ import {
   FormControl,
   Select,
   Typography,
+  Tooltip,
+  IconButton,
+  Avatar,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import LoadingPage from "./LoadingPage";
-// const dotenv = require("dotenv").config();
-
-// console.log(process.env.REACT_API_KEY);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,19 +64,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MapPage = ({ userId }) => {
-  const [selected, setSelected] = useState({});
+const MapPage = ({ userId, userName }) => {
+  const [selected, setSelected] = useState(null);
   const [location, setLocation] = useState(null);
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [privacy, setPrivacy] = useState("");
   const [otherUserData, setOtherUserData] = useState(null);
+  const [windowOpen, setWindowOpen] = useState(false);
 
   useEffect(() => {
-    // console.log(
-    //   process.env.REACT_APP_API_KEY ? "NO KEY" : process.env.REACT_APP_API_KEY
-    // );
     getUserLocation();
     getOtherLocations();
   }, []);
@@ -100,16 +99,12 @@ const MapPage = ({ userId }) => {
       })
       .then((data) => {
         if (data) {
+          setPrivacy(data.access_permission);
           setLocation(JSON.parse(data.location));
         } else {
           console.log("No Data");
         }
       });
-  };
-
-  const onSelect = (item) => {
-    setSelected(item);
-    console.log(selected);
   };
 
   const handleClickOpen = () => {
@@ -236,11 +231,18 @@ const MapPage = ({ userId }) => {
     width: "70%",
   };
 
+  const handleWindowChange = (user) => {
+    setSelected(user);
+    setWindowOpen(!windowOpen);
+  };
+
   return (
     <div className={classes.root}>
       <div className={classes.headerContainer}>
         <div>
-          <Button onClick={handleClickOpen}>Set Privacy</Button>
+          <Button onClick={handleClickOpen} color="primary">
+            Set Privacy
+          </Button>
           <Dialog
             disableBackdropClick
             disableEscapeKeyDown
@@ -306,32 +308,77 @@ const MapPage = ({ userId }) => {
         <GoogleMap
           zoom={7}
           mapContainerStyle={{
-            width: "100vw",
-            height: "100vh",
+            width: "70vw",
+            height: "70vh",
           }}
           center={!location ? { lat: 53.46685, lng: -2.233884 } : location}
         >
-          {!location ? null : <Marker position={location} />}
+          {!location ? null : <Marker position={location} label={userName} />}
           {!otherUserData
             ? null
             : otherUserData.map((user) => {
                 return (
                   <Marker
-                    key={user.user_id.username}
+                    key={user.user_id.user_name}
                     position={JSON.parse(user.location)}
-                    onClick={() => onSelect(user)}
+                    onClick={() => handleWindowChange(user)}
+                    options={{
+                      icon: {
+                        url: user.profile_img,
+                        scaledSize: { width: 32, height: 32 },
+                      },
+                      shape: {
+                        coords: [null, null, 16],
+                        type: "circle",
+                      },
+                    }}
+                    label={user.user_id.user_name}
                   />
                 );
               })}
-          {selected.location && (
+          {windowOpen && selected ? (
             <InfoWindow
-              position={selected.location}
-              clickable={true}
-              onCloseClick={() => setSelected({})}
+              position={JSON.parse(selected.location)}
+              onCloseClick={() => handleWindowChange(null)}
             >
-              <p>A</p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                }}
+              >
+                <Tooltip title="View profile">
+                  <IconButton
+                    onClick={() =>
+                      history.push(`/profile/${selected.user_id.user_name}`)
+                    }
+                  >
+                    <Avatar src={selected.profile_img} />
+                  </IconButton>
+                </Tooltip>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <Typography variant="h6">
+                    {selected.user_id.user_name}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    component={Link}
+                    to={`/profile/${selected.user_id.user_name}`}
+                  >
+                    Go to profile
+                  </Typography>
+                </div>
+              </div>
             </InfoWindow>
-          )}
+          ) : null}
         </GoogleMap>
       </LoadScript>
     </div>
