@@ -749,11 +749,16 @@ class getLocations(APIView):
                     returnList = returnList + publicFriendsOptionalData
 
                 return JsonResponse({"data": returnList}, status=status.HTTP_200_OK)
-            # else:
+            else:
             #     # Filter by Habit 
             #     habit = filterChoice 
-
-            #     # Query all users with that habit with permission=public 
+                listOfUsers = UserHabits.object.exclude(user_id=user_id).filter(habit_id__habit_name=filterChoice)
+                if listOfUsers.exist(): # List of users with permission public on that habit filter
+                    for user in listOfUsers:
+                        data = Optional.objects.filter(user_id=user['user_id'], access_permission="public")
+                        if data.exists():
+                            returnList.append(UserOptionalSerializer(data[0]).data)
+                            
             #     listOfUsers = Optional.objects.exclude(user_id=user_id).filter(permission="public")  # public people
             #     # Query all friends with permission=friend -> filter ones with habit 
                 

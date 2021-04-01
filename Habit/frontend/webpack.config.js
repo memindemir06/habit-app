@@ -21,15 +21,20 @@ module.exports = {
   optimization: {
     minimize: true,
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      "process.env": {
-        // This has effect on the react lib size
-        NODE_ENV: JSON.stringify("production"),
-      },
-    }),
-  ],
-  node: {
-    fs: "empty",
+  // plugins: [
+  //   new webpack.DefinePlugin({
+  //     "process.env": {
+  //       // This has effect on the react lib size
+  //       NODE_ENV: JSON.stringify("production"),
+  //     },
+  //   }),
+  // ],
+  // node: {
+  //   fs: "empty",
+  // },
+  resolve: {
+    fallback: {
+      fs: false,
+    },
   },
 };

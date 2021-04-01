@@ -22,9 +22,9 @@ import {
 } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import LoadingPage from "./LoadingPage";
-const dotenv = require("dotenv").config();
+// const dotenv = require("dotenv").config();
 
-console.log(process.env.REACT_API_KEY);
+// console.log(process.env.REACT_API_KEY);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
   },
   formControl: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     minWidth: 120,
   },
   mapContainer: {
