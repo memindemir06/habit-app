@@ -8,12 +8,44 @@ import {
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { Link, useHistory } from "react-router-dom";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100%",
+    margin: theme.spacing(1),
+    padding: theme.spacing(1),
+    [theme.breakpoints.down("xs")]: {
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+    },
+  },
+
+  mainContainer: {
+    width: "400px",
+    marginTop: "3em",
+    [theme.breakpoints.down("sm")]: {
+      width: "300px",
+    },
+  },
+
+  pageTitle: {
+    marginTop: 32,
+    fontWeight: "600",
+  },
+}));
 
 function Login() {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [invalid, setInvalid] = useState(false);
+  const classes = useStyles();
+  const theme = useTheme();
 
   const emailChange = (event) => {
     setEmail(event.target.value);
@@ -52,10 +84,10 @@ function Login() {
   };
 
   return (
-    <div style={{ marginLeft: "-50px", marginTop: "100px" }}>
-      <Grid container spacing={3}>
+    <div className={classes.root}>
+      <Grid container className={classes.mainContainer} spacing={3}>
         <Grid item xs={12} align="center">
-          <Typography variant="h4" component="h4">
+          <Typography className={classes.pageTitle} variant="h4" component="h4">
             Login
           </Typography>
         </Grid>
@@ -72,6 +104,8 @@ function Login() {
             label="Enter your Email"
             variant="outlined"
             margin="normal"
+            size="small"
+            style={{ width: "100%" }}
             onChange={emailChange}
           />
           <br />
@@ -80,15 +114,19 @@ function Login() {
             type="password"
             label="Enter your Password"
             variant="outlined"
+            size="small"
             margin="normal"
+            style={{ width: "100%" }}
             onChange={passwordChange}
           />
-          <br />
+        </Grid>
+        <Grid item xs={12} align="center">
           <Button
             variant="contained"
             color="primary"
             type="submit"
-            size="large"
+            size="small"
+            style={{ width: "100%" }}
             onClick={loginButtonPressed}
           >
             Login
@@ -100,7 +138,8 @@ function Login() {
             component={Link}
             variant="contained"
             color="secondary"
-            size="large"
+            size="small"
+            style={{ width: "100%" }}
           >
             Register
           </Button>

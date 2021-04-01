@@ -8,6 +8,36 @@ import {
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { Link, useHistory } from "react-router-dom";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100%",
+    margin: theme.spacing(1),
+    padding: theme.spacing(1),
+    [theme.breakpoints.down("xs")]: {
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+    },
+  },
+
+  mainContainer: {
+    width: "400px",
+    marginTop: "3em",
+    [theme.breakpoints.down("sm")]: {
+      width: "300px",
+    },
+  },
+
+  pageTitle: {
+    marginTop: 32,
+    fontWeight: "600",
+  },
+}));
 
 function Register() {
   let history = useHistory();
@@ -22,6 +52,8 @@ function Register() {
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [dobAlert, setDobAlert] = useState(false);
   const [btnDisable, setBtnDisable] = useState(true);
+  const classes = useStyles();
+  const theme = useTheme();
 
   // Handles State Changes
   const userNameChange = (event) => {
@@ -106,11 +138,11 @@ function Register() {
   };
 
   return (
-    <div style={{ marginLeft: "-50px" }}>
-      <Grid container spacing={3}>
+    <div className={classes.root}>
+      <Grid container className={classes.mainContainer} spacing={3}>
         <Grid item xs={12} align="center">
-          <Typography variant="h4" component="h4">
-            Create an Account
+          <Typography className={classes.pageTitle} variant="h4" component="h4">
+            Create your account
           </Typography>
         </Grid>
         <Grid item xs={12} align="center">
@@ -128,6 +160,8 @@ function Register() {
             required
             label="User Name"
             variant="outlined"
+            size="small"
+            style={{ width: "100%" }}
             margin="normal"
             onChange={userNameChange}
           />
@@ -136,6 +170,8 @@ function Register() {
             required
             label="First Name"
             variant="outlined"
+            size="small"
+            style={{ width: "100%" }}
             margin="normal"
             onChange={firstNameChange}
           />
@@ -144,6 +180,8 @@ function Register() {
             required
             label="Last Name"
             variant="outlined"
+            size="small"
+            style={{ width: "100%" }}
             margin="normal"
             onChange={lastNameChange}
           />
@@ -153,6 +191,8 @@ function Register() {
             label="Enter Email"
             variant="outlined"
             margin="normal"
+            size="small"
+            style={{ width: "100%" }}
             onChange={emailChange}
           />
           <br />
@@ -161,6 +201,8 @@ function Register() {
             label="Enter Password"
             variant="outlined"
             margin="normal"
+            size="small"
+            style={{ width: "100%" }}
             onChange={passwordChange}
             type="password"
           />
@@ -170,6 +212,8 @@ function Register() {
             label="Validate Password"
             variant="outlined"
             margin="normal"
+            size="small"
+            style={{ width: "100%" }}
             onChange={validatePasswordChange}
             type="password"
           />
@@ -180,6 +224,8 @@ function Register() {
             margin="normal"
             type="date"
             label="Date of Birth"
+            size="small"
+            style={{ width: "100%" }}
             InputLabelProps={{ shrink: true }}
             onChange={dobChange}
           />
@@ -189,7 +235,8 @@ function Register() {
             variant="contained"
             color="primary"
             type="submit"
-            size="large"
+            size="small"
+            style={{ width: "100%" }}
             onClick={submitButtonPressed}
             disabled={btnDisable}
           >
@@ -201,7 +248,8 @@ function Register() {
             component={Link}
             variant="contained"
             color="secondary"
-            size="large"
+            size="small"
+            style={{ width: "100%" }}
           >
             Back
           </Button>
