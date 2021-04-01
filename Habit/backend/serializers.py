@@ -19,6 +19,11 @@ class LoginSerializer(serializers.ModelSerializer):
         model = Users
         fields = ('user_id', 'user_name', 'email', 'password')
 
+class HabitsSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Habits
+            fields = '__all__'
+
 
 class UserHabitsSerializer(serializers.ModelSerializer):
     class Meta:

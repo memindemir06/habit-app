@@ -205,7 +205,7 @@ const MapPage = ({ userId, userName }) => {
       },
       body: JSON.stringify({
         user_id: userId,
-        filter: "No Filter",
+        filter: "Watching",
       }),
     };
     fetch("../api/getLocations", requestOptions)
