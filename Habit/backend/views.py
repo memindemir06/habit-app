@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import generics, status
 from .models import Users, UserHabits, Optional, UserFriends, Habits
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserHabitsSerializer, UserOptionalSerializer, FriendsSerializer, AllHabitsSerializer, ImageSerializer
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, HabitsSerializer, UserHabitsSerializer, UserOptionalSerializer, FriendsSerializer, AllHabitsSerializer, ImageSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.files.storage import FileSystemStorage 
 
@@ -752,13 +752,30 @@ class getLocations(APIView):
             else:
             #     # Filter by Habit 
             #     habit = filterChoice 
-                listOfUsers = UserHabits.object.exclude(user_id=user_id).filter(habit_id__habit_name=filterChoice)
-                if listOfUsers.exist(): # List of users with permission public on that habit filter
-                    for user in listOfUsers:
-                        data = Optional.objects.filter(user_id=user['user_id'], access_permission="public")
-                        if data.exists():
-                            returnList.append(UserOptionalSerializer(data[0]).data)
-                            
+                tempListOfUsers = []
+                habit_id = Habits.objects.filter(habit_name=filterChoice)
+                habit_id = HabitsSerializer(habit_id[0]).data
+                listOfUsers = UserHabits.objects.exclude(user_id=user_id).filter(habit_id=habit_id['habit_id'])
+                # listOfUsers = UserHabitsSerializer(listOfUsers).data
+                for user in listOfUsers:
+                    data = UserHabitsSerializer(user).data
+                    tempListOfUsers.append(data)
+                listOfUsers = tempListOfUsers
+                # if listOfUsers.exists(): # List of users with permission public on that habit filter
+                for user in listOfUsers:
+                    data = Optional.objects.filter(user_id=user['user_id']['user_id'], access_permission="public")
+                    if data.exists():
+                        returnList.append(UserOptionalSerializer(data[0]).data)
+
+                for friend in friendList:  # This append users who are friends with the current user
+                    for user in listOfUsers: # Filters friends by habit
+                        if friend['user_id'] == user['user_id']['user_id']:
+                            data = Optional.objects.filter(user_id=user['user_id']['user_id'], access_permission="friends")
+                            if data.exists():
+                                returnList.append(UserOptionalSerializer(data[0]).data)
+
+                return JsonResponse({"data": returnList}, status=status.HTTP_200_OK)
+                # return Response({"Bad Request": "No Users on this habit"}, status=status.HTTP_404_NOT_FOUND)           
             #     listOfUsers = Optional.objects.exclude(user_id=user_id).filter(permission="public")  # public people
             #     # Query all friends with permission=friend -> filter ones with habit 
                 
@@ -782,4 +799,5 @@ class getUserLocation(APIView):
             return Response({"OK Request": "User has no location"}, status=status.HTTP_200_OK) 
             
         return Response({"Bad Request": "User ID not found"}, status=status.HTTP_404_NOT_FOUND) 
+
 

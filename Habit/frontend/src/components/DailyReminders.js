@@ -141,7 +141,8 @@ function DailyReminders({
     fetch("../api/getUserHabits", requestOptions)
       .then((response) => {
         if (!response.ok) {
-          console.log("No User ID: ", response);
+          console.log(response);
+          getAllHabits();
         } else {
           return response.json();
         }

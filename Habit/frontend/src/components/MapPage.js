@@ -100,6 +100,7 @@ const MapPage = ({ userId }) => {
       })
       .then((data) => {
         if (data) {
+          setPrivacy(data.access_permission);
           setLocation(JSON.parse(data.location));
         } else {
           console.log("No Data");
@@ -210,7 +211,7 @@ const MapPage = ({ userId }) => {
       },
       body: JSON.stringify({
         user_id: userId,
-        filter: "No Filter",
+        filter: "Watching",
       }),
     };
     fetch("../api/getLocations", requestOptions)
@@ -311,7 +312,7 @@ const MapPage = ({ userId }) => {
           }}
           center={!location ? { lat: 53.46685, lng: -2.233884 } : location}
         >
-          {!location ? null : <Marker position={location} />}
+          {!location ? null : <Marker position={location} shape={MarkerShapeCircle} />}
           {!otherUserData
             ? null
             : otherUserData.map((user) => {
