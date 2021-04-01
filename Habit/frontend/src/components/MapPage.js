@@ -22,10 +22,14 @@ import {
   Tooltip,
   IconButton,
   Avatar,
+  List,
+  ListItem,
+  ListItemText,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import LoadingPage from "./LoadingPage";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,13 +74,17 @@ const MapPage = ({ userId, userName }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [privacy, setPrivacy] = useState("");
   const [otherUserData, setOtherUserData] = useState(null);
   const [windowOpen, setWindowOpen] = useState(false);
+  const [listOfFilters, setListOfFilters] = useState(["No Filter", "Friends"]);
+  const [filter, setFilter] = useState();
 
   useEffect(() => {
+    getAllHabits();
     getUserLocation();
-    getOtherLocations();
+    getOtherLocations("No Filter");
   }, []);
 
   const getUserLocation = () => {
@@ -197,7 +205,8 @@ const MapPage = ({ userId, userName }) => {
       });
   };
 
-  const getOtherLocations = () => {
+  const getOtherLocations = (filterChoice) => {
+    setFilterOpen(false);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -205,7 +214,7 @@ const MapPage = ({ userId, userName }) => {
       },
       body: JSON.stringify({
         user_id: userId,
-        filter: "Watching",
+        filter: filterChoice,
       }),
     };
     fetch("../api/getLocations", requestOptions)
@@ -226,9 +235,36 @@ const MapPage = ({ userId, userName }) => {
       });
   };
 
+  const getAllHabits = () => {
+    fetch("../api/getAllHabits")
+      .then((response) => {
+        if (!response.ok) {
+          console.log(response);
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data) {
+          for (let habit in data.list_of_all_habits) {
+            listOfFilters.push(data.list_of_all_habits[habit].habit_name);
+          }
+          console.log(listOfFilters);
+        } else {
+          console.log("No Data");
+        }
+      });
+  };
+
   const mapStyles = {
     height: "70%",
     width: "70%",
+  };
+
+  const dialogTitleStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   };
 
   const handleWindowChange = (user) => {
@@ -243,6 +279,27 @@ const MapPage = ({ userId, userName }) => {
           <Button onClick={handleClickOpen} color="primary">
             Set Privacy
           </Button>
+          <Dialog onClose={() => setFilterOpen(false)} open={filterOpen}>
+            <DialogTitle>
+              <Typography variant="h6">Select a Filter</Typography>
+              {filterOpen ? (
+                <IconButton onClick={() => setFilterOpen(false)}>
+                  <CloseIcon />
+                </IconButton>
+              ) : null}
+            </DialogTitle>
+            <List>
+              {listOfFilters.map((filter) => (
+                <ListItem
+                  button
+                  onClick={() => getOtherLocations(filter)}
+                  key={filter}
+                >
+                  <ListItemText primary={filter} />
+                </ListItem>
+              ))}
+            </List>
+          </Dialog>
           <Dialog
             disableBackdropClick
             disableEscapeKeyDown
@@ -300,6 +357,7 @@ const MapPage = ({ userId, userName }) => {
           color="primary"
           size="small"
           endIcon={<FilterListIcon />}
+          onClick={() => setFilterOpen(true)}
         >
           Filter
         </Button>

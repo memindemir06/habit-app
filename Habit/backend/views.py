@@ -775,9 +775,6 @@ class getLocations(APIView):
                                 returnList.append(UserOptionalSerializer(data[0]).data)
 
                 return JsonResponse({"data": returnList}, status=status.HTTP_200_OK)
-                # return Response({"Bad Request": "No Users on this habit"}, status=status.HTTP_404_NOT_FOUND)           
-            #     listOfUsers = Optional.objects.exclude(user_id=user_id).filter(permission="public")  # public people
-            #     # Query all friends with permission=friend -> filter ones with habit 
                 
         return Response({"Bad Request": "User ID not found"}, status=status.HTTP_404_NOT_FOUND) 
 
