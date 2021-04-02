@@ -367,6 +367,8 @@ function DailyReminders({
                       habitId={habit.habit_id.habit_id}
                       completed={habit.completed}
                       getHabits={getHabits}
+                      setHabitStatus={setHabitStatus}
+                      setAlertOpen={setAlertOpen}
                     />
                     <br />
                   </div>

@@ -41,7 +41,7 @@ const HabitBlock = ({
 
   const handleStreakClicked = (event) => {
     setStreakClicked(!streakClicked);
-    if (completed) {
+    if (streakClicked) {
       handleHabitStatus("decrement");
     } else {
       handleHabitStatus("increment");

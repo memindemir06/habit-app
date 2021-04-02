@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -11,11 +11,24 @@ import {
   Container,
   Avatar,
   Tooltip,
+  Divider,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  habitContainer: {
+    backgroundColor: "transparent",
+    boxShadow: "none",
+  },
+  emailLink: {
+    fontWeight: "800",
+    color: theme.palette.text.primary,
+  },
+}));
 
 const FriendBlock = ({
   userName,
@@ -29,6 +42,9 @@ const FriendBlock = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   let history = useHistory();
+  const classes = useStyles();
+  const theme = useTheme();
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -62,16 +78,16 @@ const FriendBlock = ({
           console.log("No Data!");
         } else {
           console.log(data);
-          filterFriends(userId, "No_Filter");
+          filterFriends(userId, "No Filter");
         }
       });
   };
 
   return (
     <div>
-      <Container>
+      <Grid container justify="center" alignItems="center">
         <Grid item xs={12}>
-          <Card>
+          <Card className={classes.habitContainer}>
             <CardHeader
               avatar={
                 <Tooltip title="View profile">
@@ -95,25 +111,27 @@ const FriendBlock = ({
               }
             />
             <Collapse in={expanded} timeout="auto">
-              <CardContent>
+              <CardContent
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingRight: "2em",
+                  paddingLeft: "2em",
+                }}
+              >
                 <Typography variant="h6">
                   {firstName + " " + lastName}
                 </Typography>
-                <Typography variant="h6">Email: {email}</Typography>
-                <Typography variant="h6">
-                  Twitter: twitter.com/twitter
-                </Typography>
-                <Typography variant="h6">
-                  Instagram: instagram.com/instagram
-                </Typography>
-                <Typography variant="h6">
-                  Facebook: facebook.com/facebook
-                </Typography>
+                <a className={classes.emailLink} href={`mailto:${email}`}>
+                  Email
+                </a>
               </CardContent>
             </Collapse>
           </Card>
         </Grid>
-      </Container>
+      </Grid>
+      <Divider />
     </div>
   );
 };

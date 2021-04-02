@@ -55,9 +55,10 @@ const useStyles = makeStyles((theme) => ({
   pageTitleContainer: {
     width: "100%",
     display: "flex",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignSelf: "flex-start",
-    margin: theme.spacing(1),
+    margin: "1em 2em",
+    paddingRight: "5em",
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
       justifyContent: "center",
@@ -65,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   pageTitle: {
+    selfAlign: "flex-start",
     marginTop: 32,
     textTransform: "uppercase",
     fontWeight: "800",
@@ -131,15 +133,14 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
   const [openFilter, setOpenFilter] = useState(false);
 
   const [checkedHabits, setCheckedHabits] = useState({
-    No_Filter: true,
     Gym: false,
     Smoking: false,
     Drugs: false,
   });
 
-  const { No_Filter, Gym, Smoking, Drugs } = checkedHabits;
+  const { Gym, Smoking, Drugs } = checkedHabits;
 
-  const error = [No_Filter, Gym, Smoking, Drugs].filter((v) => v).length !== 1;
+  const error = [Gym, Smoking, Drugs].filter((v) => v).length !== 1;
   const classes = useStyles();
   const theme = useTheme();
 
@@ -230,7 +231,7 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
             setDisplayExists("error");
             setDisplayMessageExists("Friend already exists!");
           } else {
-            filterFriends(userId, "No_Filter");
+            filterFriends(userId, "No Filter");
             setFriendAlreadyExists("success");
             setDisplayExists("success");
             setDisplayMessageExists("Friend added successfully!");
@@ -250,27 +251,22 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
 
   const NoFilterMessage = () => {
     if (friendsList.length == 0) {
-      if (filterChosen == "No_Filter") {
+      if (filterChosen == "No Filter") {
         return (
-          <div>
+          <Grid item xs={12}>
             <Typography variant="h5" align="center">
-              No Friends Added
+              You have no friends added. Add some using the box above!
             </Typography>
-            <Typography variant="h5" align="center">
-              Add some Friends...
-            </Typography>
-          </div>
+          </Grid>
         );
       } else {
         return (
-          <div>
+          <Grid item xs={12}>
             <Typography variant="h5" align="center">
-              No Friends Added for filter: {filterChosen}
+              You have no friends added which match the {filterChosen} filter.
+              Add some using the box above!
             </Typography>
-            <Typography variant="h5" align="center">
-              Add some Friends...
-            </Typography>
-          </div>
+          </Grid>
         );
       }
     }

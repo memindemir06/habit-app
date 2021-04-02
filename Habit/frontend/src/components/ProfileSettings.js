@@ -49,11 +49,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
-  backButton: {
-    alignSelf: "flex-end",
+  backButton: {},
+  titleContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   title: {
-    alignSelf: "flex-start",
     textTransform: "uppercase",
     fontWeight: "800",
   },
@@ -240,6 +243,7 @@ const ProfileSettings = ({
           color="secondary"
           onClick={() => setProfileImgOpen(true)}
           color="primary"
+          fullWidth={true}
         >
           {profileImg ? "Change Profile Picture" : "Add Profile Picture"}
         </Button>
@@ -264,6 +268,7 @@ const ProfileSettings = ({
           color="secondary"
           onClick={() => setBackgroundImgOpen(true)}
           color="primary"
+          fullWidth={true}
         >
           {backgroundImg
             ? "Change Background Picture"
@@ -314,18 +319,20 @@ const ProfileSettings = ({
 
   return (
     <div className={classes.root}>
-      <Button
-        variant="contained"
-        color="secondary"
-        startIcon={<ArrowBackIcon />}
-        onClick={backToProfile}
-        className={classes.backButton}
-      >
-        Back to Profile
-      </Button>
-      <Typography className={classes.title} variant="h4" align="center">
-        Profile Settings
-      </Typography>
+      <div className={classes.titleContainer}>
+        <Typography className={classes.title} variant="h4" align="center">
+          Profile Settings
+        </Typography>
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<ArrowBackIcon />}
+          onClick={backToProfile}
+          className={classes.backButton}
+        >
+          Back to Profile
+        </Button>
+      </div>
       <Divider
         style={{
           width: "100%",
@@ -411,6 +418,7 @@ const ProfileSettings = ({
               endIcon={<SaveIcon />}
               onClick={handleSaveChangesRequired}
               disableElevation
+              fullWidth={true}
             >
               Save Changes
             </Button>
@@ -422,9 +430,13 @@ const ProfileSettings = ({
               Optional Fields
             </Typography>
             <br />
-            <UploadProfileImg />
+            <div style={{ width: "100%" }}>
+              <UploadProfileImg />
+            </div>
             <br />
-            <UploadBackgroundImg />
+            <div style={{ width: "100%" }}>
+              <UploadBackgroundImg />
+            </div>
             <br />
             <TextField
               disabled={edit}
@@ -476,6 +488,7 @@ const ProfileSettings = ({
               endIcon={<SaveIcon />}
               onClick={handleOptionalSubmit}
               disableElevation
+              fullWidth={true}
             >
               Save Changes
             </Button>

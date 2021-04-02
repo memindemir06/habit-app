@@ -313,6 +313,9 @@ function AppBar({
                 </Link>
               </Typography>
             </div>
+            <Button href={"mailto:hello@lonyinchan.com"} color="inherit">
+              Contact Us
+            </Button>
             <Button
               component={Link}
               to="/"
@@ -349,6 +352,9 @@ function AppBar({
                 HAB!TS
               </Link>
             </Typography>
+            <Button href={"mailto:hello@lonyinchan.com"} color="inherit">
+              Contact Us
+            </Button>
             <Button
               component={Link}
               to="/"
@@ -392,6 +398,9 @@ function AppBar({
               </Link>
             </Typography>
             <div>
+              <Button href={"mailto:hello@lonyinchan.com"} color="inherit">
+                Contact Us
+              </Button>
               <Button component={Link} to="/login" color="inherit">
                 Login
               </Button>

@@ -309,11 +309,11 @@ const MapPage = ({ userId, userName }) => {
   };
 
   const mapStyles = {
-    width: "100vw",
-    height: "100vh",
+    width: "90vw",
+    height: "80vh",
     [theme.breakpoints.down("xs")]: {
-      width: "100vw",
-      height: "100vh",
+      width: "90vw",
+      height: "80vh",
     },
   };
 

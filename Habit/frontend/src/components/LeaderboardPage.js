@@ -18,7 +18,7 @@ import {
   ListItem,
   ListItemText,
   IconButton,
-  Collapse
+  Collapse,
 } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
@@ -125,7 +125,7 @@ function LeaderboardPage({
   let history = useHistory();
   const [leaderboardList, setLeaderboardList] = useState(null);
   const [expanded, setExpanded] = useState(false);
-  const [filterChosen, setFilterChosen] = useState("No_Filter");
+  const [filterChosen, setFilterChosen] = useState("No Filter");
   const [filterHabitOpen, setFilterHabitOpen] = useState(false);
   const [listOfFilters, setListOfFilters] = useState(["No Filter", "Friends"]);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -209,7 +209,7 @@ function LeaderboardPage({
 
   const NoFilterMessage = () => {
     if (leaderboardList.length == 0) {
-      if (filterChosen == "No_Filter") {
+      if (filterChosen == "No Filter") {
         return (
           <div>
             <Typography variant="h5" align="center">
@@ -305,69 +305,69 @@ function LeaderboardPage({
               </Typography>
             </div>
             <Dialog onClose={handleFilterDialogClose} open={filterOpen}>
-                <MuiDialogTitle>
-                  <div
-                    style={{
-                      height: "100px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Typography style={{ alignSelf: "flex-end" }} variant="h6">
-                      Filter the users on Leaderboard:
-                    </Typography>
-                    {filterOpen ? (
-                      <IconButton
-                        style={{ alignSelf: "flex-start" }}
-                        onClick={() => setFilterOpen(false)}
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    ) : null}
-                  </div>
-                </MuiDialogTitle>
-                <List>
-                  <ListItem
-                    button
-                    alignItems="center"
-                    onClick={() => getLeaderboard(userId, listOfFilters[0])}
-                    key={listOfFilters[0]}
-                  >
-                    <ListItemText primary="List all users" />
-                  </ListItem>
-                  <ListItem
-                    button
-                    alignItems="center"
-                    onClick={() => getLeaderboard(userId, listOfFilters[1])}
-                    key={listOfFilters[1]}
-                  >
-                    <ListItemText primary={listOfFilters[1]} />
-                  </ListItem>
-                  <ListItem button onClick={handleFilterHabitOpen}>
-                    <ListItemText primary="Habits:" />
-                    {filterHabitOpen ? <ExpandLess /> : <ExpandMore />}
-                  </ListItem>
-                  <Collapse in={filterHabitOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                      {listOfFilters.map((filter) => {
-                        return filter == "No Filter" ? null : filter ==
-                          "Friends" ? null : (
-                          <ListItem
-                            button
-                            alignItems="center"
-                            onClick={() => getLeaderboard(userId, filter)}
-                            key={filter}
-                            className={classes.nested}
-                          >
-                            <ListItemText primary={filter} />
-                          </ListItem>
-                        );
-                      })}
-                    </List>
-                  </Collapse>
-                </List>
-              </Dialog>
+              <MuiDialogTitle>
+                <div
+                  style={{
+                    height: "100px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography style={{ alignSelf: "flex-end" }} variant="h6">
+                    Filter the users on Leaderboard:
+                  </Typography>
+                  {filterOpen ? (
+                    <IconButton
+                      style={{ alignSelf: "flex-start" }}
+                      onClick={() => setFilterOpen(false)}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  ) : null}
+                </div>
+              </MuiDialogTitle>
+              <List>
+                <ListItem
+                  button
+                  alignItems="center"
+                  onClick={() => getLeaderboard(userId, listOfFilters[0])}
+                  key={listOfFilters[0]}
+                >
+                  <ListItemText primary="List all users" />
+                </ListItem>
+                <ListItem
+                  button
+                  alignItems="center"
+                  onClick={() => getLeaderboard(userId, listOfFilters[1])}
+                  key={listOfFilters[1]}
+                >
+                  <ListItemText primary={listOfFilters[1]} />
+                </ListItem>
+                <ListItem button onClick={handleFilterHabitOpen}>
+                  <ListItemText primary="Habits:" />
+                  {filterHabitOpen ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={filterHabitOpen} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {listOfFilters.map((filter) => {
+                      return filter == "No Filter" ? null : filter ==
+                        "Friends" ? null : (
+                        <ListItem
+                          button
+                          alignItems="center"
+                          onClick={() => getLeaderboard(userId, filter)}
+                          key={filter}
+                          className={classes.nested}
+                        >
+                          <ListItemText primary={filter} />
+                        </ListItem>
+                      );
+                    })}
+                  </List>
+                </Collapse>
+              </List>
+            </Dialog>
             {leaderboardList.length == 0 ? (
               <NoFilterMessage />
             ) : (
