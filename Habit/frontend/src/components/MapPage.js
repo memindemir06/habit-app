@@ -366,7 +366,6 @@ const MapPage = ({ userId, userName }) => {
                   </div>
                 </MuiDialogTitle>
                 <List>
-                  {console.log(listOfFilters)}
                   <ListItem
                     button
                     alignItems="center"
@@ -490,13 +489,16 @@ const MapPage = ({ userId, userName }) => {
               center={!location ? { lat: 53.46685, lng: -2.233884 } : location}
             >
               {!location ? null : (
-                <Marker position={location} label={userName} />
+                <>
+                  <Marker position={location} label={userName} />
+                  <Circle
+                    center={{ lat: 53.46685, lng: -2.233884 }}
+                    // required
+                    options={options}
+                  />
+                </>
               )}
-              <Circle
-                center={{ lat: 53.46685, lng: -2.233884 }}
-                // required
-                options={options}
-              />
+
               {!otherUserData
                 ? null
                 : otherUserData.map((user) => {
@@ -505,7 +507,9 @@ const MapPage = ({ userId, userName }) => {
                         key={user.user_id.user_name}
                         position={JSON.parse(user.location)}
                         onClick={() => handleWindowChange(user)}
-                        label={user.user_id.user_name}
+                        label={
+                          user.user_id.first_name[0] + user.user_id.last_name[0]
+                        }
                       />
                     );
                   })}
