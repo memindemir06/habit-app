@@ -156,8 +156,8 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
-                    {() => setIsIntroPage(true)}
                     <Redirect to="/" />
+                    {setIsIntroPage(true)}
                     <IntroPage
                       isIntroPage={isIntroPage}
                       setIsIntroPage={setIsIntroPage}
@@ -222,8 +222,8 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
-                    {setIsIntroPage(true)}
                     <Redirect to="/" />
+                    {setIsIntroPage(true)}
                     <IntroPage
                       isIntroPage={isIntroPage}
                       setIsIntroPage={setIsIntroPage}
@@ -248,8 +248,8 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
-                    {setIsIntroPage(false)}
                     <Redirect to="/login" />
+                    {setIsIntroPage(false)}
                     <Login />
                   </div>
                 ) : (
@@ -277,8 +277,8 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
-                    {setIsIntroPage(false)}
                     <Redirect to="/login" />
+                    {setIsIntroPage(false)}
                     <Login />
                   </div>
                 ) : (
@@ -304,8 +304,8 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
-                    {setIsIntroPage(false)}
                     <Redirect to="/login" />
+                    {setIsIntroPage(false)}
                     <Login />
                   </div>
                 ) : (
@@ -323,8 +323,8 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
-                    {setIsIntroPage(false)}
                     <Redirect to="/login" />
+                    {setIsIntroPage(false)}
                     <Login />
                   </div>
                 ) : (
@@ -344,6 +344,7 @@ function Home() {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
                     <Redirect to="/login" />
+                    {setIsIntroPage(false)}
                     <Login />
                   </div>
                 ) : (
@@ -361,8 +362,8 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
-                    {setIsIntroPage(false)}
                     <Redirect to="/login" />
+                    {setIsIntroPage(false)}
                     <Login />
                   </div>
                 ) : (

@@ -92,13 +92,12 @@ function Login() {
         }
       })
       .then((data) => {
-        if (data == "Username already exists!") {
-          setUserNameAlert(true);
-        } else if (data == "Email already used!") {
-          setEmailAlert(true);
-        } else if (data == "Username and Email already exists") {
-          setUserNameAlert(true);
-          setEmailAlert(true);
+        if (
+          data == "Invalid Email" ||
+          data == "Invalid Password" ||
+          data == "Invalid post data, did not find the email and password"
+        ) {
+          setInvalid(true);
         } else {
           history.push("/../");
           history.go(0);

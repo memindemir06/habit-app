@@ -81,11 +81,11 @@ class Login(APIView):
                     self.request.session['user_id'] = user['user_id']
                     return Response(user, status=status.HTTP_200_OK) 
                 else:
-                    return Response({"Bad Request", "Invalid Password"}, status=status.HTTP_400_BAD_REQUEST) 
+                    return Response({"Invalid Password"}, status=status.HTTP_200_OK) 
             
-            return Response({"Bad Request", "Invalid Email"}, status=status.HTTP_400_BAD_REQUEST) 
+            return Response({"Invalid Email"}, status=status.HTTP_200_OK) 
             
-        return Response({"Bad Request", "Invalid post data, did not find the email and password"}, status=status.HTTP_400_BAD_REQUEST) 
+        return Response({"Invalid post data, did not find the email and password"}, status=status.HTTP_200_OK) 
 
 
 class Logout(APIView):

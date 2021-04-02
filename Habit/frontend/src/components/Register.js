@@ -177,19 +177,21 @@ function Register() {
   function passwordChecker(p) {
     let error = [];
     if (p.length < 8) {
-      error.push("Your password must be at least 8 characters");
+      error.push("Your password must be at least 8 characters.\n");
     }
     if (p.search(/[a-z]/) < 0) {
-      error.push("Your password must contain at least one letter.");
+      error.push("Your password must contain at least one letter.\n");
     }
     if (p.search(/[A-Z]/) < 0) {
-      error.push("Your password must contain at least one capital letter.");
+      error.push("Your password must contain at least one capital letter.\n");
     }
     if (p.search(/[0-9]/) < 0) {
-      error.push("Your password must contain at least one digit.");
+      error.push("Your password must contain at least one digit.\n");
     }
     if (p.search(/[!@#$%^&*]/) < 0) {
-      error.push("Your password must contain at least one special character.");
+      error.push(
+        "Your password must contain at least one special character.\n"
+      );
     }
 
     if (error.length > 0) {
@@ -324,7 +326,13 @@ function Register() {
           </Collapse>
           <Collapse in={errorAlert}>
             <Alert severity="error" onClose={() => setErrorAlert(false)}>
-              {errors}
+              {errors.map((errorInfo) => {
+                return (
+                  <p style={{ textAlign: "left", fontSize: "12px" }}>
+                    {errorInfo}
+                  </p>
+                );
+              })}
             </Alert>
           </Collapse>
         </Grid>

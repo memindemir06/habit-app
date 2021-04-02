@@ -107,6 +107,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   appBarIntro: {
+    display: "block",
     background: "transparent",
     boxShadow: "none",
     top: 0,
@@ -118,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   appBarLogout: {
-    // display: "none",
+    display: "none",
     background: theme.palette.primary.main,
     boxShadow: "none",
     top: 0,
