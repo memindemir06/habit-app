@@ -19,6 +19,10 @@ import {
   InputAdornment,
   Divider,
   Container,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -27,6 +31,10 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import Footer from "./Footer";
 import SearchIcon from "@material-ui/icons/Search";
+import CloseIcon from "@material-ui/icons/Close";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   pageTitleContainer: {
     width: "100%",
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignSelf: "flex-start",
     margin: theme.spacing(1),
     [theme.breakpoints.down("sm")]: {
@@ -135,62 +143,21 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
   const classes = useStyles();
   const theme = useTheme();
 
-  // var filterChosen = "No_Filter";
-  const [filterChosen, setFilterChosen] = useState("No_Filter");
-  // const [checkedHabits, setCheckedHabits] = useState({
-  //   Smoking: false,
-  //   Jogging: false,
-  //   Drinking: false,
-  //   Drugs: false,
-  //   Reading: false,
-  //   Cycling: false,
-  //   Programming: false,
-  //   Walking: false,
-  //   Eating_Healthily: false,
-  //   Gaming: false,
-  //   Watching: false,
-  //   Learning: false,
-  // });
+  const [listOfFilters, setListOfFilters] = useState(["No Filter"]);
+  const [filterHabitOpen, setFilterHabitOpen] = useState(false);
 
-  // const {
-  //   Smoking,
-  //   Jogging,
-  //   Drinking,
-  //   Drugs,
-  //   Reading,
-  //   Cycling,
-  //   Programming,
-  //   Walking,
-  //   Eating_Healthily,
-  //   Gaming,
-  //   Watching,
-  //   Learning,
-  // } = checkedHabits;
-
-  // const error =
-  //   [
-  //     Smoking,
-  //     Jogging,
-  //     Drinking,
-  //     Drugs,
-  //     Reading,
-  //     Cycling,
-  //     Programming,
-  //     Walking,
-  //     Eating_Healthily,
-  //     Gaming,
-  //     Watching,
-  //     Learning,
-  //   ].filter((v) => v).length !== 1;
+  const [filterChosen, setFilterChosen] = useState("No Filter");
 
   useEffect(() => {
     if (userId) {
-      filterFriends(userId, "No_Filter");
+      filterFriends(userId, "No Filter");
+      getAllHabits();
     }
   }, [userId]);
 
   const filterFriends = (user_id, habit_name) => {
     setOpenFilter(false);
+    setFilterHabitOpen(false);
     setFilterChosen(habit_name);
     const requestOptions = {
       method: "POST",
@@ -309,6 +276,27 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
     }
   };
 
+  const getAllHabits = () => {
+    fetch("../api/getAllHabits")
+      .then((response) => {
+        if (!response.ok) {
+          console.log(response);
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data) {
+          for (let habit in data.list_of_all_habits) {
+            listOfFilters.push(data.list_of_all_habits[habit].habit_name);
+          }
+          console.log(listOfFilters);
+        } else {
+          console.log("No Data");
+        }
+      });
+  };
+
   if (!userId || !friendsList) {
     return <LoadingPage />;
   }
@@ -370,7 +358,64 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
             alignSelf: "flex-start",
           }}
         />
-        <Dialog
+        <Dialog open={openFilter} onClose={() => setOpenFilter(false)}>
+          <MuiDialogTitle>
+            <div
+              style={{
+                height: "100px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography style={{ alignSelf: "flex-end" }} variant="h6">
+                Filter your friends:
+              </Typography>
+              {openFilter ? (
+                <IconButton
+                  style={{ alignSelf: "flex-start" }}
+                  onClick={() => setOpenFilter(false)}
+                >
+                  <CloseIcon />
+                </IconButton>
+              ) : null}
+            </div>
+          </MuiDialogTitle>
+          <List>
+            <ListItem
+              button
+              alignItems="center"
+              onClick={() => filterFriends(userId, listOfFilters[0])}
+              key={listOfFilters[0]}
+            >
+              <ListItemText primary="List all friends" />
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => setFilterHabitOpen(!filterHabitOpen)}
+            >
+              <ListItemText primary="Habits:" />
+              {filterHabitOpen ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={filterHabitOpen} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {listOfFilters.map((filter) => {
+                  return filter == "No Filter" ? null : (
+                    <ListItem
+                      button
+                      alignItems="center"
+                      onClick={() => filterFriends(userId, filter)}
+                      key={filter}
+                    >
+                      <ListItemText primary={filter} />
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Collapse>
+          </List>
+        </Dialog>
+        {/* <Dialog
           open={openFilter}
           onClose={() => setOpenFilter(false)}
           fullWidth
@@ -425,7 +470,7 @@ function FriendsPage({ leaveAccountCallback, userId, userName }) {
               Ok
             </Button>
           </DialogActions>
-        </Dialog>
+        </Dialog> */}
         <Snackbar
           anchorOrigin={{
             vertical: "top",

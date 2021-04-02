@@ -66,6 +66,9 @@ function Register() {
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [dobAlert, setDobAlert] = useState(false);
   const [btnDisable, setBtnDisable] = useState(true);
+  const [userNameAlert, setUserNameAlert] = useState(false);
+  const [passwordLength, setPasswordLength] = useState(false);
+  const [emailAlert, setEmailAlert] = useState(false);
   const classes = useStyles();
   const theme = useTheme();
 
@@ -83,6 +86,8 @@ function Register() {
     setEmail(event.target.value);
   };
   const passwordChange = (event) => {
+    if (event.target.value.length < 8) setPasswordLength(false);
+    else setPasswordLength(false);
     setPassword(event.target.value);
     if (validatePassword == event.target.value) {
       setPasswordsMatch(true);
@@ -111,13 +116,14 @@ function Register() {
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-    if (age < 13) {
+    if (age < 13 || age > 130) {
       setDobAlert(true);
       setBtnDisable(true);
     } else {
       setDobAlert(false);
       setBtnDisable(false);
     }
+    console.log(age);
   };
 
   const submitButtonPressed = () => {
@@ -146,8 +152,17 @@ function Register() {
         }
       })
       .then((data) => {
-        history.push("/../");
-        history.go(0);
+        if (data == "Username already exists!") {
+          setUserNameAlert(true);
+        } else if (data == "Email already used!") {
+          setEmailAlert(true);
+        } else if (data == "Username and Email already exists") {
+          setUserNameAlert(true);
+          setEmailAlert(true);
+        } else {
+          history.push("/../");
+          history.go(0);
+        }
       });
   };
 
@@ -193,6 +208,13 @@ function Register() {
             onChange={userNameChange}
           />
         </Grid>
+        <Grid item xs={12} align="center">
+          <Collapse in={userNameAlert}>
+            <Alert severity="error" onClose={() => setUserNameAlert(false)}>
+              User name already exists!
+            </Alert>
+          </Collapse>
+        </Grid>
         <Grid item xs={6} align="center">
           <TextField
             required
@@ -219,12 +241,20 @@ function Register() {
           <TextField
             required
             label="Email address"
+            type="email"
             variant="outlined"
             margin="normal"
             size="small"
             fullWidth={true}
             onChange={emailChange}
           />
+        </Grid>
+        <Grid item xs={12} align="center">
+          <Collapse in={emailAlert}>
+            <Alert severity="error" onClose={() => setEmailAlert(false)}>
+              Email already used!
+            </Alert>
+          </Collapse>
         </Grid>
         <Grid item xs={12} sm={6} align="center">
           <TextField
@@ -287,18 +317,6 @@ function Register() {
           >
             Create Account
           </Button>
-          {/*
-          <Button
-            to="/"
-            component={Link}
-            variant="contained"
-            color="secondary"
-            size="small"
-            fullWidth={true}
-          >
-            Back
-          </Button>
-          */}
         </Grid>
         <Grid item xs={8} align="right" style={{ marginTop: "2em" }}>
           <Typography variant="body2">Already have an account? </Typography>

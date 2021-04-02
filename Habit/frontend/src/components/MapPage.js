@@ -309,10 +309,10 @@ const MapPage = ({ userId, userName }) => {
   };
 
   const mapStyles = {
-    width: "75vw",
-    height: "75vh",
+    width: "100vw",
+    height: "100vh",
     [theme.breakpoints.down("xs")]: {
-      width: "100px",
+      width: "100vw",
       height: "100vh",
     },
   };
@@ -484,7 +484,7 @@ const MapPage = ({ userId, userName }) => {
         <Grid item xs={12} align="center">
           <LoadScript googleMapsApiKey="AIzaSyATAEeS2YuhKhzbSUNV2M2XH1H1YFztfZo">
             <GoogleMap
-              zoom={15}
+              zoom={10}
               mapContainerStyle={mapStyles}
               center={!location ? { lat: 53.46685, lng: -2.233884 } : location}
             >

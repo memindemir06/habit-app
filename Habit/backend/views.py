@@ -24,15 +24,30 @@ class Register(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user_name = serializer.data.get('user_name')
-            first_name = serializer.data.get('first_name')
-            last_name = serializer.data.get('last_name')
             email = serializer.data.get('email')
+            first_name = serializer.data.get('first_name') 
+            last_name = serializer.data.get('last_name')
             password = serializer.data.get('password')
             dob = serializer.data.get('dob')
+
+
+            listOfUsers = Users.objects.filter(user_name=user_name)
+            listOfEmails = Users.objects.filter(email=email)    
+            
+            if listOfUsers.exists() and listOfEmails.exists():
+                return Response({"Username and Email already exists"}, status=status.HTTP_200_OK)
+                
+            if listOfUsers.exists():
+                return Response({"Username already exists!"}, status=status.HTTP_200_OK)
+            
+            if listOfEmails.exists():
+                return Response({"Email already used!"}, status=status.HTTP_200_OK)
+            
+
             user = Users(user_name=user_name ,first_name=first_name, last_name=last_name, email=email, password=password, dob=dob)
             user.save()
             
-            userOptional = Optional(user_id=user_id)
+            userOptional = Optional(user_id=user)
             userOptional.save()
 
             self.request.session['user_id'] = user.user_id
@@ -498,7 +513,7 @@ class filterFriends(APIView):
                     friendPair["profile_img"] = profile_img    
                     listOfFriends.append(friendPair)
 
-            if habit_name == "No_Filter":         
+            if habit_name == "No Filter":         
                 data = {
                     'list_of_friends': listOfFriends,
                 }
@@ -556,7 +571,7 @@ class getLeaderboard(APIView):
         if purpose != None:
             arrayOfHabits = []
 
-            if purpose == "No_Filter":
+            if purpose == "No Filter":
                 listOfHabits = UserHabits.objects.order_by('-streak', 'user_id__user_name') 
                 
                 if listOfHabits.exists():

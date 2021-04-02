@@ -118,8 +118,10 @@ function Home() {
       .then((response) => response.json())
       .then((data) => {
         if (data.user_id == null) {
+          console.log("No session");
           setUserId("No Session");
         } else {
+          console.log("User is logged in");
           temp = data.user_id;
           setUserId(data.user_id);
           setUserName(data.user_name);
@@ -154,7 +156,7 @@ function Home() {
               render={() => {
                 return !userId ? null : userId == "No Session" ? (
                   <div>
-                    {setIsIntroPage(true)}
+                    {() => setIsIntroPage(true)}
                     <Redirect to="/" />
                     <IntroPage
                       isIntroPage={isIntroPage}

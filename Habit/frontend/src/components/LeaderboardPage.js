@@ -14,7 +14,16 @@ import {
   FormGroup,
   Checkbox,
   Divider,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  Collapse
 } from "@material-ui/core";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import CloseIcon from "@material-ui/icons/Close";
 import clsx from "clsx";
 import LeaderboardBlock from "./LeaderboardBlock";
 import FilterListIcon from "@material-ui/icons/FilterList";
@@ -116,81 +125,22 @@ function LeaderboardPage({
   let history = useHistory();
   const [leaderboardList, setLeaderboardList] = useState(null);
   const [expanded, setExpanded] = useState(false);
-  const [listOfFilters, setListOfFilters] = useState();
-  const [openFilter, setOpenFilter] = useState(false);
   const [filterChosen, setFilterChosen] = useState("No_Filter");
+  const [filterHabitOpen, setFilterHabitOpen] = useState(false);
+  const [listOfFilters, setListOfFilters] = useState(["No Filter", "Friends"]);
+  const [filterOpen, setFilterOpen] = useState(false);
   const classes = useStyles();
   const theme = useTheme();
 
-  const [checkedHabits, setCheckedHabits] = useState({
-    No_Filter: true,
-    Friends: false,
-    Gym: false,
-    Smoking: false,
-    Drugs: false,
-    Attendence: false,
-  });
-
-  const { No_Filter, Friends, Gym, Smoking, Drugs, Attendence } = checkedHabits;
-
-  const error =
-    [No_Filter, Friends, Gym, Smoking, Drugs, Attendence].filter((v) => v)
-      .length !== 1;
-
-  // const [checkedHabits, setCheckedHabits] = useState({
-  //   Smoking: false,
-  //   Jogging: false,
-  //   Drinking: false,
-  //   Drugs: false,
-  //   Reading: false,
-  //   Cycling: false,
-  //   Programming: false,
-  //   Walking: false,
-  //   Eating_Healthily: false,
-  //   Gaming: false,
-  //   Watching: false,
-  //   Learning: false,
-  // });
-
-  // const {
-  //   Smoking,
-  //   Jogging,
-  //   Drinking,
-  //   Drugs,
-  //   Reading,
-  //   Cycling,
-  //   Programming,
-  //   Walking,
-  //   Eating_Healthily,
-  //   Gaming,
-  //   Watching,
-  //   Learning,
-  // } = checkedHabits;
-
-  // const error =
-  //   [
-  //     Smoking,
-  //     Jogging,
-  //     Drinking,
-  //     Drugs,
-  //     Reading,
-  //     Cycling,
-  //     Programming,
-  //     Walking,
-  //     Eating_Healthily,
-  //     Gaming,
-  //     Watching,
-  //     Learning,
-  //   ].filter((v) => v).length !== 1;
-
   useEffect(() => {
     if (userId) {
-      getLeaderboard(userId, "No_Filter");
+      getLeaderboard(userId, "No Filter");
+      getAllHabits();
     }
   }, [userId]);
 
   const getLeaderboard = (user_id, filter) => {
-    setOpenFilter(false);
+    setFilterOpen(false);
     setFilterChosen(filter);
     const requestOptions = {
       method: "POST",
@@ -220,11 +170,34 @@ function LeaderboardPage({
       });
   };
 
-  const handleHabitCheck = (event) => {
-    setCheckedHabits({
-      ...checkedHabits,
-      [event.target.name]: event.target.checked,
-    });
+  const getAllHabits = () => {
+    fetch("../api/getAllHabits")
+      .then((response) => {
+        if (!response.ok) {
+          console.log(response);
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data) {
+          for (let habit in data.list_of_all_habits) {
+            listOfFilters.push(data.list_of_all_habits[habit].habit_name);
+          }
+          console.log(listOfFilters);
+        } else {
+          console.log("No Data");
+        }
+      });
+  };
+
+  const handleFilterHabitOpen = () => {
+    setFilterHabitOpen(!filterHabitOpen);
+  };
+
+  const handleFilterDialogClose = () => {
+    setFilterHabitOpen(false);
+    setFilterOpen(false);
   };
 
   const buttonStyle = {
@@ -300,7 +273,7 @@ function LeaderboardPage({
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => setOpenFilter(true)}
+              onClick={() => setFilterOpen(true)}
               startIcon={<FilterListIcon />}
               className={classes.filterButton}
             >
@@ -331,62 +304,70 @@ function LeaderboardPage({
                 Streak
               </Typography>
             </div>
-
-            <Dialog
-              open={openFilter}
-              onClose={() => setOpenFilter(false)}
-              fullWidth
-            >
-              <DialogTitle>{"Filter Leaderboard"}</DialogTitle>
-              <DialogContent dividers>
-                <FormControl component="fieldset" error={error}>
-                  <FormLabel component="legend">Pick 1 option</FormLabel>
-                  <FormGroup>
-                    {Object.keys(checkedHabits).map(function (key, index) {
-                      return (
-                        <div>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                name={key}
-                                checked={checkedHabits[key]}
-                                onChange={handleHabitCheck}
-                                disabled={false}
-                              />
-                            }
-                            label={key}
-                          />
-                        </div>
-                      );
-                    })}
-                  </FormGroup>
-                </FormControl>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={() => {
-                    setOpenFilter(false);
-                  }}
-                  color="primary"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() => {
-                    Object.keys(checkedHabits).map(function (key, index) {
-                      if (checkedHabits[key]) {
-                        getLeaderboard(userId, key);
-                      }
-                    });
-                  }}
-                  color="primary"
-                  disabled={error ? true : false}
-                  autoFocus
-                >
-                  Ok
-                </Button>
-              </DialogActions>
-            </Dialog>
+            <Dialog onClose={handleFilterDialogClose} open={filterOpen}>
+                <MuiDialogTitle>
+                  <div
+                    style={{
+                      height: "100px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography style={{ alignSelf: "flex-end" }} variant="h6">
+                      Filter the users on Leaderboard:
+                    </Typography>
+                    {filterOpen ? (
+                      <IconButton
+                        style={{ alignSelf: "flex-start" }}
+                        onClick={() => setFilterOpen(false)}
+                      >
+                        <CloseIcon />
+                      </IconButton>
+                    ) : null}
+                  </div>
+                </MuiDialogTitle>
+                <List>
+                  <ListItem
+                    button
+                    alignItems="center"
+                    onClick={() => getLeaderboard(userId, listOfFilters[0])}
+                    key={listOfFilters[0]}
+                  >
+                    <ListItemText primary="List all users" />
+                  </ListItem>
+                  <ListItem
+                    button
+                    alignItems="center"
+                    onClick={() => getLeaderboard(userId, listOfFilters[1])}
+                    key={listOfFilters[1]}
+                  >
+                    <ListItemText primary={listOfFilters[1]} />
+                  </ListItem>
+                  <ListItem button onClick={handleFilterHabitOpen}>
+                    <ListItemText primary="Habits:" />
+                    {filterHabitOpen ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={filterHabitOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {listOfFilters.map((filter) => {
+                        return filter == "No Filter" ? null : filter ==
+                          "Friends" ? null : (
+                          <ListItem
+                            button
+                            alignItems="center"
+                            onClick={() => getLeaderboard(userId, filter)}
+                            key={filter}
+                            className={classes.nested}
+                          >
+                            <ListItemText primary={filter} />
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  </Collapse>
+                </List>
+              </Dialog>
             {leaderboardList.length == 0 ? (
               <NoFilterMessage />
             ) : (
@@ -406,17 +387,6 @@ function LeaderboardPage({
                 );
               })
             )}
-            {/* {leaderboardList.map((user) => {
-          return (
-            <LeaderboardBlock
-              userId={user.user_id}
-              userName={user.user_id.user_name}
-              habitName={user.habit_id.habit_name}
-              streak={user.streak}
-              startDate={user.start_date}
-            />
-          );
-        })} */}
           </div>
         </div>
       </div>
