@@ -43,9 +43,9 @@ function Home() {
   const history = useHistory();
   // const location = useLocation();
   const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState();
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
+  const [userName, setUserName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState(null);
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);

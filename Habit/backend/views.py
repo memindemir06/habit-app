@@ -6,6 +6,7 @@ from .models import Users, UserHabits, Optional, UserFriends, Habits
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, HabitsSerializer, UserHabitsSerializer, UserOptionalSerializer, FriendsSerializer, AllHabitsSerializer, ImageSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.files.storage import FileSystemStorage 
+from django.contrib.auth.hashers import make_password, check_password
 
 
 class index(generics.ListAPIView):
@@ -30,6 +31,7 @@ class Register(APIView):
             password = serializer.data.get('password')
             dob = serializer.data.get('dob')
 
+            hashed_password = make_password(password)
 
             listOfUsers = Users.objects.filter(user_name=user_name)
             listOfEmails = Users.objects.filter(email=email)    
@@ -44,7 +46,7 @@ class Register(APIView):
                 return Response({"Email already used!"}, status=status.HTTP_200_OK)
             
 
-            user = Users(user_name=user_name ,first_name=first_name, last_name=last_name, email=email, password=password, dob=dob)
+            user = Users(user_name=user_name ,first_name=first_name, last_name=last_name, email=email, password=hashed_password, dob=dob)
             user.save()
             
             userOptional = Optional(user_id=user)
@@ -69,16 +71,19 @@ class Login(APIView):
         password = request.data.get(self.lookup_url_kwarg_password)
 
         if (email != None and password != None):
-            user_result = Users.objects.filter(email=email, password=password)
+            userList = Users.objects.filter(email=email)
 
-            if user_result.exists():
-                user = user_result[0]
-                self.request.session['user_id'] = user.user_id
-                # serializer = self.serializer_class(data=user.user_id)
+            if userList.exists():
+                user = LoginSerializer(userList[0]).data
+                password_check = check_password(password, user['password'])
 
-                return Response(LoginSerializer(user).data, status=status.HTTP_200_OK) 
+                if password_check:
+                    self.request.session['user_id'] = user['user_id']
+                    return Response(user, status=status.HTTP_200_OK) 
+                else:
+                    return Response({"Bad Request", "Invalid Password"}, status=status.HTTP_400_BAD_REQUEST) 
             
-            return Response({"Bad Request", "Invalid Login Details"}, status=status.HTTP_400_BAD_REQUEST) 
+            return Response({"Bad Request", "Invalid Email"}, status=status.HTTP_400_BAD_REQUEST) 
             
         return Response({"Bad Request", "Invalid post data, did not find the email and password"}, status=status.HTTP_400_BAD_REQUEST) 
 
@@ -376,6 +381,19 @@ class updateProfileRequired(APIView):
         email = request.data.get(self.lookup_email)
         first_name = request.data.get(self.lookup_first_name)
         last_name = request.data.get(self.lookup_last_name)
+
+        listOfUsers = Users.objects.exclude(user_id=user_id).filter(user_name=user_name)
+        listOfEmails = Users.objects.exclude(user_id=user_id).filter(email=email)    
+            
+        if listOfUsers.exists() and listOfEmails.exists():
+            return Response({"Username and Email already exists"}, status=status.HTTP_200_OK)
+                
+        if listOfUsers.exists():
+            return Response({"Username already exists!"}, status=status.HTTP_200_OK)
+            
+        if listOfEmails.exists():
+            return Response({"Email already used!"}, status=status.HTTP_200_OK)
+            
         if (user_id != None) and (user_name != None) and (email != None) and (first_name != None) and (last_name != None):
             userList = Users.objects.filter(user_id=user_id)
             if userList.exists():

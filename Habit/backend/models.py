@@ -21,7 +21,7 @@ class Users(models.Model):
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=25) 
     email = models.EmailField(max_length=254)
-    password = models.CharField(max_length=30, default="")
+    password = models.CharField(max_length=255, default="")
     dob = models.CharField(max_length=20)
     ordering = ['user_name']
     # verified = models.BooleanField()

@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     padding: "0 8em",
-    marginLeft: theme.spacing(7),
+    marginLeft: theme.spacing(10),
     [theme.breakpoints.down("xs")]: {
       padding: theme.spacing(1),
     },
@@ -26,7 +26,7 @@ function Footer() {
     <AppBar position="static" color="primary">
       <Container maxWidth="md">
         <Toolbar>
-          <Typography variant="body1" color="inherit">
+          <Typography variant="body1" color="inherit" align="center">
             © Copyright HAB!TS 2021
           </Typography>
         </Toolbar>

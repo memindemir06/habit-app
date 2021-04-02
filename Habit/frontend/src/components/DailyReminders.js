@@ -14,6 +14,7 @@ import {
   ListItemText,
   IconButton,
   Collapse,
+  Paper,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -320,6 +321,9 @@ function DailyReminders({
         </AppBar>
         <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
           <TabPanel value={value} index={0}>
+            {listOfHabits.length == 0 ? (
+              <Typography variant="h6">No Habits added</Typography>
+            ) : null}
             {listOfHabits.map((habit) => {
               let index = listOfHabits.findIndex(
                 (habitItem) => habitItem.habit_id === habit.habit_id
@@ -351,6 +355,9 @@ function DailyReminders({
             })}
           </TabPanel>
           <TabPanel value={value} index={1}>
+            {listOfHabits.length == 0 ? (
+              <Typography variant="h6">No Habits added</Typography>
+            ) : null}
             {listOfHabits.map((habit) => {
               let index = listOfHabits.findIndex(
                 (habitItem) => habitItem.habit_id === habit.habit_id
@@ -403,17 +410,19 @@ function DailyReminders({
                   </IconButton>
                 ) : null}
               </MuiDialogTitle>
-              <List>
-                {listOfAvailableHabits.map((habit) => (
-                  <ListItem
-                    button
-                    onClick={() => handleListItemClick(habit)}
-                    key={habit}
-                  >
-                    <ListItemText primary={habit} />
-                  </ListItem>
-                ))}
-              </List>
+              <Paper style={{ maxHeight: 300, overflow: "auto" }}>
+                <List>
+                  {listOfAvailableHabits.map((habit) => (
+                    <ListItem
+                      button
+                      onClick={() => handleListItemClick(habit)}
+                      key={habit}
+                    >
+                      <ListItemText primary={habit} />
+                    </ListItem>
+                  ))}
+                </List>
+              </Paper>
             </Dialog>
           </div>
         </div>

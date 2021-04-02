@@ -69,6 +69,8 @@ function Register() {
   const [userNameAlert, setUserNameAlert] = useState(false);
   const [passwordLength, setPasswordLength] = useState(false);
   const [emailAlert, setEmailAlert] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const [errorAlert, setErrorAlert] = useState(false);
   const classes = useStyles();
   const theme = useTheme();
 
@@ -89,6 +91,9 @@ function Register() {
     if (event.target.value.length < 8) setPasswordLength(false);
     else setPasswordLength(false);
     setPassword(event.target.value);
+
+    passwordChecker(event.target.value);
+
     if (validatePassword == event.target.value) {
       setPasswordsMatch(true);
     } else {
@@ -97,6 +102,9 @@ function Register() {
   };
   const validatePasswordChange = (event) => {
     setValidatePassword(event.target.value);
+
+    passwordChecker(event.target.value);
+
     if (password == event.target.value) {
       setPasswordsMatch(true);
     } else {
@@ -165,6 +173,34 @@ function Register() {
         }
       });
   };
+
+  function passwordChecker(p) {
+    let error = [];
+    if (p.length < 8) {
+      error.push("Your password must be at least 8 characters");
+    }
+    if (p.search(/[a-z]/) < 0) {
+      error.push("Your password must contain at least one letter.");
+    }
+    if (p.search(/[A-Z]/) < 0) {
+      error.push("Your password must contain at least one capital letter.");
+    }
+    if (p.search(/[0-9]/) < 0) {
+      error.push("Your password must contain at least one digit.");
+    }
+    if (p.search(/[!@#$%^&*]/) < 0) {
+      error.push("Your password must contain at least one special character.");
+    }
+
+    if (error.length > 0) {
+      error.join("\n");
+      setErrors(error);
+      setErrorAlert(true);
+    } else {
+      setErrors("");
+      setErrorAlert(false);
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -282,9 +318,17 @@ function Register() {
         </Grid>
         <Grid item xs={12} align="center">
           <Collapse in={!passwordsMatch}>
-            <Alert severity="error">Passwords do not match!</Alert>
+            <Alert severity="error" onClose={() => setPasswordsMatch(false)}>
+              Passwords do not match!
+            </Alert>
+          </Collapse>
+          <Collapse in={errorAlert}>
+            <Alert severity="error" onClose={() => setErrorAlert(false)}>
+              {errors}
+            </Alert>
           </Collapse>
         </Grid>
+
         <Grid item xs={12} align="center">
           <TextField
             required

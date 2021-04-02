@@ -381,6 +381,9 @@ function Profile({
                   User Habits
                 </Typography>
                 <br />
+                {listOfHabits.length == 0 ? (
+                  <Typography variant="h6">No Habits Added</Typography>
+                ) : null}
                 {listOfHabits.map((habit) => {
                   let index = listOfHabits.findIndex(
                     (habitItem) => habitItem.habit_id === habit.habit_id

@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   appBarLogout: {
-    display: "none",
+    // display: "none",
     background: theme.palette.primary.main,
     boxShadow: "none",
     top: 0,

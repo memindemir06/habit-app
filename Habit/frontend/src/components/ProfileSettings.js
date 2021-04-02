@@ -14,7 +14,10 @@ import {
   ListItemText,
   IconButton,
   TextField,
+  Collapse,
+  Grid,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import SwipeableViews from "react-swipeable-views";
 import PropTypes from "prop-types";
@@ -86,7 +89,6 @@ const ProfileSettings = ({
   twitter,
   profileImg,
   backgroundImg,
-  loaded,
   setUserId,
   setUserName,
   setFirstName,
@@ -96,38 +98,46 @@ const ProfileSettings = ({
   setFacebook,
   setInstagram,
   setTwitter,
-  setProfileImg,
-  setBackgroundImg,
-  setLoaded,
   setSettingsClicked,
   darkState,
-  setDarkState,
 }) => {
   // const [open, setOpen] = useState(false);
   const [profileImgOpen, setProfileImgOpen] = useState(false);
   const [backgroundImgOpen, setBackgroundImgOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const [blankField, setBlankField] = useState(false);
-  const [value, setValue] = useState(0);
+  const [tabValue, setTabValue] = useState(0);
+  const [userNameAlert, setUserNameAlert] = useState(false);
+  const [emailAlert, setEmailAlert] = useState(false);
+  const [inputUserName, setInputUserName] = useState("");
   const tabColor = darkState ? "#ffffff" : "#000000";
   const classes = useStyles();
   const theme = useTheme();
 
-  const userNameChange = (e) => {
-    setUserName(e.target.value);
+  // const userNameChange = (e) => {
+  //   // e.preventDefault();
+  //   setUserName(e.target.value);
+  // };
+  const userNameChange = (event) => {
+    setInputUserName(event.target.value);
   };
+
   const firstNameChange = (e) => {
+    e.preventDefault();
     setFirstName(e.target.value);
   };
   const lastNameChange = (e) => {
+    e.preventDefault();
     setLastName(e.target.value);
   };
   const emailChange = (e) => {
+    e.preventDefault();
     setEmail(e.target.value);
   };
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    event.preventDefault();
+    setTabValue(newValue);
   };
 
   const handleSaveChangesRequired = () => {
@@ -158,12 +168,16 @@ const ProfileSettings = ({
           }
         })
         .then((data) => {
-          if (data) {
+          if (data == "Username already exists!") {
+            setUserNameAlert(true);
+          } else if (data == "Email already used!") {
+            setEmailAlert(true);
+          } else if (data == "Username and Email already exists") {
+            setUserNameAlert(true);
+            setEmailAlert(true);
+          } else {
             console.log(data);
             setUserId("");
-            // Add Alert -> profile updated!
-          } else {
-            console.log("No Data!");
           }
         });
     }
@@ -191,9 +205,6 @@ const ProfileSettings = ({
       })
       .then((res) => {
         console.log(res.data);
-        // return res.json();
-        // causes useEffect to be called -> update all the states
-        // setUserId("");
       })
       .catch((err) => console.log(err));
   };
@@ -288,7 +299,7 @@ const ProfileSettings = ({
   };
 
   const handleChangeIndex = (index) => {
-    setValue(index);
+    setTabValue(index);
   };
 
   function TabPanel(props) {
@@ -297,12 +308,12 @@ const ProfileSettings = ({
     return (
       <div
         role="tabpanel"
-        hidden={value !== index}
+        hidden={tabValue !== index}
         id={`simple-tabpanel-${index}`}
         aria-labelledby={`simple-tab-${index}`}
         {...other}
       >
-        {value === index && (
+        {tabValue === index && (
           <Box p={3}>
             <Typography>{children}</Typography>
           </Box>
@@ -341,341 +352,175 @@ const ProfileSettings = ({
         }}
       />
 
-      <AppBar position="static" className={classes.tabs}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="simple tabs example"
-        >
-          <Tab
-            style={{ marginLeft: "2em", color: tabColor }}
-            label="Required"
+      <Grid container style={{marginTop: "3em"}} spacing={2}>
+        <Grid style={{height: "600px"}} item xs={12} md={6}>
+          <Typography variant="h4" align="center">
+            Required Fields
+          </Typography>
+          <br />
+          <TextField
+            label="testing"
+            onChange={(e) => setInputUserName(e.target.value)}
+            variant="outlined"
+            required
+            className={classes.input}
+            multiline={true}
+            fullWidth={true}
           />
-          <Tab style={{ color: tabColor }} label="Optional" />
-          <div style={{ flexGrow: 1 }}></div>
-        </Tabs>
-      </AppBar>
-      <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
-        <TabPanel value={value} index={0}>
-          <div className="required" className={classes.profileStyle}>
-            <br />
-            <br />
-            <Typography variant="h4" align="center">
-              Required Fields
-            </Typography>
-            <br />
-            <TextField
-              disabled={edit}
-              label="Username"
-              margin="normal"
-              variant="outlined"
-              multiline={true}
-              value={userName}
-              onChange={userNameChange}
-              required={true}
-              className={classes.input}
-            />
-            <br />
-            <TextField
-              disabled={edit}
-              label="Email"
-              margin="normal"
-              variant="outlined"
-              multiline={true}
-              value={email}
-              onChange={emailChange}
-              required={true}
-              className={classes.input}
-            />
-            <br />
-            <TextField
-              disabled={edit}
-              label="First Name"
-              margin="normal"
-              variant="outlined"
-              multiline={true}
-              value={firstName}
-              onChange={firstNameChange}
-              required={true}
-              className={classes.input}
-            />
-            <br />
-            <TextField
-              disabled={edit}
-              label="Last Name"
-              margin="normal"
-              variant="outlined"
-              multiline={true}
-              value={lastName}
-              onChange={lastNameChange}
-              required={true}
-              className={classes.input}
-            />
-            <br />
-            <Button
-              variant="contained"
-              color="primary"
-              endIcon={<SaveIcon />}
-              onClick={handleSaveChangesRequired}
-              disableElevation
-              fullWidth={true}
-            >
-              Save Changes
-            </Button>
+          <TextField
+            // disabled={edit}
+            label="Username"
+            margin="normal"
+            variant="outlined"
+            multiline={true}
+            // value={userName}
+            onChange={(e) => {
+              console.log(e.target.value);
+            }}
+            required
+            className={classes.input}
+            fullWidth={true}
+          />
+          <br />
+          <Collapse in={userNameAlert}>
+            <Alert severity="error" onClose={() => setEmailAlert(false)}>
+              Username already used!
+            </Alert>
+          </Collapse>
+          <br />
+          <TextField
+            disabled={edit}
+            label="Email"
+            margin="normal"
+            variant="outlined"
+            multiline={true}
+            value={email}
+            onChange={emailChange}
+            required={true}
+            className={classes.input}
+            fullWidth={true}
+          />
+          <br />
+          <Collapse in={emailAlert}>
+            <Alert severity="error" onClose={() => setEmailAlert(false)}>
+              Email already used!
+            </Alert>
+          </Collapse>
+          <br />
+          <TextField
+            disabled={edit}
+            label="First Name"
+            margin="normal"
+            variant="outlined"
+            multiline={true}
+            value={firstName}
+            onChange={firstNameChange}
+            required={true}
+            className={classes.input}
+            fullWidth={true}
+          />
+          <br />
+          <TextField
+            disabled={edit}
+            label="Last Name"
+            margin="normal"
+            variant="outlined"
+            multiline={true}
+            value={lastName}
+            onChange={lastNameChange}
+            required={true}
+            className={classes.input}
+            fullWidth={true}
+          />
+          <br />
+          <Button
+            variant="contained"
+            color="primary"
+            endIcon={<SaveIcon />}
+            onClick={handleSaveChangesRequired}
+            disableElevation
+            fullWidth={true}
+          >
+            Save Changes
+          </Button>
+        </Grid>
+        <Grid item style={{height: "600px"}} xs={12} md={6}>
+          <Typography variant="h4" align="center">
+            Optional Fields
+          </Typography>
+          <br />
+          <div style={{ width: "100%" }}>
+            <UploadProfileImg />
           </div>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <div className="optionals" className={classes.profileStyle}>
-            <Typography variant="h4" align="center">
-              Optional Fields
-            </Typography>
-            <br />
-            <div style={{ width: "100%" }}>
-              <UploadProfileImg />
-            </div>
-            <br />
-            <div style={{ width: "100%" }}>
-              <UploadBackgroundImg />
-            </div>
-            <br />
-            <TextField
-              disabled={edit}
-              label="Description"
-              margin="normal"
-              variant="outlined"
-              multiline={true}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className={classes.input}
-            />
-            <br />
-            <TextField
-              disabled={edit}
-              label="Facebook"
-              margin="normal"
-              variant="outlined"
-              multiline={true}
-              value={facebook}
-              onChange={(e) => setFacebook(e.target.value)}
-              className={classes.input}
-            />
-            <br />
-            <TextField
-              disabled={edit}
-              label="Instagram"
-              margin="normal"
-              variant="outlined"
-              multiline={true}
-              value={instagram}
-              onChange={(e) => setInstagram(e.target.value)}
-              className={classes.input}
-            />
-            <br />
-            <TextField
-              disabled={edit}
-              label="Twitter"
-              margin="normal"
-              variant="outlined"
-              multiline={true}
-              value={twitter}
-              onChange={(e) => setTwitter(e.target.value)}
-              className={classes.input}
-            />
-            <br />
-            <Button
-              variant="contained"
-              color="primary"
-              endIcon={<SaveIcon />}
-              onClick={handleOptionalSubmit}
-              disableElevation
-              fullWidth={true}
-            >
-              Save Changes
-            </Button>
+          <br />
+          <div style={{ width: "100%" }}>
+            <UploadBackgroundImg />
           </div>
-        </TabPanel>
-      </SwipeableViews>
+          <br />
+          <TextField
+            disabled={edit}
+            label="Description"
+            margin="normal"
+            variant="outlined"
+            multiline={true}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className={classes.input}
+            fullWidth={true}
+          />
+          <br />
+          <TextField
+            disabled={edit}
+            label="Facebook"
+            margin="normal"
+            variant="outlined"
+            multiline={true}
+            value={facebook}
+            onChange={(e) => setFacebook(e.target.value)}
+            className={classes.input}
+            fullWidth={true}
+          />
+          <br />
+          <TextField
+            disabled={edit}
+            label="Instagram"
+            margin="normal"
+            variant="outlined"
+            multiline={true}
+            value={instagram}
+            onChange={(e) => setInstagram(e.target.value)}
+            className={classes.input}
+            fullWidth={true}
+          />
+          <br />
+          <TextField
+            disabled={edit}
+            label="Twitter"
+            margin="normal"
+            variant="outlined"
+            multiline={true}
+            value={twitter}
+            onChange={(e) => setTwitter(e.target.value)}
+            className={classes.input}
+            fullWidth={true}
+          />
+          <br />
+          <br />
+          <br />
+          <Button
+            variant="contained"
+            color="primary"
+            endIcon={<SaveIcon />}
+            onClick={handleOptionalSubmit}
+            disableElevation
+            fullWidth={true}
+          >
+            Save Changes
+          </Button>
+        </Grid>
+      </Grid>
     </div>
   );
 };
 
 export default ProfileSettings;
-
-//   const handleCancelClicked = () => {
-//     // setEdit(true);
-//     setSettingsClicked(false);
-//     // change userId -> to execute useEffect -> reset all states which have been changed
-//     setUserId("");
-//   };
-
-//   const handleOpen = () => {
-//     setOpen(true);
-//   };
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
-
-//    const handleSave = (file) => {
-//    console.log(file[0]);
-//    handleSaveChanges(file[0], file[0]);
-//    setProfileImg(file[0]);
-//    setBackgroundImg(file[0]);
-//    setOpen(false);
-//     file.preventDefault();
-//     console.log(this.state);
-//     let form_data = new FormData();
-//     form_data.append("image", this.state.image, this.state.image.name);
-//     form_data.append("title", this.state.title);
-//     form_data.append("content", this.state.content);
-//     let url = "http://localhost:8000/api/updateProfile";
-//     axios
-//       .post(url, form_data, {
-//         headers: {
-//           "content-type": "multipart/form-data",
-//         },
-//       })
-//       .then((res) => {
-//         console.log(res.data);
-//       })
-//       .catch((err) => console.log(err));
-//   };
-// const UploadFile = () => {
-//   return (
-//     <div style={profileStyle}>
-//       <Button onClick={handleOpen}>Add Image</Button>
-//       <DropzoneDialog
-//         open={open}
-//         onSave={handleSave}
-//         filesLimit={1}
-//         acceptedFiles={["image/jpeg", "image/png", "image/bmp", "image/webp"]}
-//         showPreviews={true}
-//         maxFileSize={5000000}
-//         onClose={handleClose}
-//       />
-//     </div>
-//   );
-// };
-
-//   if (!loaded) {
-//     return <LoadingPage />;
-//   }
-
-//   return (
-//     <div style={profileStyle}>
-//       {/* <div> */}
-
-//         {/* <Button
-//           variant="contained"
-//           color="secondary"
-//           endIcon={<CancelIcon />}
-//           onClick={handleCancelClicked}
-//           disableElevation
-//         >
-//           Cancel
-//         </Button> */}
-//       {/* </div> */}
-//       {/* <br />
-//       <UploadFile />
-//       <br /> */}
-//       <TextField
-//         disabled={edit}
-//         label="Username"
-//         style={{ margin: 8 }}
-//         margin="normal"
-//         variant="outlined"
-//         multiline={true}
-//         value={userName}
-//         onChange={userNameChange}
-//       />
-//       <br />
-//       <TextField
-//         disabled={edit}
-//         label="Email"
-//         style={{ margin: 8 }}
-//         margin="normal"
-//         variant="outlined"
-//         multiline={true}
-//         value={email}
-//         onChange={emailChange}
-//       />
-//       <br />
-//       <TextField
-//         disabled={edit}
-//         label="First Name"
-//         style={{ margin: 8 }}
-//         margin="normal"
-//         variant="outlined"
-//         multiline={true}
-//         value={firstName}
-//         onChange={firstNameChange}
-//       />
-//       <br />
-//       <TextField
-//         disabled={edit}
-//         label="Last Name"
-//         style={{ margin: 8 }}
-//         margin="normal"
-//         variant="outlined"
-//         multiline={true}
-//         value={lastName}
-//         onChange={lastNameChange}
-//       />
-//        <Button
-//           variant="contained"
-//           color="primary"
-//           endIcon={<SaveIcon />}
-//           // onClick={handleSaveChanges}
-//           onClick={handleSaveChangesRequired}
-//           disableElevation
-//         >
-//           Save Changes Required
-//         </Button>
-//       {/* <br />
-//       <TextField
-//         disabled={edit}
-//         label="Description"
-//         style={{ margin: 8 }}
-//         margin="normal"
-//         variant="outlined"
-//         multiline={true}
-//         value={description}
-//         onChange={descriptionChange}
-//       />
-//       <br />
-//       <TextField
-//         disabled={edit}
-//         label="Facebook"
-//         style={{ margin: 8 }}
-//         margin="normal"
-//         variant="outlined"
-//         multiline={true}
-//         value={facebook}
-//         onChange={facebookChange}
-//       />
-//       <br />
-//       <TextField
-//         disabled={edit}
-//         label="Instagram"
-//         style={{ margin: 8 }}
-//         margin="normal"
-//         variant="outlined"
-//         multiline={true}
-//         value={instagram}
-//         onChange={instagramChange}
-//       />
-//       <br />
-//       <TextField
-//         disabled={edit}
-//         label="Twitter"
-//         style={{ margin: 8 }}
-//         margin="normal"
-//         variant="outlined"
-//         multiline={true}
-//         value={twitter}
-//         onChange={twitterChange}
-//       />
-//       <br /> */}
-//     </div>
-//   );
-// }
-// export default ProfileSettings;

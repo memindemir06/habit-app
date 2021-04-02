@@ -92,7 +92,14 @@ function Login() {
         }
       })
       .then((data) => {
-        if (data) {
+        if (data == "Username already exists!") {
+          setUserNameAlert(true);
+        } else if (data == "Email already used!") {
+          setEmailAlert(true);
+        } else if (data == "Username and Email already exists") {
+          setUserNameAlert(true);
+          setEmailAlert(true);
+        } else {
           history.push("/../");
           history.go(0);
         }
