@@ -4,6 +4,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { useParams } from "react-router-dom";
 import {
+  Button,
   IconButton,
   Typography,
   Divider,
@@ -17,7 +18,7 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import ProfileHabitBlock from "./ProfileHabitBlock";
-import Footer from "./Footer";
+import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -106,6 +107,19 @@ const useStyles = makeStyles((theme) => ({
       color: "inherit",
     },
   },
+  addFriendButton: {
+    position: "absolute",
+    bottom: "10px",
+    right: "10px",
+    [theme.breakpoints.down("xs")]: {
+      bottom: "-160px",
+      right: 0,
+      left: "92px",
+    },
+  },
+  friendButtonText: {
+    display: "block",
+  },
   profileInfo: {
     marginTop: theme.spacing(16),
     margin: theme.spacing(2),
@@ -114,6 +128,9 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    [theme.breakpoints.down("xs")]: {
+      marginTop: theme.spacing(4),
+    },
   },
   summary: {
     width: "100%",
@@ -327,7 +344,16 @@ function Profile({
                   >
                     <SettingsIcon fontSize="small" />
                   </IconButton>
-                ) : null}
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.addFriendButton}
+                    startIcon={<AddIcon />}
+                  >
+                    <span className={classes.friendButtonText}>Add Friend</span>
+                  </Button>
+                )}
               </div>
 
               <div className={classes.profileInfo}>
