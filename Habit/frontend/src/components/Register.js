@@ -326,13 +326,15 @@ function Register() {
           </Collapse>
           <Collapse in={errorAlert}>
             <Alert severity="error" onClose={() => setErrorAlert(false)}>
-              {errors.map((errorInfo) => {
-                return (
-                  <p style={{ textAlign: "left", fontSize: "12px" }}>
-                    {errorInfo}
-                  </p>
-                );
-              })}
+              {errors
+                ? errors.map((errorInfo) => {
+                    return (
+                      <p style={{ textAlign: "left", fontSize: "12px" }}>
+                        {errorInfo}
+                      </p>
+                    );
+                  })
+                : null}
             </Alert>
           </Collapse>
         </Grid>

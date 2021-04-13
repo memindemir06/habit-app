@@ -367,7 +367,12 @@ function Home() {
                     <Login />
                   </div>
                 ) : (
-                  <MapPage userId={userId} userName={userName} />
+                  <MapPage
+                    userId={userId}
+                    userName={userName}
+                    firstName={firstName}
+                    lastName={lastName}
+                  />
                 );
               }}
             />

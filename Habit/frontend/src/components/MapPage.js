@@ -7,6 +7,7 @@ import {
   Marker,
   InfoWindow,
   Circle,
+  MarkerClusterer,
 } from "@react-google-maps/api";
 import {
   Button,
@@ -101,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MapPage = ({ userId, userName }) => {
+const MapPage = ({ userId, userName, firstName, lastName }) => {
   const [selected, setSelected] = useState(null);
   const [location, setLocation] = useState(null);
   const classes = useStyles();
@@ -317,6 +318,11 @@ const MapPage = ({ userId, userName }) => {
     },
   };
 
+  // const options = {
+  //   imagePath:
+  //     "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m", // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
+  // };
+
   const handleWindowChange = (user) => {
     setSelected(user);
     setWindowOpen(!windowOpen);
@@ -490,7 +496,10 @@ const MapPage = ({ userId, userName }) => {
             >
               {!location ? null : (
                 <>
-                  <Marker position={location} label={userName} />
+                  <Marker
+                    position={location}
+                    label={firstName[0] + lastName[0]}
+                  />
                   <Circle
                     center={{ lat: 53.46685, lng: -2.233884 }}
                     // required

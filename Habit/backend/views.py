@@ -421,6 +421,25 @@ class getOtherUserInfo(APIView):
             return Response({"Bad Request": "Username does not exists!"}, status.HTTP_400_BAD_REQUEST)
 
         return Response({"Bad Request": "Username missing in Request!"}, status.HTTP_400_BAD_REQUEST)
+        
+class checkIsFriend(APIView):
+    lookup_user_id = 'user_id'
+    lookup_friend_user_id = 'friend_user_id'
+
+    def post(self, request, format=None):
+        user_id = request.data.get(self.lookup_user_id)
+        friend_user_id = request.data.get(self.lookup_friend_user_id)
+        
+        if user_id != None and friend_user_id != None:
+            checkFriendList = UserFriends.objects.filter(user_id1=user_id, user_id2=friend_user_id)
+            checkFriendList2 = UserFriends.objects.filter(user_id1=friend_user_id, user_id2=user_id)
+            
+            if checkFriendList.exists() or checkFriendList2.exists():
+                return Response({"Good_Request": "Friend already added"}, status=status.HTTP_200_OK)
+
+            return Response({"Good_Request": "Not a friend"}, status=status.HTTP_200_OK)
+            
+        return Response({"Bad Request": "Username missing in Request!"}, status.HTTP_400_BAD_REQUEST)
 
 
 # FRIENDS PAGE --------------------------------------------------------------------------------
