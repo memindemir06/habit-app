@@ -10,3 +10,4 @@ tornado==6.1
 whitenoise==5.2.0
 dj-database-url
 psycopg2-binary
+argon2
