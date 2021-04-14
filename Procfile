@@ -1,0 +1,1 @@
+web: gunicorn Habit.wsgi --log-file -
