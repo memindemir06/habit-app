@@ -114,14 +114,6 @@ const ProfileSettings = ({
   const classes = useStyles();
   const theme = useTheme();
 
-  // const userNameChange = (e) => {
-  //   // e.preventDefault();
-  //   setUserName(e.target.value);
-  // };
-  const userNameChange = (event) => {
-    setInputUserName(event.target.value);
-  };
-
   const firstNameChange = (e) => {
     e.preventDefault();
     setFirstName(e.target.value);
@@ -352,38 +344,27 @@ const ProfileSettings = ({
         }}
       />
 
-      <Grid container style={{marginTop: "3em"}} spacing={2}>
-        <Grid style={{height: "600px"}} item xs={12} md={6}>
+      <Grid container style={{ marginTop: "3em" }} spacing={2}>
+        <Grid style={{ height: "600px" }} item xs={12} md={6}>
           <Typography variant="h4" align="center">
             Required Fields
           </Typography>
           <br />
           <TextField
-            label="testing"
-            onChange={(e) => setInputUserName(e.target.value)}
-            variant="outlined"
-            required
-            className={classes.input}
-            multiline={true}
-            fullWidth={true}
-          />
-          <TextField
-            // disabled={edit}
+            disabled={edit}
             label="Username"
             margin="normal"
             variant="outlined"
             multiline={true}
-            // value={userName}
-            onChange={(e) => {
-              console.log(e.target.value);
-            }}
-            required
+            value={userName}
+            onChange={(event) => setUserName(event.target.value)}
+            required={true}
             className={classes.input}
             fullWidth={true}
           />
           <br />
           <Collapse in={userNameAlert}>
-            <Alert severity="error" onClose={() => setEmailAlert(false)}>
+            <Alert severity="error" onClose={() => setUserNameAlert(false)}>
               Username already used!
             </Alert>
           </Collapse>
@@ -444,7 +425,7 @@ const ProfileSettings = ({
             Save Changes
           </Button>
         </Grid>
-        <Grid item style={{height: "600px"}} xs={12} md={6}>
+        <Grid item style={{ height: "600px" }} xs={12} md={6}>
           <Typography variant="h4" align="center">
             Optional Fields
           </Typography>

@@ -167,9 +167,6 @@ const HabitBlock = ({
                   Start Date: {parseDate(startDate).toLocaleDateString()}
                 </Typography>
                 <Typography variant="h6">Streak: {streak}</Typography>
-                <Typography variant="h6">
-                  Completed: {completed ? "True" : "False"}
-                </Typography>
               </CardContent>
             </Collapse>
           </Card>
