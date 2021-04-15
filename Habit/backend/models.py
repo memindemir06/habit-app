@@ -34,7 +34,7 @@ class Optional(models.Model):
     facebook = models.CharField(max_length=100, null=True, default="https://www.facebook.com/", blank=True) 
     instagram = models.CharField(max_length=100, null=True, default="https://www.instagram.com/", blank=True)
     twitter = models.CharField(max_length=100, null=True, default="https://twitter.com/", blank=True)
-    profile_img = models.ImageField(upload_to="gallery", null=True, default="/boris.webp", blank=True)
+    profile_img = models.ImageField(upload_to="gallery", null=True, default="/default_profile_img.jpeg", blank=True)
     background_img = models.ImageField(upload_to="gallery", null=True, default="/default_background.jpeg", blank=True)
     location = models.CharField(max_length=255, null=True, blank=True) 
     access_permission = models.CharField(max_length=15, default="private") 

@@ -11,11 +11,15 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     padding: "0 8em",
-    marginLeft: theme.spacing(10),
+    marginLeft: theme.spacing(15),
     [theme.breakpoints.down("xs")]: {
-      padding: theme.spacing(1),
+      padding: theme.spacing(10),
     },
     background: theme.palette.primary.main,
+  },
+  copyright: {
+    marginLeft: "40%",
+    // padding: theme.spacing(3),
   },
 }));
 
@@ -26,7 +30,12 @@ function Footer() {
     <AppBar position="static" color="primary">
       <Container maxWidth="md">
         <Toolbar>
-          <Typography variant="body1" color="inherit" align="center">
+          <Typography
+            variant="body1"
+            color="inherit"
+            align="center"
+            className={classes.copyright}
+          >
             © Copyright HAB!TS 2021
           </Typography>
         </Toolbar>

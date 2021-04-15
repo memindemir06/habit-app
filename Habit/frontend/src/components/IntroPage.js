@@ -293,7 +293,7 @@ function IntroPage(isIntroPage, setIsIntroPage) {
                 style={{
                   color: "yellow",
                   fontWeight: 600,
-                  textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
+                  textShadow: "0 0 5px blue, 0 0 10px blue, 0 0 15px blue",
                 }}
               >
                 HAB!TS
@@ -374,7 +374,7 @@ function IntroPage(isIntroPage, setIsIntroPage) {
                 style={{
                   color: "yellow",
                   fontWeight: 600,
-                  textShadow: "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px yellow",
+                  textShadow: "0 0 5px blue, 0 0 10px blue, 0 0 15px blue",
                 }}
               >
                 HAB!TS

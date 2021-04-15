@@ -500,11 +500,6 @@ const MapPage = ({ userId, userName, firstName, lastName }) => {
                     position={location}
                     label={firstName[0] + lastName[0]}
                   />
-                  <Circle
-                    center={{ lat: 53.46685, lng: -2.233884 }}
-                    // required
-                    options={options}
-                  />
                 </>
               )}
 
