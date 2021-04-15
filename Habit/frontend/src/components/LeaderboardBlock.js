@@ -164,7 +164,7 @@ const LeaderboardBlock = ({
             action={
               <div className={classes.containerRightStyle}>
                 <IconButton onClick={handleExpandClick}>
-                  {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  {expanded ? <ExpandLessIcon style={{color: "white"}}/> : <ExpandMoreIcon style={{color: "white"}}/>}
                 </IconButton>
               </div>
             }

@@ -477,11 +477,6 @@ function Profile({
                 <Typography variant="h6">No Habits Added</Typography>
               ) : null}
               {listOfHabits.map((habit) => {
-                let index = listOfHabits.findIndex(
-                  (habitItem) => habitItem.habit_id === habit.habit_id
-                );
-                if (habit.completed) {
-                  tempCompleted = true;
                   return (
                     <div>
                       <ProfileHabitBlock
@@ -492,13 +487,6 @@ function Profile({
                       <br />
                     </div>
                   );
-                } else if (index == listOfHabits.length - 1 && !tempCompleted) {
-                  return (
-                    <div>
-                      <h3>No habits here...</h3>
-                    </div>
-                  );
-                }
               })}
             </div>
           </div>
