@@ -241,6 +241,11 @@ function AppBar({
     setOpen(true);
   };
 
+  const handleImgBarClicked = () => {
+    setOpen(false);
+    setUserId("");
+  };
+
   const handleDrawerClose = () => {
     setOpen(false);
   };
@@ -448,7 +453,7 @@ function AppBar({
             <ListItem
               button
               key="My Account"
-              onClick={handleDrawerClose}
+              onClick={handleImgBarClicked}
               component={Link}
               to="/myprofile"
               className={classes.drawerButton}

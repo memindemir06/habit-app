@@ -220,9 +220,11 @@ function Profile({
 
   useEffect(() => {
     if (userId && isUser) {
+      console.log("isuser");
       getUserOptionals(userId);
     }
     if (!isUser) {
+      console.log("Not user");
       getOtherUser();
     }
   }, [userId]);
@@ -377,16 +379,14 @@ function Profile({
       });
   };
 
-  let tempCompleted = false;
   return (
-    // <div>
     <div>
       {!settingsClicked ? (
         <div className={classes.root}>
           <div className={classes.mainContainer}>
             <div className={classes.images}>
               <img className={classes.profileImage} src={profileImg} />
-              <img className={classes.backgroundImage} src={null} />
+              <img className={classes.backgroundImage} src={backgroundImg} />
               <div className={classes.nameContainer}>
                 <Typography
                   className={classes.username}
@@ -477,16 +477,16 @@ function Profile({
                 <Typography variant="h6">No Habits Added</Typography>
               ) : null}
               {listOfHabits.map((habit) => {
-                  return (
-                    <div>
-                      <ProfileHabitBlock
-                        habitName={habit.habit_id.habit_name}
-                        startDate={habit.start_date}
-                        streak={habit.streak}
-                      />
-                      <br />
-                    </div>
-                  );
+                return (
+                  <div>
+                    <ProfileHabitBlock
+                      habitName={habit.habit_id.habit_name}
+                      startDate={habit.start_date}
+                      streak={habit.streak}
+                    />
+                    <br />
+                  </div>
+                );
               })}
             </div>
           </div>

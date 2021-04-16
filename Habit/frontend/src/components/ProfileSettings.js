@@ -204,10 +204,10 @@ const ProfileSettings = ({
   const handleImageUpdate = (profile_img, background_img) => {
     let form_data = new FormData();
     form_data.append("user_id", userId);
-    form_data.append("profile_img", profile_img ? profile_img : profileImg);
+    form_data.append("profile_img", profile_img ? profile_img : null);
     form_data.append(
       "background_img",
-      background_img ? background_img : backgroundImg
+      background_img ? background_img : null
     );
 
     let url = "../api/updateProfileImage";
