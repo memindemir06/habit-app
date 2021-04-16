@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "40%",
     // padding: theme.spacing(3),
   },
+  attribute: {
+    fontSize: "10px",
+    opacity: "0.85",
+  }
 }));
 
 function Footer() {
@@ -38,6 +42,7 @@ function Footer() {
           >
             © Copyright HAB!TS 2021
           </Typography>
+          <div className={classes.attribute}>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
         </Toolbar>
       </Container>
     </AppBar>
