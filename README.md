@@ -9,75 +9,27 @@ stay on them
 - HTML & CSS
 - Git (Version Control)
 
-## Git Usage
-Git command reference:
-
-### Before Starting Working
-Before starting work on any code, make sure to update your local repo. Run:
-```sh
-git fetch
-git status
-```
-
-If there are no newer commits on your current branch, then proceed to "Building 
-a Feature". Otherwise, run:
-```sh
-git pull
-```
-
-Make sure to resolve any merge conflicts by manually editing the affected files.
-
-### Building a Feature
-When starting work on a new feature, run:
-```sh
-git branch <name-of-branch>
-git checkout <name-of-branch>
-```
-NOTE: The name of the branch should be a short, all-lowercase word or two,
-separated by hyphens. For example `user-matching`, or `frontend-index`.
-
-When working on a new feature, frequently run:
-```sh
-git add .
-git commit
-git push
-```
-NOTE: `git add .` will start tracking all changes in the current directory (`.`) 
-and in subfolders of `.`. Thus, make sure to be in w6-comp10120-tutorial/webapp 
-to ensure no changes are left behind.
-
-NOTE2: The first time you push to the branch, no "remote branch" will have been 
-created. Git might complain. To fix this, replace `git push` with `git push -u 
-origin <name-of-branch>`. Any pushes after this must be done without the extra 
-parameters.
-
-#### Commit Messages
-Commit messages should be of the following format:
-```
-Max 73 character short overview of changes, followed by a newline
-
-A more in-depth overview of changes, with reasons for broad additions 
-and changes listed in the following format:
-+ reason for adding feature X
-  + reason for adding subfeature X.1
-  ~ reason for reworking/updating subfeature X.2
-  - reason for removing feature X.3
-~ reason for reworking/updating feature Y
-- reason for removing feature Z
-```
-NOTE: The short overview must not have any trailing punctuation
-
-#### Pull Requests
-Once work on a branch has been completed, go to the gitlab repo and submit a 
-"Pull Request". This will allow us to perform a quick code review and ensure 
-that the small bugs dont get into the repo (and have to be constantly fixed by 
-many tiny commits which spam the commit history).
-
-### Cleaning Up
-When a pull request has been accepted and the changes merged into master, 
-pull the changes and cleanup your local branch. Run:
-```sh
-git checkout master
-git pull
-git branch -d <name-of-branch>
-```
+## Requirements
+- Python 3.x
+- Node.js
+- npm (included with Node.js)
+## Setup
+1. Clone or download the repository
+2. Navigate to the directory where the files are stored
+3. Create a virtual environment by running the following command: ```python -m venv env```
+4. Activate the virtual environment by running the following command: ```source env/bin/activate```
+5. Install the required Python packages by running the following command: ```pip install -r requirements.txt```
+6. Navigate to the frontend directory by running the following command: ```cd frontend```
+7. Install the required npm packages by running the following command: ```npm install```
+## How to Run
+1. Make sure you are in the root directory of the project and that the virtual environment is activated
+2. Start the Django backend server by running the following command: ```python manage.py runserver```
+3. In a new terminal window, navigate to the frontend directory and start the React development server by running the following command: ```npm start```
+4. The app will be available at http://localhost:3000
+## Building for Production
+1. In the frontend directory, run the following command to build the production version of the React app: ```npm run build```
+2. The built files will be available in the ```frontend/build``` directory
+## Credits
+Backend: Django
+Frontend: React
+Code: Mehmet Demir, Lonyin Chan, Sahir Ali, and 4 more
